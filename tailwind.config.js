@@ -1,17 +1,22 @@
-/** @type {import('tailwindcss').Config} */
+const withOpacity =
+  (variable) =>
+  ({ opacityValue }) =>
+    opacityValue === undefined
+      ? `rgb(var(${variable}))`
+      : `rgb(var(${variable}) / ${opacityValue})`;
+
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
-        background: "var(--bg-color)",
-        surface: "var(--surface-color)",
-        textPrimary: "var(--text-primary)",
-        textSecondary: "var(--text-secondary)",
-        accent: "var(--accent-color)",
-        hover: "var(--hover-color)",
-        border: "var(--border-color)",
+        background: withOpacity("--bg-color"),
+        surface: withOpacity("--surface-color"),
+        textPrimary: withOpacity("--text-primary"),
+        textSecondary: withOpacity("--text-secondary"),
+        accent: withOpacity("--accent-color"),
+        hover: withOpacity("--hover-color"),
+        border: withOpacity("--border-color"),
       },
     },
   },

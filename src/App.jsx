@@ -1,7 +1,13 @@
+import React from "react";
 import "./global.css";
+import Signin from "./pages/Signin.jsx";
 
 function App() {
-  return <>{/* Code */}</>;
+  return (
+    <>
+      <Signin />
+    </>
+  );
 }
 
 export default App;
