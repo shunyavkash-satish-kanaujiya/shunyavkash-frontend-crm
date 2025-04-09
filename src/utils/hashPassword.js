@@ -1,4 +1,4 @@
-const hashPassword = async (password) => {
+export const hashPassword = async (password) => {
   const encoder = new TextEncoder();
   const data = encoder.encode(password);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
@@ -8,5 +8,3 @@ const hashPassword = async (password) => {
     .join("");
   return hashHex;
 };
-
-export default hashPassword;

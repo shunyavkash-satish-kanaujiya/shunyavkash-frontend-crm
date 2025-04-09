@@ -1,6 +1,6 @@
 import React from "react";
 import "./global.css";
-import Signin from "./pages/Signin.jsx";
+import { Signin } from "./pages/Signin.jsx";
 
 function App() {
   return (

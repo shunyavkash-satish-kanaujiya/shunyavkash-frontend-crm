@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
-import hashPassword from "../utils/hashPassword.js";
 
-const useAuthStore = create((set) => ({
+export const useAuthStore = create((set) => ({
   user: null,
   token: null,
   loading: false,
@@ -12,12 +11,9 @@ const useAuthStore = create((set) => ({
     try {
       set({ loading: true, error: null });
 
-      // Pasword Hashing
-      const hashedPassword = await hashPassword(password);
-
       console.log("Sending Registration Request from store:", {
         email,
-        hashedPassword,
+        password,
         role,
       });
 
@@ -25,7 +21,7 @@ const useAuthStore = create((set) => ({
         "http://localhost:5000/api/auth/register",
         {
           email,
-          password: hashedPassword,
+          password,
           role,
         },
         {
@@ -52,5 +48,3 @@ const useAuthStore = create((set) => ({
     }
   },
 }));
-
-export default useAuthStore;
