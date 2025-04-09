@@ -1,19 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.js";
-import SelectionMenu from "../components/ui/SelectionMenu.jsx";
+import { SelectionMenu } from "../components/ui/SelectionMenu.jsx";
 import { useRoleStore } from "../store/roleStore.js";
 
 export const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { register, loading, error } = useAuthStore();
+  const token = useAuthStore((state) => state.token); // Development only
+  const navigate = useNavigate();
 
   const role = useRoleStore((state) => state.role);
-  const token = useAuthStore((state) => state.token); // Development only
 
-  // Development only
+  // Development logging
   console.log("email:", email);
   console.log("token:", token);
+
+  // Immediately redirect
+  useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    }
+  }, [token, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +34,7 @@ export const Signin = () => {
 
     try {
       await register(email, password, role);
-      console.log("Regiatration request sent successfully.");
+      console.log("Registration request sent successfully.");
     } catch (err) {
       console.error("Handle Submit Error:", err);
     }
@@ -86,8 +95,6 @@ export const Signin = () => {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
               </div>
-
-              {/* {error && <p className="text-sm text-red-500">{error}</p>} */}
 
               <div>
                 <button

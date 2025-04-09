@@ -13,7 +13,7 @@ import { useRoleStore } from "../../store/roleStore.js";
 // Add "Select Role" as default
 const roles = ["Select Role", "Admin", "HR", "Employee"];
 
-const SelectionMenu = () => {
+export const SelectionMenu = () => {
   const [selectedRole, setSelectedRole] = useState(roles[0]);
   const setRole = useRoleStore((state) => state.setRole);
   console.log("role:", selectedRole);
@@ -69,5 +69,3 @@ const SelectionMenu = () => {
     </Listbox>
   );
 };
-
-export default SelectionMenu;
