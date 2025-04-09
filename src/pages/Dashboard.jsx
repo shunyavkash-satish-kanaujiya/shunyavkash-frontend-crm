@@ -13,13 +13,14 @@ import {
 import { useAuthStore } from "../store/authStore.js";
 import { useNavigate } from "react-router-dom";
 import { LogsIcon } from "lucide-react";
+import Clients from "../pages/Clients.jsx";
+import ClientForm from "../components/form/ClientForm.jsx";
 
 const navigation = [
   { name: "Dashboard", icon: HomeIcon },
   {
     name: "Clients",
     icon: UsersIcon,
-    submenu: [{ name: "All Clients" }, { name: "Add Client" }],
   },
   {
     name: "Projects",
@@ -65,12 +66,44 @@ export const Dashboard = () => {
     );
   }
 
+  const renderMainContent = () => {
+    if (activeTab === "Dashboard") {
+      return (
+        <div className="rounded-lg bg-white p-6 shadow-md">
+          <h2 className="text-lg font-semibold mb-1 text-wrap wrap-break-word">
+            Welcome, {user.email}
+          </h2>
+          <p className="text-sm text-gray-600">
+            This is your CRM Admin Panel. You can now manage clients, projects,
+            reports, and more.
+          </p>
+        </div>
+      );
+    }
+
+    if (activeTab === "Clients") {
+      return <Clients setActiveTab={setActiveTab} />;
+    }
+
+    if (activeTab === "Add New Client") {
+      return <ClientForm setActiveTab={setActiveTab} />;
+    }
+
+    return (
+      <div className="rounded-lg bg-white p-6 shadow-md">
+        <p className="text-sm text-gray-600">
+          This section is under construction.
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen flex bg-background text-textPrimary">
       {/* Sidebar */}
       <aside
-        className={`${
-          sidebarOpen ? "min-w-64" : "w-16"
+        className={`$ {
+          sidebarOpen ? "min-w-70" : "w-16"
         } transition-all duration-300 bg-surface border-r border-border p-4 flex flex-col`}
       >
         <div className="flex items-center justify-between mb-6">
@@ -107,7 +140,7 @@ export const Dashboard = () => {
                           setOpenSubmenu(
                             openSubmenu === item.name ? null : item.name
                           );
-                          setActiveTab(item.name); // treat parent click as active
+                          setActiveTab(item.name);
                         }}
                         className={`w-full flex items-center justify-between px-3 py-2 rounded text-left text-sm ${itemClasses}`}
                       >
@@ -124,14 +157,14 @@ export const Dashboard = () => {
                       </button>
 
                       {openSubmenu === item.name && sidebarOpen && (
-                        <ul className="space-y-1 bg-gray-100 rounded-lg ms-2 mt-1">
+                        <ul className="space-y-1 bg-gray-100 rounded-lg mt-1">
                           {item.submenu.map((sub) => (
                             <li key={sub.name}>
                               <a
                                 href="#"
                                 onClick={() => {
                                   setActiveTab(sub.name);
-                                  setOpenSubmenu(item.name); // keep submenu open
+                                  setOpenSubmenu(item.name);
                                 }}
                                 className={`block px-4 py-2 text-sm rounded ${
                                   activeTab === sub.name
@@ -151,7 +184,7 @@ export const Dashboard = () => {
                       href="#"
                       onClick={() => {
                         setActiveTab(item.name);
-                        setOpenSubmenu(null); // close any submenu
+                        setOpenSubmenu(null);
                       }}
                       className={`flex items-center gap-3 px-3 py-2 rounded text-sm ${itemClasses}`}
                     >
@@ -183,15 +216,7 @@ export const Dashboard = () => {
 
         {/* Main Area */}
         <main className="p-6 overflow-auto bg-gray-50 flex-1">
-          <div className="rounded-lg bg-white p-6 shadow-md">
-            <h2 className="text-lg font-semibold mb-1 text-wrap wrap-break-word">
-              Welcome, {user.email}
-            </h2>
-            <p className="text-sm text-gray-600">
-              This is your CRM Admin Panel. You can now manage clients,
-              projects, reports, and more.
-            </p>
-          </div>
+          {renderMainContent()}
         </main>
       </div>
     </div>
