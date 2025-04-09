@@ -102,8 +102,8 @@ export const Dashboard = () => {
     <div className="min-h-screen flex bg-background text-textPrimary">
       {/* Sidebar */}
       <aside
-        className={`$ {
-          sidebarOpen ? "min-w-70" : "w-16"
+        className={`${
+          sidebarOpen ? "min-w-60" : "w-16"
         } transition-all duration-300 bg-surface border-r border-border p-4 flex flex-col`}
       >
         <div className="flex items-center justify-between mb-6">

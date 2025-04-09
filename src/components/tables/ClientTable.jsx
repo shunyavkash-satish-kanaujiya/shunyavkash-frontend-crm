@@ -1,5 +1,15 @@
-// src/components/table/ClientTable.jsx
+import { useClientStore } from "../../store/clientStore";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+
 const ClientTable = ({ clients }) => {
+  const deleteClient = useClientStore((state) => state.deleteClient);
+
+  const handleDelete = async (id) => {
+    if (confirm("Are you sure you want to delete this client?")) {
+      await deleteClient(id);
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200 text-sm">
@@ -22,6 +32,9 @@ const ClientTable = ({ clients }) => {
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
               Connect Date
+            </th>
+            <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+              Action
             </th>
           </tr>
         </thead>
@@ -53,6 +66,15 @@ const ClientTable = ({ clients }) => {
               </td>
               <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
                 {new Date(client.createdAt).toLocaleDateString()}
+              </td>
+              <td className="px-6 py-4 text-gray-800 whitespace-nowrap text-center">
+                <button
+                  onClick={() => handleDelete(client._id)}
+                  className="text-red-600 hover:text-red-800 cursor-pointer"
+                  title="Delete"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+                </button>
               </td>
             </tr>
           ))}

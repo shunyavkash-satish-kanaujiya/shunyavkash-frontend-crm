@@ -7,6 +7,7 @@ export const useClientStore = create((set) => ({
   loading: false,
   error: null,
 
+  //   Get Clients
   fetchClients: async () => {
     try {
       set({ loading: true, error: null });
@@ -18,6 +19,7 @@ export const useClientStore = create((set) => ({
     }
   },
 
+  //   Create New Client
   addClient: async (clientData) => {
     try {
       set({ loading: true, error: null });
@@ -32,6 +34,21 @@ export const useClientStore = create((set) => ({
     } catch (err) {
       set({ error: err.message, loading: false });
       throw err;
+    }
+  },
+
+  // Remove Client
+  deleteClient: async (clientId) => {
+    try {
+      set({ loading: true, error: null });
+      await axios.delete(`http://localhost:5000/api/client/${clientId}`);
+      set((state) => ({
+        clients: state.clients.filter((client) => client._id !== clientId),
+        loading: false,
+      }));
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      console.error("Failed to delete client:", err);
     }
   },
 }));
