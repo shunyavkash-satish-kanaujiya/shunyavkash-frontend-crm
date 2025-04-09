@@ -3,15 +3,17 @@ import useAuthStore from "../store/authStore.js";
 import SelectionMenu from "../components/ui/SelectionMenu.jsx";
 import { useRoleStore } from "../store/roleStore.js";
 
-export default function Signin() {
+const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { register, loading, error } = useAuthStore();
 
   const role = useRoleStore((state) => state.role);
+  const token = useAuthStore((state) => state.token);
 
   console.log("email:", email);
   console.log("password:", password);
+  console.log("token:", token);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,4 +103,6 @@ export default function Signin() {
       </div>
     </div>
   );
-}
+};
+
+export default Signin;
