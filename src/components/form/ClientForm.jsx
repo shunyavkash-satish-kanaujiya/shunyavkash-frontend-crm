@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useClientStore } from "../../store/clientStore";
 
-const AddClient = ({ setActiveTab }) => {
+export const ClientForm = ({ setActiveTab, editingClient, setEditingClient }) => {
   const [formData, setFormData] = useState({
     name: "",
     contactPerson: "",
@@ -11,6 +11,13 @@ const AddClient = ({ setActiveTab }) => {
   });
 
   const addClient = useClientStore((state) => state.addClient);
+  const updateClient = useClientStore((state) => state.updateClient);
+
+  useEffect(() => {
+    if (editingClient) {
+      setFormData(editingClient);
+    }
+  }, [editingClient]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,64 +26,124 @@ const AddClient = ({ setActiveTab }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addClient(formData);
-      alert("Client added successfully!");
+      if (editingClient) {
+        await updateClient(editingClient._id, formData);
+        alert("Client updated successfully!");
+        setEditingClient(null);
+      } else {
+        await addClient(formData);
+        setFormData({
+          name: "",
+          contactPerson: "",
+          email: "",
+          phone: "",
+          billingAddress: "",
+        });
+
+        alert("Client added successfully!");
+      }
       setActiveTab("Clients");
     } catch (err) {
       console.error(err);
-      alert("Failed to add new client.");
+      alert("Failed to submit client.");
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8 transition-all duration-300">
+    <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
       <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
-        Add New Client
+        {editingClient ? "Update Client" : "Add New Client"}
       </h2>
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        {[
-          { label: "Client Name", name: "name", type: "text", required: true },
-          { label: "Contact Person", name: "contactPerson", type: "text" },
-          { label: "Email", name: "email", type: "email", required: true },
-          { label: "Phone", name: "phone", type: "number" },
-          { label: "Billing Address", name: "billingAddress", type: "email" },
-        ].map((field) => (
-          <div className="relative z-0 w-full group" key={field.name}>
-            <input
-              type={field.type}
-              name={field.name}
-              id={field.name}
-              value={formData[field.name]}
-              onChange={handleChange}
-              required={field.required}
-              className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
-              autoComplete="off"
-            />
-            <label
-              htmlFor={field.name}
-              className="rounded-lg absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
-              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
-              peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
-            >
-              {field.label}
-            </label>
-          </div>
-        ))}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Client Name
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
 
-        <div className="md:col-span-2 flex justify-end">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Contact Person
+          </label>
+          <input
+            type="text"
+            name="contactPerson"
+            value={formData.contactPerson}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Phone
+          </label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Billing Address
+          </label>
+          <textarea
+            name="billingAddress"
+            value={formData.billingAddress}
+            onChange={handleChange}
+            rows="3"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <div className="md:col-span-2 flex justify-end space-x-3">
+          <button
+            type="button"
+            className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-6 rounded-lg"
+            onClick={() => {
+              setEditingClient(null);
+              setActiveTab("Clients");
+            }}
+          >
+            Cancel
+          </button>
+
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
           >
-            Save Client
+            {editingClient ? "Update Client" : "Save Client"}
           </button>
         </div>
       </form>
     </div>
   );
 };
-
-export default AddClient;

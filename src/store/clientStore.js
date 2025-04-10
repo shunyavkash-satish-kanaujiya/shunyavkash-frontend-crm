@@ -1,4 +1,3 @@
-// src/store/clientStore.js
 import { create } from "zustand";
 import axios from "axios";
 
@@ -49,6 +48,26 @@ export const useClientStore = create((set) => ({
     } catch (err) {
       set({ error: err.message, loading: false });
       console.error("Failed to delete client:", err);
+    }
+  },
+
+  // Update Client
+  updateClient: async (clientId, updatedData) => {
+    try {
+      set({ loading: true, error: null });
+      const res = await axios.put(
+        `http://localhost:5000/api/client/${clientId}`,
+        updatedData
+      );
+      set((state) => ({
+        clients: state.clients.map((client) =>
+          client._id === clientId ? res.data : client
+        ),
+        loading: false,
+      }));
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      throw err;
     }
   },
 }));

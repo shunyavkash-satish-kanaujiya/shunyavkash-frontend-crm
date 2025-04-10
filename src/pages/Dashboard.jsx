@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/authStore.js";
 import { useNavigate } from "react-router-dom";
-import Clients from "../pages/Clients.jsx";
-import ClientForm from "../components/form/ClientForm.jsx";
+import { Clients } from "../pages/Clients.jsx";
+import { ClientForm } from "../components/form/ClientForm.jsx";
 import { Sidebar } from "../components/layouts/Sidebar.jsx";
 import {
   HomeIcon,
@@ -39,6 +39,7 @@ export const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const [activeTab, setActiveTab] = useState("Dashboard");
+  const [editingClient, setEditingClient] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -87,11 +88,22 @@ export const Dashboard = () => {
     }
 
     if (activeTab === "Clients") {
-      return <Clients setActiveTab={setActiveTab} />;
+      return (
+        <Clients
+          setActiveTab={setActiveTab}
+          setEditingClient={setEditingClient}
+        />
+      );
     }
 
     if (activeTab === "Add New Client") {
-      return <ClientForm setActiveTab={setActiveTab} />;
+      return (
+        <ClientForm
+          setActiveTab={setActiveTab}
+          editingClient={editingClient}
+          setEditingClient={setEditingClient}
+        />
+      );
     }
 
     return (

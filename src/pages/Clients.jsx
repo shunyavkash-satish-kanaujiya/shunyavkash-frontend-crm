@@ -1,11 +1,12 @@
-// src/pages/Clients.jsx
 import { useEffect } from "react";
-import ClientTable from "../components/tables/ClientTable.jsx";
+import { ClientTable } from "../components/tables/ClientTable.jsx";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useClientStore } from "../store/clientStore";
 
-const Clients = ({ setActiveTab }) => {
-  const { clients, fetchClients, loading } = useClientStore();
+export const Clients = ({ setActiveTab, setEditingClient }) => {
+  const clients = useClientStore((state) => state.clients);
+  const fetchClients = useClientStore((state) => state.fetchClients);
+  const loading = useClientStore((state) => state.loading);
 
   useEffect(() => {
     fetchClients();
@@ -29,11 +30,13 @@ const Clients = ({ setActiveTab }) => {
             Loading clients...
           </div>
         ) : (
-          <ClientTable clients={clients} />
+          <ClientTable
+            clients={clients}
+            setActiveTab={setActiveTab}
+            setEditingClient={setEditingClient}
+          />
         )}
       </div>
     </div>
   );
 };
-
-export default Clients;
