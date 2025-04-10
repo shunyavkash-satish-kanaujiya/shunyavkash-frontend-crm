@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/authStore.js";
 import { useNavigate } from "react-router-dom";
+import { Sidebar } from "../components/layouts/Sidebar.jsx";
 import { Clients } from "../pages/Clients.jsx";
 import { ClientForm } from "../components/form/ClientForm.jsx";
-import { Sidebar } from "../components/layouts/Sidebar.jsx";
+import { Project } from "../pages/Project.jsx";
+import { ProjectForm } from "../components/form/ProjectForm.jsx";
 import {
   HomeIcon,
   UsersIcon,
@@ -22,7 +24,6 @@ const navigation = [
   {
     name: "Projects",
     icon: FolderIcon,
-    submenu: [{ name: "All Projects" }, { name: "Create Project" }],
   },
   { name: "Timesheet", icon: LogsIcon },
   { name: "Reports", icon: ChartBarIcon },
@@ -36,10 +37,14 @@ const navigation = [
 export const Dashboard = () => {
   const { user, token, fetchUser } = useAuthStore();
   const navigate = useNavigate();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const [activeTab, setActiveTab] = useState("Dashboard");
+
   const [editingClient, setEditingClient] = useState(null);
+
+  const [editingProject, setEditingProject] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -73,6 +78,7 @@ export const Dashboard = () => {
   }
 
   const renderMainContent = () => {
+    // Dashboard Rander
     if (activeTab === "Dashboard") {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
@@ -87,6 +93,7 @@ export const Dashboard = () => {
       );
     }
 
+    // Client Render
     if (activeTab === "Clients") {
       return (
         <Clients
@@ -102,6 +109,26 @@ export const Dashboard = () => {
           setActiveTab={setActiveTab}
           editingClient={editingClient}
           setEditingClient={setEditingClient}
+        />
+      );
+    }
+
+    // Project Render
+    if (activeTab === "Projects") {
+      return (
+        <Project
+          setActiveTab={setActiveTab}
+          setEditingProject={setEditingProject}
+        />
+      );
+    }
+
+    if (activeTab === "Create Project") {
+      return (
+        <ProjectForm
+          setActiveTab={setActiveTab}
+          editingProject={editingProject}
+          setEditingProject={setEditingProject}
         />
       );
     }
