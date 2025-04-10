@@ -102,9 +102,10 @@ export const Dashboard = () => {
     <div className="min-h-screen flex bg-background text-textPrimary">
       {/* Sidebar */}
       <aside
-        className={`${
-          sidebarOpen ? "min-w-60" : "w-16"
-        } transition-all duration-300 bg-surface border-r border-border p-4 flex flex-col`}
+        className={`transition-all duration-300 ease-in-out bg-surface border-r border-border p-4 flex flex-col`}
+        style={{
+          width: sidebarOpen ? "240px" : "70px",
+        }}
       >
         <div className="flex items-center justify-between mb-6">
           {sidebarOpen && <h2 className="text-xl font-bold">CRM Admin</h2>}
@@ -142,18 +143,26 @@ export const Dashboard = () => {
                           );
                           setActiveTab(item.name);
                         }}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded text-left text-sm ${itemClasses}`}
+                        className={`w-full flex items-center px-2 py-0 rounded text-sm gap-3 ${itemClasses}`}
                       >
-                        <span className="flex items-center gap-3">
+                        <div
+                          className={`h-10 w-10 flex items-center justify-center rounded ${
+                            sidebarOpen ? "" : "mx-auto"
+                          }`}
+                        >
                           <item.icon className="h-5 w-5 text-indigo-600" />
-                          {sidebarOpen && <span>{item.name}</span>}
-                        </span>
-                        {sidebarOpen &&
-                          (openSubmenu === item.name ? (
-                            <ChevronDownIcon className="h-4 w-4 text-gray-500" />
-                          ) : (
-                            <SubChevronRightIcon className="h-4 w-4 text-gray-500 ms-1.5" />
-                          ))}
+                        </div>
+
+                        {sidebarOpen && (
+                          <div className="flex flex-1 justify-between items-center">
+                            <span className="truncate">{item.name}</span>
+                            {openSubmenu === item.name ? (
+                              <ChevronDownIcon className="h-4 w-4 text-gray-500 ms-2" />
+                            ) : (
+                              <SubChevronRightIcon className="h-4 w-4 text-gray-500 ms-2" />
+                            )}
+                          </div>
+                        )}
                       </button>
 
                       {openSubmenu === item.name && sidebarOpen && (
@@ -186,10 +195,18 @@ export const Dashboard = () => {
                         setActiveTab(item.name);
                         setOpenSubmenu(null);
                       }}
-                      className={`flex items-center gap-3 px-3 py-2 rounded text-sm ${itemClasses}`}
+                      className={`flex items-center px-2 py-0 rounded text-sm gap-3 ${itemClasses}`}
                     >
-                      <item.icon className="h-5 w-5 text-indigo-600" />
-                      {sidebarOpen && <span>{item.name}</span>}
+                      <div
+                        className={`h-10 w-10 flex items-center justify-center rounded ${
+                          sidebarOpen ? "" : "mx-auto"
+                        }`}
+                      >
+                        <item.icon className="h-5 w-5 text-indigo-600" />
+                      </div>
+                      {sidebarOpen && (
+                        <span className="truncate">{item.name}</span>
+                      )}
                     </a>
                   )}
                 </li>
