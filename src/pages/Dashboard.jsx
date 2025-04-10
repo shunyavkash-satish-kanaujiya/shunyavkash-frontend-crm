@@ -34,11 +34,19 @@ const navigation = [
 ];
 
 export const Dashboard = () => {
+  const { user, token, fetchUser } = useAuthStore();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const [activeTab, setActiveTab] = useState("Dashboard");
-  const { user, token } = useAuthStore();
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    } else if (!user) {
+      fetchUser();
+    }
+  }, [user, token, navigate, fetchUser]);
 
   useEffect(() => {
     if (!user || !token) {
@@ -68,7 +76,7 @@ export const Dashboard = () => {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
           <h2 className="text-lg font-semibold mb-1 text-wrap wrap-break-word">
-            Welcome, {user.email}
+            Welcome, {user?.email || "User"}
           </h2>
           <p className="text-sm text-gray-600">
             This is your CRM Admin Panel. You can now manage clients, projects,
@@ -113,13 +121,24 @@ export const Dashboard = () => {
         {/* Header */}
         <header className="flex items-center justify-between p-4 bg-white border-b border-border shadow-sm gap-3">
           <h1 className="text-2xl font-bold">{activeTab}</h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-semibold cursor-pointer">
-              {user.email.charAt(0).toUpperCase()}
+              {user?.email?.charAt(0).toUpperCase() || "U"}
             </div>
             <span className="text-sm font-medium text-gray-800">
-              {user.email}
+              {user?.email || "User"}
             </span>
+
+            {/* Logout Button */}
+            <button
+              onClick={() => {
+                useAuthStore.getState().logout();
+                navigate("/");
+              }}
+              className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-md transition-all"
+            >
+              Logout
+            </button>
           </div>
         </header>
 
