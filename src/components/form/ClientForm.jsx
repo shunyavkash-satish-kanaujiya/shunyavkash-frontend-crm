@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useClientStore } from "../../store/clientStore";
 
-export const ClientForm = ({ setActiveTab, editingClient, setEditingClient }) => {
+export const ClientForm = ({
+  setActiveTab,
+  editingClient,
+  setEditingClient,
+}) => {
   const [formData, setFormData] = useState({
     name: "",
     contactPerson: "",
@@ -103,7 +107,7 @@ export const ClientForm = ({ setActiveTab, editingClient, setEditingClient }) =>
             Phone
           </label>
           <input
-            type="text"
+            type="number"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
@@ -115,16 +119,25 @@ export const ClientForm = ({ setActiveTab, editingClient, setEditingClient }) =>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Billing Address
           </label>
-          <textarea
+          <input
+            type="email"
             name="billingAddress"
             value={formData.billingAddress}
             onChange={handleChange}
-            rows="3"
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          ></textarea>
+          />
         </div>
 
         <div className="md:col-span-2 flex justify-end space-x-3">
+          {/* submit button */}
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
+          >
+            {editingClient ? "Update Client" : "Save Client"}
+          </button>
+
+          {/* cancel button */}
           <button
             type="button"
             className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-6 rounded-lg"
@@ -134,13 +147,6 @@ export const ClientForm = ({ setActiveTab, editingClient, setEditingClient }) =>
             }}
           >
             Cancel
-          </button>
-
-          <button
-            type="submit"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
-          >
-            {editingClient ? "Update Client" : "Save Client"}
           </button>
         </div>
       </form>
