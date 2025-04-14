@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useAuthStore } from "../store/authStore.js";
+// Dashboard.jsx
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/layouts/Sidebar.jsx";
 import { Clients } from "../pages/Clients.jsx";
@@ -15,16 +14,17 @@ import {
 } from "@heroicons/react/24/outline";
 import { LogsIcon } from "lucide-react";
 
+// Import custom hooks
+import { useAuth } from "../hooks/dashboard/useAuth";
+import { useTab } from "../hooks/dashboard/useTab";
+import { useSidebar } from "../hooks/dashboard/useSidebar";
+import { useState } from "react";
+import { useAuthStore } from "../store/authStore.js";
+
 const navigation = [
   { name: "Dashboard", icon: HomeIcon },
-  {
-    name: "Clients",
-    icon: UsersIcon,
-  },
-  {
-    name: "Projects",
-    icon: FolderIcon,
-  },
+  { name: "Clients", icon: UsersIcon },
+  { name: "Projects", icon: FolderIcon },
   { name: "Timesheet", icon: LogsIcon },
   { name: "Reports", icon: ChartBarIcon },
   {
@@ -35,26 +35,25 @@ const navigation = [
 ];
 
 export const Dashboard = () => {
-  const { user, token, fetchUser } = useAuthStore();
   const navigate = useNavigate();
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [openSubmenu, setOpenSubmenu] = useState(null);
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const { user, token, isAuthLoading } = useAuth();
+  const { activeTab, setActiveTab } = useTab();
+  const { sidebarOpen, setSidebarOpen, openSubmenu, setOpenSubmenu } =
+    useSidebar();
 
   const [editingClient, setEditingClient] = useState(null);
-
   const [editingProject, setEditingProject] = useState(null);
 
-  useEffect(() => {
-    const { user, token, fetchUser } = useAuthStore.getState();
-
-    if (!token) {
-      navigate("/");
-    } else if (!user) {
-      fetchUser();
-    }
-  }, [navigate, user, token, fetchUser]);
+  if (isAuthLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background text-textPrimary">
+        <div className="text-center">
+          <div className="w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm text-gray-600">Checking authorization...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user || !token) {
     return (
@@ -74,11 +73,10 @@ export const Dashboard = () => {
   }
 
   const renderMainContent = () => {
-    // Dashboard Rander
     if (activeTab === "Dashboard") {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
-          <h2 className="text-lg font-semibold mb-1 text-wrap wrap-break-word">
+          <h2 className="text-lg font-semibold mb-1">
             Welcome, {user?.email || "User"}
           </h2>
           <p className="text-sm text-gray-600">
@@ -89,7 +87,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Client Render
     if (activeTab === "Clients") {
       return (
         <Clients
@@ -109,7 +106,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Project Render
     if (activeTab === "Projects") {
       return (
         <Project
@@ -140,7 +136,6 @@ export const Dashboard = () => {
 
   return (
     <div className="min-h-screen flex bg-background text-textPrimary">
-      {/* Sidebar */}
       <Sidebar
         navigation={navigation}
         sidebarOpen={sidebarOpen}
@@ -150,10 +145,7 @@ export const Dashboard = () => {
         openSubmenu={openSubmenu}
         setOpenSubmenu={setOpenSubmenu}
       />
-
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
         <header className="flex items-center justify-between p-4 bg-white border-b border-border shadow-sm gap-3">
           <h1 className="text-2xl font-bold">{activeTab}</h1>
           <div className="flex items-center gap-4">
@@ -164,7 +156,6 @@ export const Dashboard = () => {
               {user?.email || "User"}
             </span>
 
-            {/* Logout Button */}
             <button
               onClick={() => {
                 useAuthStore.getState().logout();
@@ -177,7 +168,6 @@ export const Dashboard = () => {
           </div>
         </header>
 
-        {/* Main Area */}
         <main className="p-6 overflow-auto bg-gray-50 flex-1">
           {renderMainContent()}
         </main>
