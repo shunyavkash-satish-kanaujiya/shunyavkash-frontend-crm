@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/layouts/Sidebar.jsx";
-import { Clients } from "../pages/Clients.jsx";
+import { Clients } from "./Client.jsx";
 import { ClientForm } from "../components/form/ClientForm.jsx";
 import { Project } from "../pages/Project.jsx";
 import { ProjectForm } from "../components/form/ProjectForm.jsx";
@@ -12,6 +12,7 @@ import {
   CogIcon,
 } from "@heroicons/react/24/outline";
 import { LogsIcon } from "lucide-react";
+import { TABS } from "../constants/activeTab";
 
 // Custom hooks
 import { useAuth } from "../hooks/dashboard/useAuth";
@@ -72,7 +73,7 @@ export const Dashboard = () => {
   }
 
   const renderMainContent = () => {
-    if (activeTab === "Dashboard") {
+    if (activeTab === TABS.DASHBOARD) {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
           <h2 className="text-lg font-semibold mb-1">
@@ -86,7 +87,7 @@ export const Dashboard = () => {
       );
     }
 
-    if (activeTab === "Clients") {
+    if (activeTab === TABS.CLIENTS) {
       return (
         <Clients
           setActiveTab={setActiveTab}
@@ -95,7 +96,7 @@ export const Dashboard = () => {
       );
     }
 
-    if (activeTab === "Add New Client") {
+    if (activeTab === TABS.ADD_CLIENT) {
       return (
         <ClientForm
           setActiveTab={setActiveTab}
@@ -105,7 +106,7 @@ export const Dashboard = () => {
       );
     }
 
-    if (activeTab === "Projects") {
+    if (activeTab === TABS.PROJECTS) {
       return (
         <Project
           setActiveTab={setActiveTab}
@@ -114,7 +115,7 @@ export const Dashboard = () => {
       );
     }
 
-    if (activeTab === "Create Project") {
+    if (activeTab === TABS.ADD_PROJECT) {
       return (
         <ProjectForm
           setActiveTab={setActiveTab}

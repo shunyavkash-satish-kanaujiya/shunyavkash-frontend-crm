@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useClientStore } from "../../store/clientStore";
+import { TABS } from "../../constants/activeTab.js";
 
 export const ClientForm = ({
   setActiveTab,
@@ -23,9 +24,8 @@ export const ClientForm = ({
     }
   }, [editingClient]);
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +36,7 @@ export const ClientForm = ({
         setEditingClient(null);
       } else {
         await addClient(formData);
+        alert("Client added successfully!");
         setFormData({
           name: "",
           contactPerson: "",
@@ -43,15 +44,21 @@ export const ClientForm = ({
           phone: "",
           billingAddress: "",
         });
-
-        alert("Client added successfully!");
       }
-      setActiveTab("Clients");
+      setActiveTab(TABS.CLIENTS);
     } catch (err) {
       console.error(err);
       alert("Failed to submit client.");
     }
   };
+
+  const fields = [
+    { label: "Client Name", name: "name", type: "text", required: true },
+    { label: "Contact Person", name: "contactPerson", type: "text" },
+    { label: "Email", name: "email", type: "email", required: true },
+    { label: "Phone", name: "phone", type: "text" },
+    { label: "Billing Address", name: "billingAddress", type: "text" },
+  ];
 
   return (
     <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
@@ -62,88 +69,41 @@ export const ClientForm = ({
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Client Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Contact Person
-          </label>
-          <input
-            type="text"
-            name="contactPerson"
-            value={formData.contactPerson}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Phone
-          </label>
-          <input
-            type="number"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Billing Address
-          </label>
-          <input
-            type="email"
-            name="billingAddress"
-            value={formData.billingAddress}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
+        {fields.map((field) => (
+          <div className="relative z-0 w-full group" key={field.name}>
+            <input
+              type={field.type}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              required={field.required}
+              autoComplete="off"
+              className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+            />
+            <label
+              htmlFor={field.name}
+              className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+              peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+            >
+              {field.label}
+            </label>
+          </div>
+        ))}
 
         <div className="md:col-span-2 flex justify-end space-x-3">
-          {/* submit button */}
           <button
             type="submit"
             className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
           >
             {editingClient ? "Update Client" : "Save Client"}
           </button>
-
-          {/* cancel button */}
           <button
             type="button"
             className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-6 rounded-lg"
             onClick={() => {
               setEditingClient(null);
-              setActiveTab("Clients");
+              setActiveTab(TABS.CLIENTS);
             }}
           >
             Cancel

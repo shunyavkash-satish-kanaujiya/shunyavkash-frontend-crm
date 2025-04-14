@@ -1,5 +1,6 @@
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useClientStore } from "../../store/clientStore";
+import { TABS } from "../../constants/activeTab";
 
 export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
   const deleteClient = useClientStore((state) => state.deleteClient);
@@ -12,7 +13,7 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
 
   const handleEdit = (client) => {
     setEditingClient(client);
-    setActiveTab("Add New Client");
+    setActiveTab(TABS.ADD_CLIENT);
   };
 
   return (

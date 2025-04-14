@@ -5,6 +5,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useProjectStore } from "../../store/projectStore.js";
+import { TABS } from "../../constants/activeTab.js";
 
 const statusStyles = {
   pending: "bg-blue-100 text-blue-800",
@@ -25,7 +26,7 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
 
   const handleEdit = (project) => {
     setEditingProject(project);
-    setActiveTab("Create Project");
+    setActiveTab(TABS.ADD_PROJECT);
   };
 
   const filteredProjects = projects.filter((project) => {

@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { ClientTable } from "../components/tables/ClientTable.jsx";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useClientStore } from "../store/clientStore";
+import { useClientStore } from "../store/clientStore.js";
+import { TABS } from "../constants/activeTab.js";
 
 export const Clients = ({ setActiveTab, setEditingClient }) => {
   const clients = useClientStore((state) => state.clients);
@@ -16,7 +17,7 @@ export const Clients = ({ setActiveTab, setEditingClient }) => {
     <div className="bg-gray-50 min-h-screen text-textPrimary">
       <div className="flex justify-end items-center mb-4 w-full">
         <button
-          onClick={() => setActiveTab("Add New Client")}
+          onClick={() => setActiveTab(TABS.ADD_CLIENT)}
           className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition cursor-pointer"
         >
           <PlusIcon className="h-5 w-5" />

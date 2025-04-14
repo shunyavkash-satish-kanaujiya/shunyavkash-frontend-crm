@@ -4,7 +4,7 @@ import "./global.css";
 import { Signin } from "./pages/Signin.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { Route, Routes } from "react-router-dom";
-import { Clients } from "./pages/Clients.jsx";
+import { Clients } from "./pages/Client.jsx";
 import { Project } from "./pages/Project.jsx";
 // import DashboardHome from "./pages/DashboardHome.jsx";
 
