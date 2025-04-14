@@ -12,3 +12,9 @@
   --hover-color: 42, 64, 98;
   --border-color: 210, 210, 210;
 }
+
+button,
+a,
+select {
+  cursor: pointer;
+}

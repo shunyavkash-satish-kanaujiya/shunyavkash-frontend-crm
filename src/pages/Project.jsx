@@ -12,7 +12,7 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
   }, [fetchProjects]);
 
   return (
-    <div className="bg-gray-50 min-h-screen text-textPrimary p-4">
+    <div className="bg-gray-50 min-h-screen text-textPrimary">
       <div className="flex justify-end items-center mb-4 w-full">
         <button
           onClick={() => {

@@ -15,7 +15,7 @@ export const Clients = ({ setActiveTab, setEditingClient }) => {
 
   return (
     <div className="bg-gray-50 min-h-screen text-textPrimary">
-      <div className="flex justify-end items-center mb-4 w-full">
+      <div className="flex justify-end items-center mb-6 w-full">
         <button
           onClick={() => setActiveTab(TABS.ADD_CLIENT)}
           className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition cursor-pointer"
