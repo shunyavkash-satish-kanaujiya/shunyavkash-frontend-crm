@@ -14,7 +14,7 @@ export const ProjectForm = ({
   setActiveTab,
 }) => {
   const { clients, fetchClients } = useClientStore();
-  const { addProject, updateProject } = useProjectStore();
+  const { addProject, updateProject, fetchProjects } = useProjectStore();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -56,6 +56,9 @@ export const ProjectForm = ({
       } else {
         await addProject(formData);
       }
+
+      await fetchProjects(); // Populated clients
+
       setFormData({
         title: "",
         client: "",
@@ -64,6 +67,7 @@ export const ProjectForm = ({
         endDate: "",
         status: "pending",
       });
+
       setActiveTab("All Projects");
     } catch (error) {
       console.error("Failed to submit project:", error);

@@ -1,4 +1,3 @@
-// Dashboard.jsx
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/layouts/Sidebar.jsx";
 import { Clients } from "../pages/Clients.jsx";
@@ -14,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { LogsIcon } from "lucide-react";
 
-// Import custom hooks
+// Custom hooks
 import { useAuth } from "../hooks/dashboard/useAuth";
 import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
