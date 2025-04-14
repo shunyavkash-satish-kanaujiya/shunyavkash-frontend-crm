@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios from "axios";
 
 export const useAuthStore = create((set) => ({
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: null,
   token: localStorage.getItem("token") || null,
   loading: false,
   error: null,
@@ -17,12 +17,12 @@ export const useAuthStore = create((set) => ({
         { headers: { "Content-Type": "application/json" } }
       );
 
-      const user = res.data.user || res.data;
       const token = res.data.token || null;
-
       localStorage.setItem("token", token);
 
-      set({ user, token, loading: false });
+      set({ token, loading: false });
+
+      await useAuthStore.getState().fetchUser();
     } catch (err) {
       set({
         error:
@@ -32,8 +32,25 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  fetchUser: async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const res = await axios.get("http://localhost:5000/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const user = res.data;
+      set({ user });
+    } catch (err) {
+      console.error("Fetch user failed:", err.message);
+      set({ error: "Failed to fetch user", user: null, token: null });
+      localStorage.removeItem("token");
+    }
+  },
+
   logout: () => {
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
     set({ user: null, token: null });
   },

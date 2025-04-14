@@ -47,18 +47,14 @@ export const Dashboard = () => {
   const [editingProject, setEditingProject] = useState(null);
 
   useEffect(() => {
+    const { user, token, fetchUser } = useAuthStore.getState();
+
     if (!token) {
       navigate("/");
     } else if (!user) {
       fetchUser();
     }
-  }, [user, token, navigate, fetchUser]);
-
-  useEffect(() => {
-    if (!user || !token) {
-      navigate("/");
-    }
-  }, [user, token, navigate]);
+  }, [navigate, user, token, fetchUser]);
 
   if (!user || !token) {
     return (
