@@ -6,6 +6,7 @@ import { Dashboard } from "./pages/Dashboard.jsx";
 import { Route, Routes } from "react-router-dom";
 import { Clients } from "./pages/Client.jsx";
 import { Project } from "./pages/Project.jsx";
+import { HR } from "./pages/HR.jsx";
 // import DashboardHome from "./pages/DashboardHome.jsx";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         {/* <Route index element={<DashboardHome />} /> */}
         <Route path="clients" element={<Clients />} />
         <Route path="projects" element={<Project />} />
+        <Route path="hr" element={<HR />} />
       </Route>
     </Routes>
   );

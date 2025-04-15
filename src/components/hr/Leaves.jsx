@@ -4,7 +4,6 @@ export const Leaves = () => {
       <div className="text-gray-700">
         Calendar for leave tracking goes here.
       </div>
-      {/* Can later integrate React Big Calendar or custom calendar */}
     </div>
   );
 };
