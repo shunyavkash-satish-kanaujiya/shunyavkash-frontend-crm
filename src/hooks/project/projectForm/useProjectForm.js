@@ -21,7 +21,7 @@ export const useProjectForm = (
     description: "",
     startDate: "",
     endDate: "",
-    priority: "Normal",
+    priority: "normal",
     status: "pending",
   });
 
@@ -37,7 +37,7 @@ export const useProjectForm = (
         description: editingProject.description || "",
         startDate: editingProject.startDate?.substring(0, 10) || "",
         endDate: editingProject.endDate?.substring(0, 10) || "",
-        priority: editingProject.priority || "Normal",
+        priority: editingProject.priority || "normal",
         status: editingProject.status || "pending",
       });
     }
@@ -55,7 +55,7 @@ export const useProjectForm = (
       description: "",
       startDate: "",
       endDate: "",
-      priority: "Normal",
+      priority: "normal",
       status: "pending",
     });
     setEditingProject(null);
@@ -64,11 +64,28 @@ export const useProjectForm = (
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formattedData = {
+      ...formData,
+      client:
+        typeof formData.client === "object"
+          ? formData.client._id
+          : formData.client,
+      priority: formData.priority.toLowerCase(),
+      status: formData.status.toLowerCase(),
+    };
+
+    console.log("Submitting project data:", formattedData);
+
     try {
+      if (!formattedData.client || formattedData.client.length !== 24) {
+        throw new Error("Client ID is invalid or missing.");
+      }
+
       if (editingProject) {
-        await updateProject(editingProject._id, formData);
+        await updateProject(editingProject._id, formattedData);
       } else {
-        await addProject(formData);
+        await addProject(formattedData);
       }
 
       await fetchProjects();

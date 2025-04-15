@@ -7,13 +7,13 @@ export const useAuthStore = create((set) => ({
   loading: false,
   error: null,
 
-  register: async (email, password, role) => {
+  register: async (email, password) => {
     try {
       set({ loading: true, error: null });
 
       const res = await axios.post(
         "http://localhost:5000/api/auth/register",
-        { email, password, role },
+        { email, password },
         { headers: { "Content-Type": "application/json" } }
       );
 

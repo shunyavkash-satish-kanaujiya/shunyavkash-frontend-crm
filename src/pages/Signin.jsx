@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.js";
-import { SelectionMenu } from "../components/ui/SelectionMenu.jsx";
-import { useRoleStore } from "../store/roleStore.js";
 
 export const Signin = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +9,6 @@ export const Signin = () => {
   const token = useAuthStore((state) => state.token); // Development only
   const navigate = useNavigate();
 
-  const role = useRoleStore((state) => state.role);
 
   // Development logging
   console.log("email:", email);
@@ -27,13 +24,8 @@ export const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (role === "Select Role") {
-      alert("Please select a valid role.");
-      return;
-    }
-
     try {
-      await register(email, password, role);
+      await register(email, password);
       console.log("Registration request sent successfully.");
     } catch (err) {
       console.error("Handle Submit Error:", err);
@@ -54,7 +46,7 @@ export const Signin = () => {
 
           <div className="m-10 sm:mx-auto sm:w-full sm:max-w-sm">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <SelectionMenu />
+              {/* <SelectionMenu /> */}
               <div>
                 <label
                   htmlFor="email"
