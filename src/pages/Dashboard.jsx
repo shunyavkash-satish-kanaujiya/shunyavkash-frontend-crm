@@ -77,8 +77,13 @@ export const Dashboard = () => {
     if (activeTab === TABS.DASHBOARD) {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
+          {/* Username Capitalize */}
           <h2 className="text-lg font-semibold mb-1">
-            Welcome, {user?.email || "User"}
+            Welcome,{" "}
+            {user?.email
+              ?.split("@")[0]
+              .replace(/\./g, " ")
+              .replace(/\b\w/g, (char) => char.toUpperCase()) || "User"}
           </h2>
           <p className="text-sm text-gray-600">
             This is your CRM Admin Panel. You can now manage clients, projects,

@@ -95,7 +95,7 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
         </select>
       </div>
 
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
+      <table className="min-w-full divide-y divide-gray-200 text-sm overflow-hidden rounded-lg">
         <thead className="bg-indigo-50">
           <tr>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
@@ -141,8 +141,10 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                 className="hover:bg-indigo-50 transition cursor-pointer"
               >
                 <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{project.title}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap capitalize">
+                  {project.title}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap capitalize">
                   {project.client?.name || "N/A"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap truncate max-w-xs">

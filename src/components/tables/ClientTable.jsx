@@ -62,10 +62,10 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
                     <div className="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center font-semibold uppercase">
                       {client.name.charAt(0)}
                     </div>
-                    <span>{client.name}</span>
+                    <span className="capitalize">{client.name}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+                <td className="px-6 py-4 text-gray-800 whitespace-nowrap capitalize">
                   {client.contactPerson}
                 </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">

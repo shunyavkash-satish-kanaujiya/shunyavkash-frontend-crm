@@ -26,7 +26,7 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
         </button>
       </div>
 
-      <div>
+      <div className="table-wrap">
         {loading ? (
           <div className="text-center py-6 text-indigo-600 font-medium">
             Loading projects...

@@ -36,7 +36,11 @@ export const UserDropdown = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">
-                  {user?.email?.split("@")[0] || "User"}
+                  {/* Username Capitalize */}
+                  {user?.email
+                    ?.split("@")[0]
+                    .replace(/\./g, " ")
+                    .replace(/\b\w/g, (char) => char.toUpperCase()) || "User"}
                 </p>
                 <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
