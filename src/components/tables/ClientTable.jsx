@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useClientStore } from "../../store/clientStore";
 import { TABS } from "../../constants/activeTab";
 
 export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
   const deleteClient = useClientStore((state) => state.deleteClient);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this client?")) {
@@ -16,9 +18,24 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
     setActiveTab(TABS.ADD_CLIENT);
   };
 
+  const filteredClients = clients.filter((client) =>
+    client.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
+    <div className="overflow-x-auto space-y-4 shadow-md rounded-md p-2">
+      <div className="flex items-center">
+        <input
+          type="text"
+          placeholder="Search by client name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 rounded-md px-4 py-2 w-64"
+        />
+      </div>
+
+      {/* Table */}
+      <table className="min-w-full divide-y divide-gray-200 text-sm overflow-hidden rounded-lg">
         <thead className="bg-indigo-50">
           <tr>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
@@ -45,14 +62,14 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
-          {clients.length === 0 ? (
+          {filteredClients.length === 0 ? (
             <tr>
               <td colSpan="7" className="text-center py-4 text-gray-500">
                 No clients found.
               </td>
             </tr>
           ) : (
-            clients.map((client) => (
+            filteredClients.map((client) => (
               <tr
                 key={client._id}
                 className="hover:bg-indigo-50 transition cursor-pointer"
@@ -88,7 +105,6 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
                   >
                     <PencilSquareIcon className="w-5 h-5 inline" />
                   </button>
-
                   <button
                     onClick={() => handleDelete(client._id)}
                     className="text-red-600 hover:text-red-800"
