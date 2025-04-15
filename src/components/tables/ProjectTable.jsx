@@ -198,12 +198,14 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap space-x-2 cursor-pointer">
+                      {/* View */}
                       <button
                         className="text-blue-600 hover:text-blue-800 cursor-pointer"
                         title="View"
                       >
                         <EyeIcon className="w-5 h-5 inline" />
                       </button>
+                      {/* Edit */}
                       <button
                         onClick={() => handleEdit(project)}
                         className="text-indigo-600 hover:text-indigo-800 cursor-pointer"
@@ -211,6 +213,7 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                       >
                         <PencilSquareIcon className="w-5 h-5 inline" />
                       </button>
+                      {/* Delete */}
                       <button
                         onClick={() => handleDelete(project._id)}
                         className="text-red-600 hover:text-red-800 cursor-pointer"

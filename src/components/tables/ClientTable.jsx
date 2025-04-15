@@ -9,7 +9,11 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
 
   const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this client?")) {
-      await deleteClient(id);
+      const res = await deleteClient(id);
+
+      if (!res.success) {
+        alert(res.error);
+      }
     }
   };
 

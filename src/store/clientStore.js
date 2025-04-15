@@ -40,14 +40,23 @@ export const useClientStore = create((set) => ({
   deleteClient: async (clientId) => {
     try {
       set({ loading: true, error: null });
+
       await axios.delete(`http://localhost:5000/api/client/${clientId}`);
+
       set((state) => ({
         clients: state.clients.filter((client) => client._id !== clientId),
         loading: false,
       }));
+
+      return { success: true };
     } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to delete client:", err);
+      const backendError =
+        err.response?.data?.error || err.message || "Something went wrong";
+
+      set({ error: backendError, loading: false });
+      console.error("Failed to delete client:", backendError);
+
+      return { success: false, error: backendError };
     }
   },
 
