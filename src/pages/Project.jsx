@@ -13,7 +13,7 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
 
   return (
     <div className="bg-gray-50 min-h-screen text-textPrimary">
-      <div className="flex justify-end items-center mb-4 w-full">
+      <div className="flex justify-end items-center mb-6 w-full">
         <button
           onClick={() => {
             setEditingProject(null); // Clear editing state

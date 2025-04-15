@@ -10,6 +10,7 @@ import {
   FolderIcon,
   ChartBarIcon,
   CogIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import { LogsIcon } from "lucide-react";
 
@@ -21,9 +22,12 @@ import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
 import { UserDropdown } from "../components/dashboard/userDropdown.jsx";
+import { HR } from "./HR.jsx";
 
+// Sidebar Tabs
 const navigation = [
   { name: "Dashboard", icon: HomeIcon },
+  { name: "HR", icon: UserGroupIcon },
   { name: "Clients", icon: UsersIcon },
   { name: "Projects", icon: FolderIcon },
   { name: "Timesheet", icon: LogsIcon },
@@ -74,6 +78,7 @@ export const Dashboard = () => {
   }
 
   const renderMainContent = () => {
+    // Dashboard
     if (activeTab === TABS.DASHBOARD) {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
@@ -93,6 +98,7 @@ export const Dashboard = () => {
       );
     }
 
+    // Clients
     if (activeTab === TABS.CLIENTS) {
       return (
         <Clients
@@ -112,6 +118,7 @@ export const Dashboard = () => {
       );
     }
 
+    // Projects
     if (activeTab === TABS.PROJECTS) {
       return (
         <Project
@@ -128,6 +135,13 @@ export const Dashboard = () => {
           editingProject={editingProject}
           setEditingProject={setEditingProject}
         />
+      );
+    }
+
+    // HR
+    if (activeTab === TABS.HR) {
+      return (
+        <HR setActiveTab={setActiveTab} setEditingProject={setEditingProject} />
       );
     }
 

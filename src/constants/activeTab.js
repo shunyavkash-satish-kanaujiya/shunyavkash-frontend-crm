@@ -6,4 +6,6 @@ export const TABS = {
 
   PROJECTS: "Projects",
   ADD_PROJECT: "Add Project",
+
+  HR: "HR",
 };
