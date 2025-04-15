@@ -12,6 +12,7 @@ import {
   CogIcon,
 } from "@heroicons/react/24/outline";
 import { LogsIcon } from "lucide-react";
+
 import { TABS } from "../constants/activeTab";
 
 // Custom hooks
@@ -19,7 +20,7 @@ import { useAuth } from "../hooks/dashboard/useAuth";
 import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
-import { useAuthStore } from "../store/authStore.js";
+import { UserDropdown } from "../components/dashboard/userDropdown.jsx";
 
 const navigation = [
   { name: "Dashboard", icon: HomeIcon },
@@ -148,24 +149,8 @@ export const Dashboard = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="flex items-center justify-between p-4 bg-white border-b border-border shadow-sm gap-3">
           <h1 className="text-2xl font-bold">{activeTab}</h1>
-          <div className="flex items-center gap-4">
-            <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-semibold cursor-pointer">
-              {user?.email?.charAt(0).toUpperCase() || "U"}
-            </div>
-            <span className="text-sm font-medium text-gray-800">
-              {user?.email || "User"}
-            </span>
-
-            <button
-              onClick={() => {
-                useAuthStore.getState().logout();
-                navigate("/");
-              }}
-              className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-md transition-all"
-            >
-              Logout
-            </button>
-          </div>
+          {/* User Dropdown */}
+          <UserDropdown />
         </header>
 
         <main className="p-6 overflow-auto bg-gray-50 flex-1">
