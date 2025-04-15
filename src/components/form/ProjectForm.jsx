@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useProjectForm } from "../../hooks/project/projectForm/useProjectForm";
 
 export const ProjectForm = ({
@@ -10,10 +11,22 @@ export const ProjectForm = ({
     formData,
     priorityOptions,
     statusOptions,
+    setFormData,
     handleChange,
     handleSubmit,
     resetForm,
   } = useProjectForm(editingProject, setEditingProject, setActiveTab);
+
+  useEffect(() => {
+    if (editingProject) {
+      setFormData({
+        ...editingProject,
+        priority: editingProject.priority?.toLowerCase() || "normal",
+        status: editingProject.status?.toLowerCase() || "pending",
+        client: editingProject.client?._id || editingProject.client || "",
+      });
+    }
+  }, [editingProject, setFormData]);
 
   return (
     <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">

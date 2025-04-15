@@ -98,6 +98,7 @@ export const useProjectForm = (
   return {
     clients,
     formData,
+    setFormData,
     priorityOptions,
     statusOptions,
     handleChange,

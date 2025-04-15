@@ -8,14 +8,14 @@ import { useProjectStore } from "../../store/projectStore.js";
 import { TABS } from "../../constants/activeTab.js";
 
 const priorityStyles = {
-  Urgent: "bg-red-100 text-red-800",
-  High: "bg-yellow-100 text-yellow-800",
-  Normal: "bg-blue-100 text-blue-800",
-  Low: "bg-gray-200 text-gray-700",
-  None: "bg-gray-100 text-gray-500",
+  urgent: "bg-red-100 text-red-800",
+  high: "bg-yellow-100 text-yellow-800",
+  normal: "bg-blue-100 text-blue-800",
+  low: "bg-gray-200 text-gray-700",
+  none: "bg-gray-100 text-gray-500",
 };
 
-const priorityOptions = ["Urgent", "High", "Normal", "Low", "None"];
+const priorityOptions = ["urgent", "high", "normal", "low", "none"];
 
 const statusStyles = {
   pending: "bg-blue-100 text-blue-800",
@@ -167,14 +167,11 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                     }
                     onChange={async (e) => {
                       const newPriority = e.target.value;
+                      console.log(newPriority);
                       await updateProjectPriority(project._id, newPriority);
                     }}
                     className={`text-xs font-medium rounded px-2 py-1 outline-none ${
-                      priorityStyles[
-                        priorityOptions.includes(project.priority)
-                          ? project.priority
-                          : "None"
-                      ]
+                      priorityStyles[project.priority?.toLowerCase() || "none"]
                     }`}
                   >
                     {priorityOptions.map((option) => (
