@@ -67,22 +67,6 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
     }
   };
 
-  //   const handleRemoveExistingDoc = async (index) => {
-  //     const doc = existingDocs[index];
-  //     try {
-  //       await axios.delete(
-  //         `http://localhost:5000/api/employee/document/${editingEmployee._id}`,
-  //         {
-  //           data: { publicId: doc.publicId },
-  //         }
-  //       );
-  //       setExistingDocs((prev) => prev.filter((_, i) => i !== index));
-  //     } catch (error) {
-  //       console.error("Error deleting document:", error);
-  //       alert("Failed to delete document.");
-  //     }
-  //   };
-
   const handleRemoveExistingDoc = (index) => {
     const doc = existingDocs[index];
     setDeletedDocIds((prev) => [...prev, doc.publicId]);
@@ -254,50 +238,50 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
             className="hidden"
           />
 
-          {/* Existing Docs */}
+          {/* Show Existing Docs */}
           {existingDocs.length > 0 && (
-            <div className="space-y-1 mt-2">
+            <ul className="text-sm text-gray-700 mt-2">
               {existingDocs.map((doc, index) => (
-                <div
+                <li
                   key={index}
-                  className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md"
+                  className="flex items-center justify-between bg-gray-100 px-3 py-1 rounded mb-1"
                 >
-                  <span className="text-sm truncate max-w-[200px] text-gray-700">
-                    {doc.name || doc.url.split("/").pop()}
+                  <span className="truncate">
+                    {doc.originalname || doc.url?.split("/").pop()}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleRemoveExistingDoc(index)}
-                    className="text-red-500 text-sm ml-4"
+                    className="text-red-500 hover:text-red-700 text-lg ml-3"
+                    title="Delete"
                   >
                     ❌
                   </button>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
 
-          {/* New Docs */}
+          {/* Show New (Unsaved) Docs */}
           {formData.documents.length > 0 && (
-            <div className="space-y-1 mt-2">
-              {formData.documents.map((file, index) => (
-                <div
+            <ul className="text-sm text-gray-700 mt-2">
+              {formData.documents.map((doc, index) => (
+                <li
                   key={index}
-                  className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                  className="flex items-center justify-between bg-gray-100 px-3 py-1 rounded mb-1"
                 >
-                  <span className="text-sm truncate max-w-[200px] text-gray-700">
-                    {file.name}
-                  </span>
+                  <span className="truncate">{doc.name}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveNewDoc(index)}
-                    className="text-red-500 text-sm ml-4"
+                    className="text-red-500 hover:text-red-700 text-lg ml-3"
+                    title="Delete"
                   >
                     ❌
                   </button>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
 
