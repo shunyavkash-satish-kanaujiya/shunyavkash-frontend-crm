@@ -23,6 +23,8 @@ import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
 import { UserDropdown } from "../components/dashboard/userDropdown.jsx";
 import { HR } from "./HR.jsx";
+import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
+import { Employees } from "../components/hr/Employees.jsx";
 
 // Sidebar Tabs
 const navigation = [
@@ -48,6 +50,7 @@ export const Dashboard = () => {
 
   const [editingClient, setEditingClient] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
+  const [editingEmployee, setEditingEmployee] = useState(null);
 
   if (isAuthLoading) {
     return (
@@ -144,6 +147,28 @@ export const Dashboard = () => {
         <HR setActiveTab={setActiveTab} setEditingProject={setEditingProject} />
       );
     }
+
+    // Employee
+    // Employees
+    if (activeTab === TABS.EMPLOYEES) {
+      return (
+        <Employees
+          setActiveTab={setActiveTab}
+          setEditingEmployee={setEditingEmployee}
+        />
+      );
+    }
+
+    if (activeTab === TABS.ADD_EMPLOYEE) {
+      return (
+        <EmployeeForm
+          setActiveTab={setActiveTab}
+          editingEmployee={editingEmployee}
+          setEditingEmployee={setEditingEmployee}
+        />
+      );
+    }
+
 
     return (
       <div className="rounded-lg bg-white p-6 shadow-md">

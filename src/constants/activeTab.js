@@ -8,4 +8,6 @@ export const TABS = {
   ADD_PROJECT: "Add Project",
 
   HR: "HR",
+  EMPLOYEES: "Employees",
+  ADD_EMPLOYEE: "Add Employee",
 };

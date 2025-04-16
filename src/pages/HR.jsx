@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Employees } from "../components/hr/Employees";
-import { Attendences } from "../components/hr/Attendences";
+import { EmployeeForm } from "../components/forms/EmployeeForm";
+import { Attendances } from "../components/hr/Attendances";
 import { Leaves } from "../components/hr/Leaves";
 import { Payrolls } from "../components/hr/Payrolls";
 import { Interviews } from "../components/hr/Interviews";
@@ -11,8 +12,11 @@ import {
   localStorageKeyHR,
 } from "../constants/hr/activeTabHR";
 
+import { TABS } from "../constants/activeTab";
+
 export const HR = () => {
   const [activeTab, setActiveTab] = useState(defaultHRTab);
+  const [employeeTab, setEmployeeTab] = useState(TABS.EMPLOYEES); // NEW for Employee Sub-Tabs
 
   useEffect(() => {
     const savedTab = localStorage.getItem(localStorageKeyHR);
@@ -49,7 +53,12 @@ export const HR = () => {
         {activeTab === "employees" && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-indigo-700">Employees</h2>
-            <Employees />
+            {employeeTab === TABS.EMPLOYEES && (
+              <Employees setEmployeeTab={setEmployeeTab} />
+            )}
+            {employeeTab === TABS.ADD_EMPLOYEE && (
+              <EmployeeForm setEmployeeTab={setEmployeeTab} />
+            )}
           </div>
         )}
 
@@ -58,7 +67,7 @@ export const HR = () => {
             <h2 className="text-xl font-semibold text-indigo-700">
               Attendances
             </h2>
-            <Attendences />
+            <Attendances />
           </div>
         )}
 
