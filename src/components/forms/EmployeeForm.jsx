@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
 import { TABS } from "../../constants/activeTab";
+// import axios from "axios";
 
 export const EmployeeForm = ({ setEmployeeTab }) => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,10 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
     avatar: null,
     documents: [],
   });
+
+  const [loading, setLoading] = useState(false);
+  const [existingDocs, setExistingDocs] = useState([]);
+  const [deletedDocIds, setDeletedDocIds] = useState([]);
 
   const addEmployee = useEmployeeStore((state) => state.addEmployee);
   const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
@@ -38,13 +43,91 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
         status: editingEmployee.status || "Active",
         address: editingEmployee.address || "",
         avatar: editingEmployee.avatar || null,
-        documents: [], // Let the user re-upload if needed
+        documents: [],
       }));
+      setExistingDocs(editingEmployee.documents || []);
+      setDeletedDocIds([]);
     }
   }, [editingEmployee]);
 
-  useEffect(() => {
-    if (!editingEmployee) {
+  const handleChange = (e) => {
+    const { name, type, files, value } = e.target;
+    if (type === "file") {
+      if (name === "documents") {
+        const newFiles = Array.from(files);
+        setFormData((prev) => ({
+          ...prev,
+          documents: [...prev.documents, ...newFiles],
+        }));
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: files[0] }));
+      }
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  //   const handleRemoveExistingDoc = async (index) => {
+  //     const doc = existingDocs[index];
+  //     try {
+  //       await axios.delete(
+  //         `http://localhost:5000/api/employee/document/${editingEmployee._id}`,
+  //         {
+  //           data: { publicId: doc.publicId },
+  //         }
+  //       );
+  //       setExistingDocs((prev) => prev.filter((_, i) => i !== index));
+  //     } catch (error) {
+  //       console.error("Error deleting document:", error);
+  //       alert("Failed to delete document.");
+  //     }
+  //   };
+
+  const handleRemoveExistingDoc = (index) => {
+    const doc = existingDocs[index];
+    setDeletedDocIds((prev) => [...prev, doc.publicId]);
+    setExistingDocs((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveNewDoc = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      documents: prev.documents.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    alert(editingEmployee ? "Updating employee..." : "Saving employee...");
+
+    const submissionData = new FormData();
+    for (const key in formData) {
+      if (key === "documents") {
+        for (let file of formData.documents) {
+          submissionData.append("documents", file);
+        }
+      } else if (key === "avatar" && formData.avatar instanceof File) {
+        submissionData.append("avatar", formData.avatar);
+      } else {
+        submissionData.append(key, formData[key]);
+      }
+    }
+
+    submissionData.append("existingDocs", JSON.stringify(existingDocs));
+    submissionData.append("documentsToDelete", JSON.stringify(deletedDocIds));
+
+    try {
+      if (editingEmployee) {
+        await updateEmployee(editingEmployee._id, submissionData);
+        alert("Employee updated successfully!");
+        setEditingEmployee(null);
+      } else {
+        await addEmployee(submissionData);
+        alert("Employee added successfully!");
+      }
+
+      // Reset
       setFormData({
         firstName: "",
         lastName: "",
@@ -58,62 +141,14 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
         avatar: null,
         documents: [],
       });
-    }
-  }, [editingEmployee]);
-
-  const handleChange = (e) => {
-    const { name, type, files, value } = e.target;
-    if (type === "file") {
-      if (name === "documents") {
-        setFormData({ ...formData, documents: files });
-      } else {
-        setFormData({ ...formData, [name]: files[0] });
-      }
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const submissionData = new FormData();
-    for (const key in formData) {
-      if (key === "documents") {
-        for (let file of formData.documents) {
-          submissionData.append("documents", file);
-        }
-      } else {
-        submissionData.append(key, formData[key]);
-      }
-    }
-
-    try {
-      if (editingEmployee) {
-        await updateEmployee(editingEmployee._id, submissionData);
-        alert("Employee updated successfully!");
-        setEditingEmployee(null);
-      } else {
-        await addEmployee(submissionData);
-        alert("Employee added successfully!");
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          designation: "",
-          dateOfJoining: "",
-          salary: "",
-          status: "Active",
-          address: "",
-          avatar: null,
-          documents: [],
-        });
-      }
+      setExistingDocs([]);
+      setDeletedDocIds([]);
       setEmployeeTab(TABS.EMPLOYEES);
     } catch (err) {
       console.error(err);
       alert("Failed to save employee.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -161,7 +196,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
           </div>
         ))}
 
-        {/* Avatar Upload (Styled) */}
+        {/* Avatar Upload */}
         <div className="relative mb-6">
           <label className="block mb-2 text-sm font-medium text-gray-700">
             Avatar
@@ -191,21 +226,21 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
           />
         </div>
 
-        {/* Documents Upload (Styled) */}
-        <div className="relative mb-6">
+        {/* Documents Upload */}
+        <div className="relative mb-6 md:col-span-2">
           <label className="block mb-2 text-sm font-medium text-gray-700">
             Documents
           </label>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 mb-2">
             <label
               htmlFor="documents"
               className="cursor-pointer px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
             >
               Upload Documents
             </label>
-            {formData.documents.length > 0 && (
-              <span className="text-sm text-gray-600 truncate max-w-[200px]">
-                {formData.documents.length} file(s) selected
+            {(formData.documents.length > 0 || existingDocs.length > 0) && (
+              <span className="text-sm text-gray-600">
+                {formData.documents.length + existingDocs.length} file(s) total
               </span>
             )}
           </div>
@@ -218,16 +253,94 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
             onChange={handleChange}
             className="hidden"
           />
+
+          {/* Existing Docs */}
+          {existingDocs.length > 0 && (
+            <div className="space-y-1 mt-2">
+              {existingDocs.map((doc, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md"
+                >
+                  <span className="text-sm truncate max-w-[200px] text-gray-700">
+                    {doc.name || doc.url.split("/").pop()}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveExistingDoc(index)}
+                    className="text-red-500 text-sm ml-4"
+                  >
+                    ❌
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* New Docs */}
+          {formData.documents.length > 0 && (
+            <div className="space-y-1 mt-2">
+              {formData.documents.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
+                >
+                  <span className="text-sm truncate max-w-[200px] text-gray-700">
+                    {file.name}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveNewDoc(index)}
+                    className="text-red-500 text-sm ml-4"
+                  >
+                    ❌
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Buttons */}
         <div className="md:col-span-2 flex justify-end space-x-3 mt-4">
+          {/* submit */}
           <button
             type="submit"
-            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
+            disabled={loading}
+            className={`${
+              loading
+                ? "bg-indigo-400 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-500"
+            } text-white font-medium py-2 px-6 rounded-lg flex items-center justify-center`}
           >
-            {editingEmployee ? "Update Employee" : "Save Employee"}
+            {loading ? (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l4-4-4-4v4a12 12 0 00-12 12h4z"
+                ></path>
+              </svg>
+            ) : editingEmployee ? (
+              "Update Employee"
+            ) : (
+              "Save Employee"
+            )}
           </button>
+
           <button
             type="button"
             className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-6 rounded-lg"

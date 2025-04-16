@@ -1,25 +1,38 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
-import { deleteEmployee } from "../../hooks/hr/employees/useEmployeeActions";
+import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { TABS } from "../../constants/activeTab";
+import { ArrowPathIcon } from "@heroicons/react/24/solid"; // Spinner icon
 
-export const EmployeeCard = ({ employee }) => {
-  const { setEditingEmployee } = useEmployeeStore();
-  const navigate = useNavigate();
+export const EmployeeCard = ({ employee, setEmployeeTab }) => {
+  const { setEditingEmployee, deleteEmployee } = useEmployeeStore();
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = async (employeeId, avatarPublicId, documents) => {
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
+    );
+    if (!confirmed) return;
+
     try {
-      await deleteEmployee(employeeId, avatarPublicId, documents);
+      setIsDeleting(true);
+      await deleteEmployee(
+        employee._id,
+        employee.avatarPublicId,
+        employee.documents
+      );
       alert("Employee deleted successfully");
     } catch (error) {
       alert("Error deleting employee");
       console.error("Delete failed:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  const handleEdit = (employee) => {
+  const handleEdit = () => {
     setEditingEmployee(employee);
-    navigate("/hr/employee-form");
+    setEmployeeTab(TABS.ADD_EMPLOYEE);
   };
 
   return (
@@ -27,7 +40,7 @@ export const EmployeeCard = ({ employee }) => {
       <img
         src={employee.avatar || "default-avatar.png"}
         alt="Employee Avatar"
-        className="w-24 h-24 rounded-full mx-auto"
+        className="w-24 h-24 rounded-full mx-auto object-cover"
       />
       <div className="text-center mt-4">
         <h3 className="font-semibold text-xl">{`${employee.firstName} ${employee.lastName}`}</h3>
@@ -44,21 +57,23 @@ export const EmployeeCard = ({ employee }) => {
       </div>
       <div className="flex justify-between mt-4">
         <button
-          onClick={() => handleEdit(employee)}
-          className="bg-blue-500 text-white p-2 rounded-md"
+          onClick={handleEdit}
+          disabled={isDeleting}
+          className="bg-blue-500 text-white p-2 rounded-md flex items-center gap-2 disabled:opacity-50"
         >
+          <PencilSquareIcon className="h-5 w-5" />
           Edit
         </button>
         <button
-          onClick={() =>
-            handleDelete(
-              employee._id,
-              employee.avatarPublicId,
-              employee.documents
-            )
-          }
-          className="bg-red-500 text-white p-2 rounded-md"
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="bg-red-500 text-white p-2 rounded-md flex items-center gap-2 disabled:opacity-50"
         >
+          {isDeleting ? (
+            <ArrowPathIcon className="h-5 w-5 animate-spin" />
+          ) : (
+            <XMarkIcon className="h-5 w-5" />
+          )}
           Delete
         </button>
       </div>

@@ -39,8 +39,14 @@ export const useEmployeeStore = create((set) => ({
     try {
       const response = await axios.put(
         `http://localhost:5000/api/employee/${employeeId}`,
-        updatedData
+        updatedData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+
       set((state) => ({
         employees: state.employees.map((emp) =>
           emp._id === employeeId ? response.data : emp
