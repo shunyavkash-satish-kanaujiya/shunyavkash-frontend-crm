@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/layouts/Sidebar.jsx";
 import { Clients } from "./Client.jsx";
-import { ClientForm } from "../components/form/ClientForm.jsx";
+import { ClientForm } from "../components/forms/ClientForm.jsx";
 import { Project } from "../pages/Project.jsx";
-import { ProjectForm } from "../components/form/ProjectForm.jsx";
+import { ProjectForm } from "../components/forms/ProjectForm.jsx";
 import {
   HomeIcon,
   UsersIcon,

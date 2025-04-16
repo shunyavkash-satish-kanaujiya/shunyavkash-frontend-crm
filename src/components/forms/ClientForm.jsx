@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useClientStore } from "../../store/clientStore";
+import { useClientStore } from "../../store/clientStore.js";
 import { TABS } from "../../constants/activeTab.js";
 
 export const ClientForm = ({
