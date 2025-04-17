@@ -47,13 +47,30 @@ export const EmployeeCard = ({ employee, setEmployeeTab }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Active":
-        return "bg-green-100 text-green-600";
+        return {
+          bg: "bg-green-100 text-green-600",
+          dot: "bg-green-600",
+        };
       case "Inactive":
-        return "bg-gray-100 text-gray-600";
+        return {
+          bg: "bg-gray-100 text-gray-600",
+          dot: "bg-gray-600",
+        };
       case "Terminated":
-        return "bg-gray-100 text-gray-600";
+        return {
+          bg: "bg-red-100 text-red-600",
+          dot: "bg-red-600",
+        };
+      case "On Leave":
+        return {
+          bg: "bg-yellow-100 text-yellow-600",
+          dot: "bg-yellow-600",
+        };
       default:
-        return "bg-indigo-100 text-indigo-600";
+        return {
+          bg: "bg-indigo-100 text-indigo-600",
+          dot: "bg-indigo-600",
+        };
     }
   };
 
@@ -111,7 +128,7 @@ export const EmployeeCard = ({ employee, setEmployeeTab }) => {
           <h3 className="text-lg font-bold text-gray-800 capitalize break-words">
             {employee.firstName} {employee.lastName}
           </h3>
-          <p className="text-sm text-gray-500 break-words">
+          <p className="text-sm text-gray-500 break-words capitalize">
             {employee.designation || "—"}
           </p>
         </div>
@@ -132,10 +149,15 @@ export const EmployeeCard = ({ employee, setEmployeeTab }) => {
       {/* Status */}
       <div className="text-sm text-gray-700">
         <span
-          className={`inline-flex items-center text-xs font-medium px-2 py-1 rounded-full ${getStatusColor(
-            employee.status
-          )}`}
+          className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
+            getStatusColor(employee.status).bg
+          }`}
         >
+          <span
+            className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+              getStatusColor(employee.status).dot
+            }`}
+          ></span>
           {employee.status || "N/A"}
         </span>
       </div>
