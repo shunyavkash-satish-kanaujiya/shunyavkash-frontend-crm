@@ -14,7 +14,7 @@ export const Employees = ({ setEmployeeTab }) => {
     fetchEmployees();
   }, [fetchEmployees]);
 
-  // Pass setEmployeeTab as prop for edit handling
+  // setEmployeeTab: Edit handling
   const renderEmployees = Array.isArray(employees) ? (
     employees.map((emp) => (
       <EmployeeCard

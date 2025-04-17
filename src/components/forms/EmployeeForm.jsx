@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
 import { TABS } from "../../constants/activeTab";
-// import axios from "axios";
 
 export const EmployeeForm = ({ setEmployeeTab }) => {
   const [formData, setFormData] = useState({
@@ -87,22 +86,6 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-
-  //   const handleRemoveExistingDoc = async (index) => {
-  //     const doc = existingDocs[index];
-  //     try {
-  //       await axios.delete(
-  //         `http://localhost:5000/api/employee/document/${editingEmployee._id}`,
-  //         {
-  //           data: { publicId: doc.publicId },
-  //         }
-  //       );
-  //       setExistingDocs((prev) => prev.filter((_, i) => i !== index));
-  //     } catch (error) {
-  //       console.error("Error deleting document:", error);
-  //       alert("Failed to delete document.");
-  //     }
-  //   };
 
   const handleRemoveExistingDoc = (index) => {
     const doc = existingDocs[index];

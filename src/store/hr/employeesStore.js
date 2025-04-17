@@ -60,9 +60,15 @@ export const useEmployeeStore = create((set) => ({
   // Delete Employee
   deleteEmployee: async (employeeId, avatarPublicId, documents) => {
     try {
+      // development only
+      console.log("Deleting employee with ID:", employeeId);
+      console.log("Avatar Public ID:", avatarPublicId);
+      console.log("Documents:", documents);
+
       await axios.delete(`http://localhost:5000/api/employee/${employeeId}`, {
         data: { avatarPublicId, documents },
       });
+
       set((state) => ({
         employees: state.employees.filter((emp) => emp._id !== employeeId),
       }));
