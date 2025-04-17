@@ -49,7 +49,9 @@ export const Employees = ({ setEmployeeTab }) => {
 
   return (
     <div>
+      {/* Main Container */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 w-full flex-wrap">
+        {/* Reusable Search & Filters */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 w-full flex-wrap">
           <ReusableSearch
             searchPlaceholder="Search employee by name..."

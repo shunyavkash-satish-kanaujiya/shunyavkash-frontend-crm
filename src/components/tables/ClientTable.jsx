@@ -1,16 +1,13 @@
-import { useState } from "react";
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useClientStore } from "../../store/clientStore";
 import { TABS } from "../../constants/activeTab";
 
 export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
   const deleteClient = useClientStore((state) => state.deleteClient);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this client?")) {
       const res = await deleteClient(id);
-
       if (!res.success) {
         alert(res.error);
       }
@@ -22,22 +19,8 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
     setActiveTab(TABS.ADD_CLIENT);
   };
 
-  const filteredClients = clients.filter((client) =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="overflow-x-auto space-y-4 shadow-md rounded-md p-2">
-      <div className="flex items-center">
-        <input
-          type="text"
-          placeholder="Search by client name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded-md px-4 py-2 w-64"
-        />
-      </div>
-
       {/* Table */}
       <table className="min-w-full divide-y divide-gray-200 text-sm overflow-hidden rounded-lg">
         <thead className="bg-indigo-50">
@@ -66,14 +49,14 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
-          {filteredClients.length === 0 ? (
+          {clients.length === 0 ? (
             <tr>
               <td colSpan="7" className="text-center py-4 text-gray-500">
                 No clients found.
               </td>
             </tr>
           ) : (
-            filteredClients.map((client) => (
+            clients.map((client) => (
               <tr
                 key={client._id}
                 className="hover:bg-indigo-50 transition cursor-pointer"

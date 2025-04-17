@@ -61,8 +61,9 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
   });
 
   return (
-    <div className="space-y-4">
-      {/* Reusable Filters */}
+    // Main Container
+    <div className="bg-gray-50 min-h-screen text-textPrimary space-y-4">
+      {/* Reusable Search & Filters */}
       <div className="flex flex-wrap gap-4 items-center">
         <ReusableSearch
           searchPlaceholder="Search by project or client"
