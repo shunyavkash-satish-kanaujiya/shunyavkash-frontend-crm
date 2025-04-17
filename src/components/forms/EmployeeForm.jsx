@@ -19,6 +19,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [previewAvatar, setPreviewAvatar] = useState(null); // avatar preview
   const [existingDocs, setExistingDocs] = useState([]);
   const [deletedDocIds, setDeletedDocIds] = useState([]);
 
@@ -43,6 +44,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
         status: editingEmployee.status || "Active",
         address: editingEmployee.address || "",
         avatar: editingEmployee.avatar || null,
+
         documents: [],
       }));
       setExistingDocs(editingEmployee.documents || []);
@@ -50,8 +52,27 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
     }
   }, [editingEmployee]);
 
+  // avatar preview
+  useEffect(() => {
+    return () => {
+      if (previewAvatar) {
+        URL.revokeObjectURL(previewAvatar);
+      }
+    };
+  }, [previewAvatar]);
+
   const handleChange = (e) => {
     const { name, type, files, value } = e.target;
+
+    // avatar preview
+    if (name === "avatar") {
+      const file = files[0];
+      if (file) {
+        setPreviewAvatar(URL.createObjectURL(file));
+        setFormData((prev) => ({ ...prev, avatar: file }));
+      }
+    }
+
     if (type === "file") {
       if (name === "documents") {
         const newFiles = Array.from(files);
@@ -66,6 +87,22 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+
+  //   const handleRemoveExistingDoc = async (index) => {
+  //     const doc = existingDocs[index];
+  //     try {
+  //       await axios.delete(
+  //         `http://localhost:5000/api/employee/document/${editingEmployee._id}`,
+  //         {
+  //           data: { publicId: doc.publicId },
+  //         }
+  //       );
+  //       setExistingDocs((prev) => prev.filter((_, i) => i !== index));
+  //     } catch (error) {
+  //       console.error("Error deleting document:", error);
+  //       alert("Failed to delete document.");
+  //     }
+  //   };
 
   const handleRemoveExistingDoc = (index) => {
     const doc = existingDocs[index];
@@ -208,6 +245,18 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
             onChange={handleChange}
             className="hidden"
           />
+          {/* avatar preview */}
+          {(previewAvatar ||
+            (editingEmployee && editingEmployee.avatar?.url)) && (
+            <div className="mb-4">
+              <p className="text-sm text-gray-500 mb-1">Avatar Preview:</p>
+              <img
+                src={previewAvatar || editingEmployee.avatar.url}
+                alt="Avatar Preview"
+                className="h-24 w-24 object-cover rounded-full border"
+              />
+            </div>
+          )}
         </div>
 
         {/* Documents Upload */}
@@ -238,50 +287,50 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
             className="hidden"
           />
 
-          {/* Show Existing Docs */}
+          {/* Existing Docs */}
           {existingDocs.length > 0 && (
-            <ul className="text-sm text-gray-700 mt-2">
+            <div className="space-y-1 mt-2">
               {existingDocs.map((doc, index) => (
-                <li
+                <div
                   key={index}
-                  className="flex items-center justify-between bg-gray-100 px-3 py-1 rounded mb-1"
+                  className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded-md"
                 >
-                  <span className="truncate">
-                    {doc.originalname || doc.url?.split("/").pop()}
+                  <span className="text-sm truncate max-w-[200px] text-gray-700">
+                    {doc.name || doc.url.split("/").pop()}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleRemoveExistingDoc(index)}
-                    className="text-red-500 hover:text-red-700 text-lg ml-3"
-                    title="Delete"
+                    className="text-red-500 text-sm ml-4"
                   >
                     ❌
                   </button>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
 
-          {/* Show New (Unsaved) Docs */}
+          {/* New Docs */}
           {formData.documents.length > 0 && (
-            <ul className="text-sm text-gray-700 mt-2">
-              {formData.documents.map((doc, index) => (
-                <li
+            <div className="space-y-1 mt-2">
+              {formData.documents.map((file, index) => (
+                <div
                   key={index}
-                  className="flex items-center justify-between bg-gray-100 px-3 py-1 rounded mb-1"
+                  className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
                 >
-                  <span className="truncate">{doc.name}</span>
+                  <span className="text-sm truncate max-w-[200px] text-gray-700">
+                    {file.name}
+                  </span>
                   <button
                     type="button"
                     onClick={() => handleRemoveNewDoc(index)}
-                    className="text-red-500 hover:text-red-700 text-lg ml-3"
-                    title="Delete"
+                    className="text-red-500 text-sm ml-4"
                   >
                     ❌
                   </button>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
 

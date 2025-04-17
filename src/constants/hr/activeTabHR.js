@@ -1,5 +1,3 @@
-// constants/hr/activeTabHR.js
-
 export const activeTabHR = [
   { label: "Employees", value: "employees" },
   { label: "Attendances", value: "attendances" },
