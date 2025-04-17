@@ -1,30 +1,32 @@
-import React, { useState } from "react";
+import {
+  EllipsisVerticalIcon,
+  PencilSquareIcon,
+  XMarkIcon,
+  ArrowPathIcon,
+  EyeIcon,
+} from "@heroicons/react/24/outline";
+import { useState } from "react";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
-import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { TABS } from "../../constants/activeTab";
-import { ArrowPathIcon } from "@heroicons/react/24/solid"; // Spinner icon
+import { DropdownMenu } from "../ui/DropdownMenu";
 
 export const EmployeeCard = ({ employee, setEmployeeTab }) => {
   const { setEditingEmployee, deleteEmployee } = useEmployeeStore();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleDelete = async () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`
-    );
-    if (!confirmed) return;
-
+    if (!window.confirm(`Delete ${employee.firstName} ${employee.lastName}?`))
+      return;
+    setIsDeleting(true);
     try {
-      setIsDeleting(true);
       await deleteEmployee(
         employee._id,
         employee.avatarPublicId,
         employee.documents
       );
-      alert("Employee deleted successfully");
-    } catch (error) {
-      alert("Error deleting employee");
-      console.error("Delete failed:", error);
+    } catch (err) {
+      console.error(err);
     } finally {
       setIsDeleting(false);
     }
@@ -33,49 +35,109 @@ export const EmployeeCard = ({ employee, setEmployeeTab }) => {
   const handleEdit = () => {
     setEditingEmployee(employee);
     setEmployeeTab(TABS.ADD_EMPLOYEE);
+    setDropdownOpen(false);
+  };
+
+  const handleView = () => {
+    setEditingEmployee(employee);
+    setEmployeeTab(TABS.VIEW_EMPLOYEE);
+    setDropdownOpen(false);
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Active":
+        return "bg-green-100 text-green-600";
+      case "Inactive":
+        return "bg-gray-100 text-gray-600";
+      case "Terminated":
+        return "bg-gray-100 text-gray-600";
+      default:
+        return "bg-indigo-100 text-indigo-600";
+    }
   };
 
   return (
-    <div className="max-w-xs rounded-lg shadow-lg bg-white p-4">
-      <img
-        src={employee.avatar || "default-avatar.png"}
-        alt="Employee Avatar"
-        className="w-24 h-24 rounded-full mx-auto object-cover"
-      />
-      <div className="text-center mt-4">
-        <h3 className="font-semibold text-xl">{`${employee.firstName} ${employee.lastName}`}</h3>
-        <p className="text-gray-500">{employee.designation}</p>
-        <p
-          className={`mt-2 px-3 py-1 rounded-full text-sm ${
-            employee.status === "Active"
-              ? "bg-green-500 text-white"
-              : "bg-red-500 text-white"
-          }`}
+    <div className="relative w-full bg-white shadow-md rounded-xl p-4 flex flex-col gap-4 overflow-hidden">
+      {/* Dropdown trigger */}
+      <button
+        onClick={() => setDropdownOpen((prev) => !prev)}
+        className="absolute top-2 right-2 p-1 hover:bg-gray-100 rounded-full"
+      >
+        <EllipsisVerticalIcon className="w-5 h-5 text-gray-500" />
+      </button>
+
+      {/* Dropdown Menu */}
+      <DropdownMenu
+        isOpen={dropdownOpen}
+        onClose={() => setDropdownOpen(false)}
+      >
+        <button
+          onClick={handleView}
+          className="w-full flex items-center gap-2 px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
         >
-          {employee.status}
-        </p>
-      </div>
-      <div className="flex justify-between mt-4">
+          <EyeIcon className="w-4 h-4" /> View
+        </button>
         <button
           onClick={handleEdit}
-          disabled={isDeleting}
-          className="bg-blue-500 text-white p-2 rounded-md flex items-center gap-2 disabled:opacity-50"
+          className="w-full flex items-center gap-2 px-2 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded"
         >
-          <PencilSquareIcon className="h-5 w-5" />
-          Edit
+          <PencilSquareIcon className="w-4 h-4" /> Edit
         </button>
         <button
           onClick={handleDelete}
           disabled={isDeleting}
-          className="bg-red-500 text-white p-2 rounded-md flex items-center gap-2 disabled:opacity-50"
+          className="w-full flex items-center gap-2 px-2 py-1 text-sm text-red-600 hover:bg-red-50 rounded disabled:opacity-50"
         >
           {isDeleting ? (
-            <ArrowPathIcon className="h-5 w-5 animate-spin" />
+            <ArrowPathIcon className="w-4 h-4 animate-spin" />
           ) : (
-            <XMarkIcon className="h-5 w-5" />
+            <XMarkIcon className="w-4 h-4" />
           )}
           Delete
         </button>
+      </DropdownMenu>
+
+      {/* Card content */}
+      <div className="flex items-center gap-4">
+        <img
+          src={employee.avatar || "/default-avatar.png"}
+          alt="Avatar"
+          onError={(e) => (e.target.src = "/default-avatar.png")}
+          className="w-20 h-20 rounded-full object-cover border-2 border-gray-200 shadow-sm shrink-0"
+        />
+
+        <div className="flex flex-col min-w-0">
+          <h3 className="text-lg font-bold text-gray-800 capitalize break-words">
+            {employee.firstName} {employee.lastName}
+          </h3>
+          <p className="text-sm text-gray-500 break-words">
+            {employee.designation || "—"}
+          </p>
+        </div>
+      </div>
+
+      {/* Departments */}
+      <div className="flex flex-wrap gap-2">
+        {employee.departments?.map((dept, idx) => (
+          <span
+            key={idx}
+            className="bg-indigo-100 text-indigo-600 text-xs font-medium px-2 py-1 rounded-full break-words"
+          >
+            {dept}
+          </span>
+        ))}
+      </div>
+
+      {/* Status */}
+      <div className="text-sm text-gray-700">
+        <span
+          className={`inline-flex items-center text-xs font-medium px-2 py-1 rounded-full ${getStatusColor(
+            employee.status
+          )}`}
+        >
+          {employee.status || "N/A"}
+        </span>
       </div>
     </div>
   );

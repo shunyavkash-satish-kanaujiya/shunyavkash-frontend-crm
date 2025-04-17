@@ -14,23 +14,24 @@ export const Employees = ({ setEmployeeTab }) => {
     fetchEmployees();
   }, [fetchEmployees]);
 
-  // setEmployeeTab: Edit handling
-  const renderEmployees = Array.isArray(employees) ? (
-    employees.map((emp) => (
-      <EmployeeCard
-        key={emp._id}
-        employee={emp}
-        setEmployeeTab={setEmployeeTab}
-      />
-    ))
-  ) : (
-    <p>No employees available.</p>
-  );
+  const renderEmployees =
+    Array.isArray(employees) && employees.length > 0 ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {employees.map((emp) => (
+          <EmployeeCard
+            key={emp._id}
+            employee={emp}
+            setEmployeeTab={setEmployeeTab}
+          />
+        ))}
+      </div>
+    ) : (
+      <p className="text-gray-500 text-center">No employees available.</p>
+    );
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Employees</h2>
+      <div className="flex justify-end items-center mb-6">
         <button
           onClick={() => {
             setEditingEmployee(null);
@@ -42,9 +43,8 @@ export const Employees = ({ setEmployeeTab }) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {renderEmployees}
-      </div>
+      {/* Grid container for employee cards */}
+      <div className="render-employee">{renderEmployees}</div>
     </div>
   );
 };

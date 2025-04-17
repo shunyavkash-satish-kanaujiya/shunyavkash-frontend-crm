@@ -49,10 +49,9 @@ export const HR = () => {
       </div>
 
       {/* Content Area */}
-      <div className="shadow-md bg-white rounded-lg p-4">
+      <div>
         {activeTab === "employees" && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-indigo-700">Employees</h2>
             {employeeTab === TABS.EMPLOYEES && (
               <Employees setEmployeeTab={setEmployeeTab} />
             )}
