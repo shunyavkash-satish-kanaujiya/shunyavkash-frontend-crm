@@ -192,7 +192,8 @@ export const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-background text-textPrimary">
+    <div className="h-screen flex overflow-hidden bg-background text-textPrimary">
+      {/* Sidebar */}
       <Sidebar
         navigation={navigation}
         sidebarOpen={sidebarOpen}
@@ -202,14 +203,17 @@ export const Dashboard = () => {
         openSubmenu={openSubmenu}
         setOpenSubmenu={setOpenSubmenu}
       />
-      <div className="flex-1 flex flex-col overflow-hidden">
+
+      {/* Main Area */}
+      <div className="flex flex-col flex-1 h-full">
+        {/* Header - Fixed */}
         <header className="flex items-center justify-between p-4 bg-white border-b border-border shadow-sm gap-3">
           <h1 className="text-2xl font-bold">{activeTab}</h1>
-          {/* User Dropdown */}
           <UserDropdown />
         </header>
 
-        <main className="p-6 overflow-auto bg-gray-50 flex-1">
+        {/* Scrollable Main Content */}
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           {renderMainContent()}
         </main>
       </div>
