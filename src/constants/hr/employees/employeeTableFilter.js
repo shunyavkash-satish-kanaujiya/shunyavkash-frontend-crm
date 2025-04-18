@@ -2,11 +2,11 @@ export const employeeTableFilters = [
   {
     label: "Filter by Designation",
     key: "designation",
-    options: ["Manager", "Developer", "Designer", "HR", "Sales"],
+    options: ["Admin", "HR", "Developer", "Designer"],
   },
   {
     label: "Filter by Status",
     key: "status",
-    options: ["active", "inactive", "on leave"],
+    options: ["active", "inactive", "on leave", "terminated"],
   },
 ];
