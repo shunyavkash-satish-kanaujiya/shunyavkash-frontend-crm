@@ -3,6 +3,8 @@ import {
   ChevronRightIcon,
   ChevronDownIcon,
   ChevronRightIcon as SubChevronRightIcon,
+  ArchiveBoxXMarkIcon,
+  ArchiveBoxIcon,
 } from "@heroicons/react/24/outline";
 
 export const Sidebar = ({
@@ -93,6 +95,7 @@ export const Sidebar = ({
                                   : "text-gray-600 hover:bg-indigo-100"
                               }`}
                             >
+                              <ArchiveBoxIcon className="w-5 h-5 inline mr-6" />
                               {sub.name}
                             </a>
                           </li>

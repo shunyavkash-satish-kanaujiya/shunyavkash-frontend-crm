@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { ProjectTable } from "../components/tables/ProjectTable";
 import { useProjectStore } from "../store/projectStore";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { TABS } from "../constants/activeTab";
 
 export const Project = ({ setActiveTab, setEditingProject }) => {
   const { projects, fetchProjects, loading } = useProjectStore();
@@ -10,6 +8,15 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+
+  useEffect(() => {
+    console.log(projects); // Log projects to check if data is loaded properly
+  }, [projects]);
+
+  const activeProjects = projects.filter((project) => !project.isArchived);
 
   return (
     <div className="bg-gray-50 min-h-screen text-textPrimary">
@@ -20,7 +27,7 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
           </div>
         ) : (
           <ProjectTable
-            projects={projects}
+            projects={activeProjects}
             setActiveTab={setActiveTab}
             setEditingProject={setEditingProject}
           />

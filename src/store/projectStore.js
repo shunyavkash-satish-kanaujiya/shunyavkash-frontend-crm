@@ -2,11 +2,13 @@ import { create } from "zustand";
 import axios from "axios";
 
 export const useProjectStore = create((set) => ({
+  // Separate states
   projects: [],
+  archivedProjects: [],
   loading: false,
   error: null,
 
-  // Get Projects
+  // Fetch Active Projects
   fetchProjects: async () => {
     try {
       set({ loading: true, error: null });
@@ -86,6 +88,61 @@ export const useProjectStore = create((set) => ({
       }));
     } catch (error) {
       console.error("Failed to update project priority", error);
+    }
+  },
+
+  // Fetch Archived Projects
+  fetchArchivedProjects: async () => {
+    try {
+      set({ loading: true, error: null });
+      const res = await axios.get("http://localhost:5000/api/project/archived");
+      set({ archivedProjects: res.data, loading: false });
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      console.error("Failed to fetch archived projects:", err);
+    }
+  },
+
+  // Archive single project
+  archiveProject: async (projectId) => {
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/project/${projectId}/archive`
+      );
+      set((state) => ({
+        projects: state.projects.filter((p) => p._id !== projectId),
+      }));
+    } catch (error) {
+      console.error("Failed to archive project:", error);
+    }
+  },
+
+  // Restore a single project
+  restoreProject: async (projectId) => {
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/project/${projectId}/archive`,
+        {
+          isArchived: false,
+        }
+      );
+
+      set((state) => {
+        const restoredProject = state.archivedProjects.find(
+          (p) => p._id === projectId
+        );
+        return {
+          archivedProjects: state.archivedProjects.filter(
+            (p) => p._id !== projectId
+          ),
+          projects: [
+            ...state.projects,
+            { ...restoredProject, isArchived: false },
+          ],
+        };
+      });
+    } catch (error) {
+      console.error("Failed to restore project:", error);
     }
   },
 }));

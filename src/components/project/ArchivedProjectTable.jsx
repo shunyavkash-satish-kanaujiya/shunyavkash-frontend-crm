@@ -1,40 +1,21 @@
+import { ArchiveBoxXMarkIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import {
-  ArchiveBoxArrowDownIcon,
-  EyeIcon,
-  PencilSquareIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import { useProjectStore } from "../../store/projectStore.js";
-import { TABS } from "../../constants/activeTab.js";
-
+import { useProjectStore } from "../../store/projectStore.js"; // <-- Import your Zustand store
 import { ReusableContainer } from "../ui/ReusableContainer.jsx";
 import {
-  priorityOptions,
   priorityStyles,
   statusStyles,
 } from "../../constants/project/projectOptions.js";
 import { projectTableFilters } from "../../constants/project/projectTableFilter.js";
 
-export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
-  const updateProjectPriority = useProjectStore(
-    (state) => state.updateProjectPriority
-  );
-  const deleteProject = useProjectStore((state) => state.deleteProject);
-  const archiveProject = useProjectStore((state) => state.archiveProject);
-
+export const ArchivedProjectTable = ({ projects }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({ status: "", priority: "" });
 
-  const handleDelete = async (id) => {
-    if (confirm("Are you sure you want to delete this project?")) {
-      await deleteProject(id);
-    }
-  };
+  const restoreProject = useProjectStore((state) => state.restoreProject); // <-- Hook into store
 
-  const handleEdit = (project) => {
-    setEditingProject(project);
-    setActiveTab(TABS.ADD_PROJECT);
+  const handleRestore = (projectId) => {
+    restoreProject(projectId);
   };
 
   const filteredProjects = projects.filter((project) => {
@@ -58,10 +39,8 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
       onSearchChange={setSearchTerm}
       filters={projectTableFilters}
       onFilterChange={setFilters}
-      onAddClick={() => setActiveTab(TABS.ADD_PROJECT)}
-      addButtonLabel="Add Project"
+      addButtonLabel={null}
     >
-      {/* Table */}
       <div className="overflow-x-auto shadow-md rounded-md p-2">
         <table className="min-w-full divide-y divide-gray-200 text-sm overflow-hidden rounded-lg">
           <thead className="bg-indigo-50">
@@ -96,16 +75,13 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
               <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
                 Action
               </th>
-              <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
-                Archive
-              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
             {filteredProjects.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center py-4 text-gray-500">
-                  No projects found.
+                <td colSpan="10" className="text-center py-4 text-gray-500">
+                  No archived projects found.
                 </td>
               </tr>
             ) : (
@@ -115,7 +91,6 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                   className="hover:bg-indigo-50 transition cursor-pointer"
                 >
                   <td className="px-5 py-4 whitespace-nowrap space-x-2">
-                    {/* View */}
                     <button
                       className="text-gray-600 hover:text-blue-800"
                       title="View"
@@ -144,27 +119,15 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                       : "-"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <select
-                      value={
-                        priorityOptions.includes(project.priority)
-                          ? project.priority
-                          : "none"
-                      }
-                      onChange={async (e) =>
-                        await updateProjectPriority(project._id, e.target.value)
-                      }
-                      className={`text-xs font-medium rounded px-2 py-1 outline-none ${
+                    <span
+                      className={`text-xs font-medium rounded px-2 py-1 ${
                         priorityStyles[
                           project.priority?.toLowerCase() || "none"
                         ]
                       }`}
                     >
-                      {priorityOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
+                      {project.priority || "None"}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
@@ -175,32 +138,13 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                       {project.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                    {/* Edit */}
-                    <button
-                      onClick={() => handleEdit(project)}
-                      className="text-indigo-600 hover:text-indigo-800"
-                      title="Edit"
-                    >
-                      <PencilSquareIcon className="w-5 h-5 inline" />
-                    </button>
-                    {/* Delete */}
-                    <button
-                      onClick={() => handleDelete(project._id)}
-                      className="text-red-600 hover:text-red-800"
-                      title="Delete"
-                    >
-                      <XMarkIcon className="w-5 h-5 inline" />
-                    </button>
-                  </td>
-                  <td className="px-5 py-4 whitespace-nowrap">
-                    {/* Archive */}
+                  <td className="px-5 py-4 whitespace-nowrap space-x-2">
                     <button
                       className="text-blue-600 hover:text-bule-800"
-                      title="Archive"
-                      onClick={() => archiveProject(project._id)}
+                      title="Restore"
+                      onClick={() => handleRestore(project._id)}
                     >
-                      <ArchiveBoxArrowDownIcon className="w-5 h-5 inline" />
+                      <ArchiveBoxXMarkIcon className="w-5 h-5 inline" />
                     </button>
                   </td>
                 </tr>

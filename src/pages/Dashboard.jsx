@@ -15,6 +15,10 @@ import {
 import { LogsIcon } from "lucide-react";
 
 import { TABS } from "../constants/activeTab";
+import { HR } from "./HR.jsx";
+import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
+import { Employees } from "../components/hr/Employees.jsx";
+import { ArchivedProjects } from "../components/project/ArchivedProjects.jsx";
 
 // Custom hooks
 import { useAuth } from "../hooks/dashboard/useAuth";
@@ -22,9 +26,6 @@ import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
 import { UserDropdown } from "../components/dashboard/userDropdown.jsx";
-import { HR } from "./HR.jsx";
-import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
-import { Employees } from "../components/hr/Employees.jsx";
 
 // Sidebar Tabs
 const navigation = [
@@ -140,6 +141,15 @@ export const Dashboard = () => {
         <ProjectForm
           setActiveTab={setActiveTab}
           editingProject={editingProject}
+          setEditingProject={setEditingProject}
+        />
+      );
+    }
+
+    if (activeTab === TABS.ARCHIVED_PROJECTS) {
+      return (
+        <ArchivedProjects
+          setActiveTab={setActiveTab}
           setEditingProject={setEditingProject}
         />
       );
