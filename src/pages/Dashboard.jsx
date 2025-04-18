@@ -31,7 +31,11 @@ const navigation = [
   { name: "Dashboard", icon: HomeIcon },
   { name: "HR", icon: UserGroupIcon },
   { name: "Clients", icon: UsersIcon },
-  { name: "Projects", icon: FolderIcon },
+  {
+    name: "Projects",
+    icon: FolderIcon,
+    submenu: [{ name: "Archived Projects" }],
+  },
   { name: "Timesheet", icon: LogsIcon },
   { name: "Reports", icon: ChartBarIcon },
   {
@@ -148,7 +152,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Employee
     // Employees
     if (activeTab === TABS.EMPLOYEES) {
       return (
@@ -168,7 +171,6 @@ export const Dashboard = () => {
         />
       );
     }
-
 
     return (
       <div className="rounded-lg bg-white p-6 shadow-md">

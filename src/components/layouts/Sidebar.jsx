@@ -78,7 +78,7 @@ export const Sidebar = ({
                     </button>
 
                     {openSubmenu === item.name && sidebarOpen && (
-                      <ul className="space-y-1 bg-gray-100 rounded-lg mt-1">
+                      <ul className="space-y-1 bg-gray-100 rounded-sm mt-1 font-medium ">
                         {item.submenu.map((sub) => (
                           <li key={sub.name}>
                             <a
@@ -90,7 +90,7 @@ export const Sidebar = ({
                               className={`block px-4 py-2 text-sm rounded ${
                                 activeTab === sub.name
                                   ? "bg-indigo-50 text-indigo-700 font-medium"
-                                  : "text-gray-700 hover:bg-indigo-100"
+                                  : "text-gray-600 hover:bg-indigo-100"
                               }`}
                             >
                               {sub.name}

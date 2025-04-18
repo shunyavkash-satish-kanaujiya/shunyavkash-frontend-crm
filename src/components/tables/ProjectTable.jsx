@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  ArchiveBoxArrowDownIcon,
   EyeIcon,
   PencilSquareIcon,
   XMarkIcon,
@@ -65,6 +66,9 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
           <thead className="bg-indigo-50">
             <tr>
               <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+                View
+              </th>
+              <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
                 #
               </th>
               <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
@@ -91,6 +95,9 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
               <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
                 Action
               </th>
+              <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+                Archive
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100">
@@ -106,6 +113,15 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                   key={project._id}
                   className="hover:bg-indigo-50 transition cursor-pointer"
                 >
+                  <td className="px-5 py-4 whitespace-nowrap space-x-2">
+                    {/* View */}
+                    <button
+                      className="text-gray-600 hover:text-blue-800"
+                      title="View"
+                    >
+                      <EyeIcon className="w-5 h-5 inline" />
+                    </button>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap capitalize">
                     {project.title}
@@ -159,12 +175,7 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                    <button
-                      className="text-blue-600 hover:text-blue-800"
-                      title="View"
-                    >
-                      <EyeIcon className="w-5 h-5 inline" />
-                    </button>
+                    {/* Edit */}
                     <button
                       onClick={() => handleEdit(project)}
                       className="text-indigo-600 hover:text-indigo-800"
@@ -172,12 +183,22 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                     >
                       <PencilSquareIcon className="w-5 h-5 inline" />
                     </button>
+                    {/* Delete */}
                     <button
                       onClick={() => handleDelete(project._id)}
                       className="text-red-600 hover:text-red-800"
                       title="Delete"
                     >
                       <XMarkIcon className="w-5 h-5 inline" />
+                    </button>
+                  </td>
+                  <td className="px-5 py-4 whitespace-nowrap space-x-2 text-start">
+                    {/* Archive */}
+                    <button
+                      className="text-blue-600 hover:text-blue-800 text-center"
+                      title="Archive"
+                    >
+                      <ArchiveBoxArrowDownIcon className="w-5 h-5 inline" />
                     </button>
                   </td>
                 </tr>
