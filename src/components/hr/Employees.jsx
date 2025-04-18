@@ -57,7 +57,7 @@ export const Employees = ({ setEmployeeTab }) => {
         setEditingEmployee(null);
         setEmployeeTab(TABS.ADD_EMPLOYEE);
       }}
-      addButtonLabel="Add New Employee"
+      addButtonLabel="Add Employee"
       showWhiteBox={false}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

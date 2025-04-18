@@ -29,7 +29,7 @@ export const Clients = ({ setActiveTab, setEditingClient }) => {
       searchPlaceholder="Search by client name"
       onSearchChange={setSearchTerm}
       filters={[]} // You can add if needed
-      addButtonLabel="Add New Client"
+      addButtonLabel="Add Client"
       onAddClick={() => setActiveTab(TABS.ADD_CLIENT)}
     >
       {loading ? (
