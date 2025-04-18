@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
 import { TABS } from "../../constants/activeTab";
 import { DropdownMenu } from "../ui/DropdownMenu";
+import { getStatusColor } from "../../constants/hr/employees/statusColors";
 
 export const EmployeeCard = ({ employee, setEmployeeTab }) => {
   const { setEditingEmployee, deleteEmployee } = useEmployeeStore();
@@ -42,36 +43,6 @@ export const EmployeeCard = ({ employee, setEmployeeTab }) => {
     setEditingEmployee(employee);
     setEmployeeTab(TABS.VIEW_EMPLOYEE);
     setDropdownOpen(false);
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Active":
-        return {
-          bg: "bg-green-100 text-green-600",
-          dot: "bg-green-600",
-        };
-      case "Inactive":
-        return {
-          bg: "bg-gray-100 text-gray-600",
-          dot: "bg-gray-600",
-        };
-      case "Terminated":
-        return {
-          bg: "bg-red-100 text-red-600",
-          dot: "bg-red-600",
-        };
-      case "On Leave":
-        return {
-          bg: "bg-yellow-100 text-yellow-600",
-          dot: "bg-yellow-600",
-        };
-      default:
-        return {
-          bg: "bg-indigo-100 text-indigo-600",
-          dot: "bg-indigo-600",
-        };
-    }
   };
 
   return (
