@@ -6,6 +6,7 @@ import {
   ArchiveBoxXMarkIcon,
   ArchiveBoxIcon,
 } from "@heroicons/react/24/outline";
+import { TABS } from "../../constants/activeTab";
 
 export const Sidebar = ({
   navigation,
@@ -95,7 +96,10 @@ export const Sidebar = ({
                                   : "text-gray-600 hover:bg-indigo-100"
                               }`}
                             >
-                              <ArchiveBoxIcon className="w-5 h-5 inline mr-6" />
+                              {/* Conditional sub-menu icons rendering */}
+                              {sub.name === TABS.ARCHIVED_PROJECTS && (
+                                <ArchiveBoxIcon className="w-5 h-5 inline mr-6" />
+                              )}
                               {sub.name}
                             </a>
                           </li>
