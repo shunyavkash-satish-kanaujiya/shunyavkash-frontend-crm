@@ -1,20 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ProjectTable } from "../components/tables/ProjectTable";
+import { ProjectDetails } from "../components/project/ProjectDetails";
 import { useProjectStore } from "../store/projectStore";
 
 export const Project = ({ setActiveTab, setEditingProject }) => {
   const { projects, fetchProjects, loading } = useProjectStore();
+  const [viewingProjectId, setViewingProjectId] = useState(null);
 
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
-  useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
-
-  useEffect(() => {
-    console.log(projects); // Log projects to check if data is loaded properly
-  }, [projects]);
 
   const activeProjects = projects.filter((project) => !project.isArchived);
 
@@ -25,11 +20,17 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
           <div className="text-center py-6 text-indigo-600 font-medium">
             Loading projects...
           </div>
+        ) : viewingProjectId ? (
+          <ProjectDetails
+            projectId={viewingProjectId}
+            goBack={() => setViewingProjectId(null)}
+          />
         ) : (
           <ProjectTable
             projects={activeProjects}
             setActiveTab={setActiveTab}
             setEditingProject={setEditingProject}
+            setViewingProjectId={setViewingProjectId}
           />
         )}
       </div>

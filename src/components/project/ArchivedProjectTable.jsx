@@ -1,6 +1,6 @@
 import { ArchiveBoxXMarkIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { useProjectStore } from "../../store/projectStore.js"; // <-- Import your Zustand store
+import { useProjectStore } from "../../store/projectStore.js";
 import { ReusableContainer } from "../ui/ReusableContainer.jsx";
 import {
   priorityStyles,

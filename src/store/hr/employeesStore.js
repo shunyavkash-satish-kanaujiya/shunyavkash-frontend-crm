@@ -11,11 +11,13 @@ export const useEmployeeStore = create((set) => ({
   fetchEmployees: async () => {
     try {
       set({ loading: true });
+
       const response = await axios.get("http://localhost:5000/api/employee");
+
       set({ employees: response.data, loading: false });
     } catch (error) {
       set({ loading: false, error: error.message });
-      console.error(error);
+      console.error("Failed to fetch employees:", error);
     }
   },
 

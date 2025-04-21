@@ -1,13 +1,12 @@
-import { useState } from "react";
 import {
   ArchiveBoxArrowDownIcon,
   EyeIcon,
   PencilSquareIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useState } from "react";
 import { useProjectStore } from "../../store/projectStore.js";
 import { TABS } from "../../constants/activeTab.js";
-
 import { ReusableContainer } from "../ui/ReusableContainer.jsx";
 import {
   priorityOptions,
@@ -15,8 +14,15 @@ import {
   statusStyles,
 } from "../../constants/project/projectOptions.js";
 import { projectTableFilters } from "../../constants/project/projectTableFilter.js";
+import { ProjectDetails } from "../project/ProjectDetails.jsx";
 
-export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
+export const ProjectTable = ({
+  projects,
+  setActiveTab,
+  setEditingProject,
+  setViewingProjectId,
+  viewingProjectId,
+}) => {
   const updateProjectPriority = useProjectStore(
     (state) => state.updateProjectPriority
   );
@@ -51,6 +57,15 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
 
     return matchesSearch && matchesStatus && matchesPriority;
   });
+
+  if (viewingProjectId) {
+    return (
+      <ProjectDetails
+        projectId={viewingProjectId}
+        goBack={() => setViewingProjectId(null)}
+      />
+    );
+  }
 
   return (
     <ReusableContainer
@@ -104,7 +119,7 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
           <tbody className="bg-white divide-y divide-gray-100">
             {filteredProjects.length === 0 ? (
               <tr>
-                <td colSpan="9" className="text-center py-4 text-gray-500">
+                <td colSpan="11" className="text-center py-4 text-gray-500">
                   No projects found.
                 </td>
               </tr>
@@ -115,10 +130,10 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                   className="hover:bg-indigo-50 transition cursor-pointer"
                 >
                   <td className="px-5 py-4 whitespace-nowrap space-x-2">
-                    {/* View */}
                     <button
                       className="text-gray-600 hover:text-blue-800"
                       title="View"
+                      onClick={() => setViewingProjectId(project._id)}
                     >
                       <EyeIcon className="w-5 h-5 inline" />
                     </button>
@@ -176,7 +191,6 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap space-x-2">
-                    {/* Edit */}
                     <button
                       onClick={() => handleEdit(project)}
                       className="text-indigo-600 hover:text-indigo-800"
@@ -184,7 +198,6 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                     >
                       <PencilSquareIcon className="w-5 h-5 inline" />
                     </button>
-                    {/* Delete */}
                     <button
                       onClick={() => handleDelete(project._id)}
                       className="text-red-600 hover:text-red-800"
@@ -194,9 +207,8 @@ export const ProjectTable = ({ projects, setActiveTab, setEditingProject }) => {
                     </button>
                   </td>
                   <td className="px-5 py-4 whitespace-nowrap">
-                    {/* Archive */}
                     <button
-                      className="text-blue-600 hover:text-bule-800"
+                      className="text-blue-600 hover:text-blue-800"
                       title="Archive"
                       onClick={() => archiveProject(project._id)}
                     >

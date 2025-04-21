@@ -2,9 +2,10 @@ import { create } from "zustand";
 import axios from "axios";
 
 export const useProjectStore = create((set) => ({
-  // Separate states
   projects: [],
   archivedProjects: [],
+  editingProject: null,
+  setEditingProject: (project) => set({ editingProject: project }),
   loading: false,
   error: null,
 
@@ -79,8 +80,6 @@ export const useProjectStore = create((set) => ({
       await axios.put(`http://localhost:5000/api/project/${projectId}`, {
         priority,
       });
-
-      // Dynamically update the priority
       set((state) => ({
         projects: state.projects.map((project) =>
           project._id === projectId ? { ...project, priority } : project
@@ -103,7 +102,7 @@ export const useProjectStore = create((set) => ({
     }
   },
 
-  // Archive single project
+  // Archive Project
   archiveProject: async (projectId) => {
     try {
       await axios.patch(
@@ -117,16 +116,13 @@ export const useProjectStore = create((set) => ({
     }
   },
 
-  // Restore a single project
+  // Restore Project
   restoreProject: async (projectId) => {
     try {
       await axios.patch(
         `http://localhost:5000/api/project/${projectId}/archive`,
-        {
-          isArchived: false,
-        }
+        { isArchived: false }
       );
-
       set((state) => {
         const restoredProject = state.archivedProjects.find(
           (p) => p._id === projectId
@@ -143,6 +139,34 @@ export const useProjectStore = create((set) => ({
       });
     } catch (error) {
       console.error("Failed to restore project:", error);
+    }
+  },
+
+  // Assign Employees
+  assignEmployees: async (projectId, employeesWithRoles) => {
+    try {
+      console.log("Employees with roles to assign:", employeesWithRoles);
+
+      // Send request to backend to assign employees to project
+      const res = await axios.put(
+        `http://localhost:5000/api/project/${projectId}/assign`,
+        { employees: employeesWithRoles } // Send employees with roles
+      );
+
+      console.log("Assigned employees response:", res.data);
+
+      // Update the project data in the store with updated project info
+      set((state) => ({
+        projects: state.projects.map(
+          (p) => (p._id === projectId ? res.data : p) // Update the specific project
+        ),
+      }));
+    } catch (error) {
+      console.error(
+        "Failed to assign employees:",
+        error.response ? error.response.data : error
+      );
+      throw error; // Rethrow error to let the calling function handle it
     }
   },
 }));
