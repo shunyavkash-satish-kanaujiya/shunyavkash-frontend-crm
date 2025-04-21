@@ -9,7 +9,6 @@ export const Signin = () => {
   const token = useAuthStore((state) => state.token); // Development only
   const navigate = useNavigate();
 
-
   // Development logging
   console.log("email:", email);
   console.log("token:", token);

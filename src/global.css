@@ -1,7 +1,12 @@
 /* @import "tailwindcss/preflight"; */
-@import "tailwindcss/utilities";
+/* @import "tailwindcss/utilities"; */
 
 @import "tailwindcss";
+
+/* Setting Custom Color (Tailwind: v4.0+) */
+/* @theme {
+  --color-background: #000000;
+} */
 
 :root {
   --bg-color: 255, 255, 255;
