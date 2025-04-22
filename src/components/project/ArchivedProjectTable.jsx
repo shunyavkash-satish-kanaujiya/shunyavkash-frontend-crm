@@ -46,9 +46,6 @@ export const ArchivedProjectTable = ({ projects }) => {
           <thead className="bg-indigo-50">
             <tr>
               <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
-                View
-              </th>
-              <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
                 #
               </th>
               <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
@@ -90,14 +87,6 @@ export const ArchivedProjectTable = ({ projects }) => {
                   key={project._id}
                   className="hover:bg-indigo-50 transition cursor-pointer"
                 >
-                  <td className="px-5 py-4 whitespace-nowrap space-x-2">
-                    <button
-                      className="text-gray-600 hover:text-blue-800"
-                      title="View"
-                    >
-                      <EyeIcon className="w-5 h-5 inline" />
-                    </button>
-                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap capitalize">
                     {project.title}

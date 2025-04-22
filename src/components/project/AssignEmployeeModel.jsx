@@ -8,13 +8,21 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [error, setError] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   const { employees, fetchEmployees } = useEmployeeStore();
   const { assignEmployees } = useProjectStore();
 
   useEffect(() => {
     fetchEmployees();
+    // fade-in after mounting
+    setTimeout(() => setIsVisible(true), 10);
   }, [fetchEmployees]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => closeModal(), 100); // transition duration
+  };
 
   const handleAssign = async () => {
     if (!selectedEmployee || !selectedRole) {
@@ -22,7 +30,6 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
       return;
     }
 
-    // ✅ Check if project and assignedEmployees exist
     if (!project?.assignedEmployees) {
       setError("Project data not loaded.");
       return;
@@ -51,8 +58,8 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
     };
 
     try {
-      await assignEmployees(projectId, [employeeToAssign]); // send as array
-      closeModal();
+      await assignEmployees(projectId, [employeeToAssign]);
+      handleClose(); // Use transition close
     } catch (err) {
       setError("Failed to assign employee.");
       console.error(err);
@@ -60,10 +67,14 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
-      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4 relative">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
+        isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
+    >
+      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4 relative transform transition-all duration-300 scale-100">
         <button
-          onClick={closeModal}
+          onClick={handleClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
         >
           <XMarkIcon className="h-5 w-5" />
@@ -78,13 +89,12 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
           <select
             value={selectedEmployee}
             onChange={(e) => setSelectedEmployee(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border px-3 py-2 rounded capitalize tracking-wide"
           >
             <option value="">-- Select Employee --</option>
             {employees.map((emp) => (
-              <option key={emp._id} value={emp._id}>
+              <option key={emp._id} value={emp._id} className="tracking-wide">
                 {emp.firstName} {emp.lastName}
-                {console.log("EMP: ", emp)}
               </option>
             ))}
           </select>

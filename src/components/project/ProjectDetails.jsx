@@ -40,8 +40,8 @@ export const ProjectDetails = ({ projectId, goBack }) => {
 
       {/* Project Info */}
       <div className="bg-white rounded-xl shadow p-6 space-y-4">
-        <h2 className="text-2xl font-semibold">{project.title}</h2>
-        <p className="text-gray-600">
+        <h2 className="text-2xl font-semibold capitalize">{project.title}</h2>
+        <p className="text-gray-600 bg-indigo-50 rounded-lg p-3 first-letter:capitalize">
           {project.description || "No description provided."}
         </p>
 
@@ -73,8 +73,10 @@ export const ProjectDetails = ({ projectId, goBack }) => {
 
       {/* Client Info */}
       <div className="bg-indigo-50 rounded-xl p-4">
-        <h3 className="text-lg font-semibold mb-2">Client Details</h3>
-        <p>
+        <h3 className="text-lg font-semibold mb-2 tracking-wide">
+          Client Details
+        </h3>
+        <p className="capitalize">
           <strong>Name:</strong> {project.client?.name || "—"}
         </p>
         <p>
@@ -91,9 +93,9 @@ export const ProjectDetails = ({ projectId, goBack }) => {
           <h3 className="text-lg font-semibold">Assigned Employees</h3>
           <button
             onClick={() => setShowAssignModal(true)}
-            className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+            className="flex items-center gap-1 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700"
           >
-            <UserPlusIcon className="w-4 h-4" />
+            <UserPlusIcon className="w-4 h-4 stroke-2" />
             Assign Employee
           </button>
         </div>
@@ -105,10 +107,12 @@ export const ProjectDetails = ({ projectId, goBack }) => {
                 className="border p-3 rounded shadow-sm flex justify-between items-center"
               >
                 <div>
-                  <p className="font-semibold">
+                  {/* Do not remove this log */}
+                  {console.log("ASSIGN: ", assign)}
+                  <p className="font-semibold capitalize">
                     {assign.employee?.firstName} {assign.employee?.lastName}
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 capitalize">
                     {assign.role || "No role assigned"}
                   </p>
                 </div>

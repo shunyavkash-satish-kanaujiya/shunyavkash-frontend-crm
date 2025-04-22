@@ -20,7 +20,7 @@ export const Sidebar = ({
   return (
     <aside
       className={`transition-all duration-300 ease-in-out bg-surface border-r border-border p-4 flex flex-col`}
-      style={{ width: sidebarOpen ? "240px" : "70px" }}
+      style={{ minWidth: sidebarOpen ? "240px" : "70px" }}
     >
       <div className="flex items-center justify-between mb-6">
         {sidebarOpen && <h2 className="text-xl font-bold">CRM Admin</h2>}

@@ -18,6 +18,15 @@
   --border-color: 210, 210, 210;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-indigo-200);
+  border-radius: 3px;
+}
+
 button,
 a,
 select {
