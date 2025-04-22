@@ -15,6 +15,7 @@ export const useProjectStore = create((set) => ({
       set({ loading: true, error: null });
       const res = await axios.get("http://localhost:5000/api/project");
       set({ projects: res.data, loading: false });
+      console.log("Fetched projects:", res.data);
     } catch (err) {
       set({ error: err.message, loading: false });
       console.error("Failed to fetch projects:", err);

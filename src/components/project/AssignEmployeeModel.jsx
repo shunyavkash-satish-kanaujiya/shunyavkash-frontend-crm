@@ -4,113 +4,114 @@ import { employeeRoles } from "../../constants/hr/employees/employeeRoles";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
 import { useProjectStore } from "../../store/projectStore";
 
-// Last Updated
-export const AssignEmployeeModel = ({ projectId, closeModal }) => {
+export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [error, setError] = useState("");
 
-  // Using Zustand store
-  const { employees, fetchEmployees, loading } = useEmployeeStore();
+  const { employees, fetchEmployees } = useEmployeeStore();
   const { assignEmployees } = useProjectStore();
 
   useEffect(() => {
-    fetchEmployees(); // Fetch employees when the component mounts
+    fetchEmployees();
   }, [fetchEmployees]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleAssign = async () => {
     if (!selectedEmployee || !selectedRole) {
-      setError("Please select both employee and role.");
+      setError("Both employee and role are required.");
       return;
     }
 
+    // ✅ Check if project and assignedEmployees exist
+    if (!project?.assignedEmployees) {
+      setError("Project data not loaded.");
+      return;
+    }
+
+    const isAlreadyAssigned = project.assignedEmployees.some(
+      (e) => e.employeeId === selectedEmployee || e._id === selectedEmployee
+    );
+
+    if (isAlreadyAssigned) {
+      setError("This employee is already assigned to the project.");
+      return;
+    }
+
+    const emp = employees.find((e) => e._id === selectedEmployee);
+    if (!emp) {
+      setError("Selected employee not found.");
+      return;
+    }
+
+    const employeeToAssign = {
+      employeeId: emp._id,
+      firstname: emp.firstName,
+      lastname: emp.lastName,
+      role: selectedRole,
+    };
+
     try {
-      // Sending an array of objects with employeeId and role
-      await assignEmployees(projectId, [
-        { employeeId: selectedEmployee, role: selectedRole },
-      ]);
+      await assignEmployees(projectId, [employeeToAssign]); // send as array
       closeModal();
     } catch (err) {
-      console.error("Failed to assign employee:", err);
-      setError("Failed to assign employee. Please try again.");
+      setError("Failed to assign employee.");
+      console.error(err);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Assign Employee to Project</h3>
-          <button
-            onClick={closeModal}
-            className="text-gray-500 hover:text-gray-700"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+      <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md space-y-4 relative">
+        <button
+          onClick={closeModal}
+          className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
+        >
+          <XMarkIcon className="h-5 w-5" />
+        </button>
+
+        <h2 className="text-xl font-semibold">Assign Employee</h2>
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">Employee</label>
+          <select
+            value={selectedEmployee}
+            onChange={(e) => setSelectedEmployee(e.target.value)}
+            className="w-full border px-3 py-2 rounded"
           >
-            <XMarkIcon className="w-5 h-5" />
-          </button>
+            <option value="">-- Select Employee --</option>
+            {employees.map((emp) => (
+              <option key={emp._id} value={emp._id}>
+                {emp.firstName} {emp.lastName}
+                {console.log("EMP: ", emp)}
+              </option>
+            ))}
+          </select>
+
+          <label className="block text-sm font-medium mt-3">Role</label>
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">-- Select Role --</option>
+            {employeeRoles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        {loading ? (
-          <p className="text-center py-4">Loading employees...</p>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block mb-1 font-medium">Select Employee</label>
-              <select
-                value={selectedEmployee}
-                onChange={(e) => setSelectedEmployee(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              >
-                <option value="">-- Select Employee --</option>
-                {employees.map((emp) => (
-                  <option key={emp._id} value={emp._id}>
-                    {emp.firstName} {emp.lastName}{" "}
-                    {/* Concatenate first and last name */}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Assign Role</label>
-              <select
-                value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-              >
-                <option value="">-- Select Role --</option>
-                {employeeRoles.map((role) => (
-                  <option key={role} value={role}>
-                    {role}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex justify-end space-x-3 pt-4">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Assign
-              </button>
-            </div>
-          </form>
-        )}
+        <div className="flex justify-end mt-4">
+          <button
+            onClick={handleAssign}
+            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+          >
+            Assign
+          </button>
+        </div>
       </div>
     </div>
   );

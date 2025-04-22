@@ -75,13 +75,13 @@ export const ProjectDetails = ({ projectId, goBack }) => {
       <div className="bg-indigo-50 rounded-xl p-4">
         <h3 className="text-lg font-semibold mb-2">Client Details</h3>
         <p>
-          <strong>Name:</strong> {project.client?.name}
+          <strong>Name:</strong> {project.client?.name || "—"}
         </p>
         <p>
-          <strong>Email:</strong> {project.client?.email}
+          <strong>Email:</strong> {project.client?.email || "—"}
         </p>
         <p>
-          <strong>Phone:</strong> {project.client?.phone}
+          <strong>Phone:</strong> {project.client?.phone || "—"}
         </p>
       </div>
 
@@ -97,20 +97,19 @@ export const ProjectDetails = ({ projectId, goBack }) => {
             Assign Employee
           </button>
         </div>
-        {project.assignedEmployees.length > 0 ? (
+        {project.assignedEmployees?.length > 0 ? (
           <ul className="space-y-2">
-            {project.assignedEmployees.map((emp, index) => (
+            {project.assignedEmployees.map((assign, index) => (
               <li
-                key={`${emp._id || emp.employeeId}-${index}`} // Unique key with fallback
+                key={`${assign._id}-${index}`}
                 className="border p-3 rounded shadow-sm flex justify-between items-center"
               >
                 <div>
                   <p className="font-semibold">
-                    {emp.name || "Unknown Employee"} {/* Display name */}
+                    {assign.employee?.firstName} {assign.employee?.lastName}
                   </p>
-
                   <p className="text-sm text-gray-600">
-                    {emp.role || "No role assigned"} {/* Display role */}
+                    {assign.role || "No role assigned"}
                   </p>
                 </div>
               </li>
@@ -121,8 +120,10 @@ export const ProjectDetails = ({ projectId, goBack }) => {
         )}
       </div>
 
+      {/* Assign Employee Modal */}
       {showAssignModal && (
         <AssignEmployeeModel
+          project={project}
           projectId={projectId}
           closeModal={() => {
             setShowAssignModal(false);
