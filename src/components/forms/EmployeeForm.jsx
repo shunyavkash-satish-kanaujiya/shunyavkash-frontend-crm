@@ -28,7 +28,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
         encType="multipart/form-data"
       >
-        {employeeFields.map((field) => (
+        {/* {employeeFields.map((field) => (
           <div className="relative z-0 w-full group" key={field.name}>
             <input
               type={field.type}
@@ -44,6 +44,47 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
               className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
               peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
               peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+            >
+              {field.label}
+            </label>
+          </div>
+        ))} */}
+
+        {employeeFields.map((field) => (
+          <div className="relative z-0 w-full group" key={field.name}>
+            {field.type === "select" ? (
+              <select
+                name={field.name}
+                value={formData[field.name] ?? ""}
+                onChange={handleChange}
+                required
+                className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-indigo-600"
+              >
+                <option value="" disabled hidden>
+                  Select {field.label}
+                </option>
+                {field.options.map((option, i) => (
+                  <option key={i} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={field.type}
+                name={field.name}
+                value={formData[field.name] ?? ""}
+                onChange={handleChange}
+                required={field.required}
+                autoComplete="off"
+                className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+              />
+            )}
+            <label
+              htmlFor={field.name}
+              className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+        peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+        peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
             >
               {field.label}
             </label>

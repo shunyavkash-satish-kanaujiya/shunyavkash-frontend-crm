@@ -31,6 +31,13 @@ export const Employees = ({ setEmployeeTab, setSelectedEmployee }) => {
       );
     }
 
+    if (filters.department) {
+      updated = updated.filter(
+        (emp) =>
+          emp.department?.toLowerCase() === filters.department.toLowerCase()
+      );
+    }
+
     if (filters.designation) {
       updated = updated.filter(
         (emp) =>

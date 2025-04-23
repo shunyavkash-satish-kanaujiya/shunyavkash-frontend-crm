@@ -7,14 +7,14 @@ export const AvatarUpload = ({
   editingEmployee,
 }) => {
   return (
-    <div className="relative mb-6">
+    <div className="relative">
       <label className="block mb-2 text-sm font-medium text-gray-700">
         Avatar
       </label>
       <div className="flex items-center space-x-4">
         <label
           htmlFor="avatar"
-          className="cursor-pointer px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200"
+          className="cursor-pointer px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-200 text-nowrap"
         >
           Upload Avatar
         </label>

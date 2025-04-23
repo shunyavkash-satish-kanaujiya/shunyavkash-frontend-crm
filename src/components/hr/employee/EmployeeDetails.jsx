@@ -55,10 +55,10 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             className="w-24 h-24 rounded-full object-cover"
           />
           <div>
-            <h2 className="text-2xl font-semibold capitalize">
+            <h2 className="font-bold text-xl capitalize">
               {employee.firstName} {employee.lastName}
             </h2>
-            <p className="text-gray-600 bg-indigo-50 rounded-lg p-3 first-letter:capitalize">
+            <p className=" w-max text-gray-600 bg-indigo-50 rounded-lg px-4 py-1.5 font-semibold first-letter:capitalize">
               {employee.designation || "No designation provided."}
             </p>
           </div>
@@ -72,37 +72,38 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             <strong>Phone:</strong> {employee.phone || "—"}
           </p>
           <p>
+            <strong>Payable:</strong> {employee.salary || "—"}
+            {"/- "}
+            <span className="text-gray-500 font-semibold">per annum</span>
+          </p>
+          {/* <p>
             <strong>Date of Birth:</strong>{" "}
             {employee.dateOfBirth
               ? new Date(employee.dateOfBirth).toLocaleDateString()
               : "—"}
-          </p>
+          </p> */}
           <p>
             <strong>Joining Date:</strong>{" "}
-            {employee.joiningDate
-              ? new Date(employee.joiningDate).toLocaleDateString()
+            {employee.dateOfJoining
+              ? new Date(employee.dateOfJoining).toLocaleDateString()
               : "—"}
           </p>
-          <p>
-            <strong>Status:</strong>{" "}
+          {console.log("EMPLOYEE JOINING DATE:", employee)}
+          {/* Status */}
+          <div className="text-sm text-gray-700">
             <span
-              className="px-2 py-1 rounded-full text-xs"
-              style={{
-                backgroundColor: employee.status
-                  ? getStatusColor(employee.status).bgColor
-                  : "#e5e7eb", // Default background color
-                color: employee.status
-                  ? getStatusColor(employee.status).textColor
-                  : "#374151", // Default text color
-              }}
+              className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
+                getStatusColor(employee.status).bg
+              }`}
             >
-              {employee.status || "—"}
+              <span
+                className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+                  getStatusColor(employee.status).dot
+                }`}
+              ></span>
+              {employee.status || "N/A"}
             </span>
-          </p>
-          <p>
-            <strong>Created At:</strong>{" "}
-            {new Date(employee.createdAt).toLocaleDateString()}
-          </p>
+          </div>
         </div>
       </div>
 
@@ -114,32 +115,17 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
         <p className="capitalize">
           <strong>Address:</strong> {employee.address || "—"}
         </p>
-        <p>
-          <strong>Emergency Contact:</strong> {employee.emergencyContact || "—"}
-        </p>
-        <p>
-          <strong>Blood Group:</strong> {employee.bloodGroup || "—"}
-        </p>
       </div>
 
       {/* Departments - Similar to Assigned Employees in ProjectDetails */}
       <div className="bg-white rounded-xl shadow p-4">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-lg font-semibold">Departments</h3>
+          <h3 className="text-lg font-semibold">Department</h3>
         </div>
         {employee.departments?.length > 0 ? (
-          <ul className="space-y-2">
-            {employee.departments.map((dept, index) => (
-              <li
-                key={index}
-                className="border p-3 rounded shadow-sm flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-semibold capitalize">{dept}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <p className="w-max text-gray-600 bg-indigo-50 rounded-lg px-4 py-1.5 font-semibold first-letter:capitalize">
+            {employee.designation || "No designation provided."}
+          </p>
         ) : (
           <p className="text-gray-500">No departments assigned yet.</p>
         )}
