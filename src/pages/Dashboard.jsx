@@ -25,7 +25,7 @@ import { useAuth } from "../hooks/dashboard/useAuth";
 import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
-import { UserDropdown } from "../components/dashboard/userDropdown.jsx";
+import { UserDropdown } from "../components/dashboard/UserDropdown.jsx";
 
 // Sidebar Tabs
 const navigation = [

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useEmployeeStore } from "../../../store/hr/employeesStore.js";
-import { getStatusColor } from "../../../constants/hr/employees/statusColors.js";
+import { getStatusColor } from "../../../constants/hr/employee/statusColors.js";
 
 export const EmployeeDetails = ({ employeeId, goBack }) => {
   const [employee, setEmployee] = useState(null);
@@ -90,10 +90,10 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
               style={{
                 backgroundColor: employee.status
                   ? getStatusColor(employee.status).bgColor
-                  : "#e5e7eb", // Default color if status is not provided
+                  : "#e5e7eb", // Default background color
                 color: employee.status
                   ? getStatusColor(employee.status).textColor
-                  : "#374151", // Default text color if status is not provided
+                  : "#374151", // Default text color
               }}
             >
               {employee.status || "—"}

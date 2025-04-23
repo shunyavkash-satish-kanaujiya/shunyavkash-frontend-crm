@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { employeeRoles } from "../../constants/hr/employees/employeeRoles";
+import { employeeRoles } from "../../constants/hr/employee/employeeRoles";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
 import { useProjectStore } from "../../store/projectStore";
 

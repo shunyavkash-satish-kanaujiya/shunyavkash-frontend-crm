@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Employees } from "../components/hr/Employees";
-import { EmployeeForm } from "../components/forms/EmployeeForm";
+import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
 import { Attendances } from "../components/hr/Attendances";
 import { Leaves } from "../components/hr/Leaves";
 import { Payrolls } from "../components/hr/Payrolls";
