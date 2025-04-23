@@ -9,6 +9,7 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
   const [selectedRole, setSelectedRole] = useState("");
   const [error, setError] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { employees, fetchEmployees } = useEmployeeStore();
   const { assignEmployees } = useProjectStore();
@@ -24,6 +25,47 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
     setTimeout(() => closeModal(), 100); // transition duration
   };
 
+  // const handleAssign = async () => {
+  //   if (!selectedEmployee || !selectedRole) {
+  //     setError("Both employee and role are required.");
+  //     return;
+  //   }
+
+  //   if (!project?.assignedEmployees) {
+  //     setError("Project data not loaded.");
+  //     return;
+  //   }
+
+  //   const isAlreadyAssigned = project.assignedEmployees.some(
+  //     (e) => e.employeeId === selectedEmployee || e._id === selectedEmployee
+  //   );
+
+  //   if (isAlreadyAssigned) {
+  //     setError("This employee is already assigned to the project.");
+  //     return;
+  //   }
+
+  //   const emp = employees.find((e) => e._id === selectedEmployee);
+  //   if (!emp) {
+  //     setError("Selected employee not found.");
+  //     return;
+  //   }
+
+  //   const employeeToAssign = {
+  //     employeeId: emp._id,
+  //     firstname: emp.firstName,
+  //     lastname: emp.lastName,
+  //     role: selectedRole,
+  //   };
+
+  //   try {
+  //     await assignEmployees(projectId, [employeeToAssign]);
+  //     handleClose(); // Use transition close
+  //   } catch (err) {
+  //     setError("Failed to assign employee.");
+  //     console.error(err);
+  //   }
+  // };
   const handleAssign = async () => {
     if (!selectedEmployee || !selectedRole) {
       setError("Both employee and role are required.");
@@ -58,11 +100,14 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
     };
 
     try {
+      setLoading(true); // Start loader
       await assignEmployees(projectId, [employeeToAssign]);
-      handleClose(); // Use transition close
+      setLoading(false); // Stop loader
+      handleClose();
     } catch (err) {
-      setError("Failed to assign employee.");
       console.error(err);
+      setError("Failed to assign employee.");
+      setLoading(false); // Ensure loader stops on error
     }
   };
 
@@ -115,11 +160,41 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
         </div>
 
         <div className="flex justify-end mt-4">
-          <button
+          {/* <button
             onClick={handleAssign}
             className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
           >
             Assign
+          </button> */}
+          <button
+            onClick={handleAssign}
+            disabled={loading}
+            className={`flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 disabled:opacity-50`}
+          >
+            {loading ? (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l4-4-4-4v4a12 12 0 00-12 12h4z"
+                ></path>
+              </svg>
+            ) : (
+              "Assign"
+            )}
           </button>
         </div>
       </div>
