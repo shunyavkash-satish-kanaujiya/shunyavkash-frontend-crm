@@ -15,92 +15,9 @@ import {
 import { TABS } from "../constants/activeTab";
 import { EmployeeDetails } from "../components/hr/employee/EmployeeDetails";
 
-// export const HR = () => {
-//   const [activeTab, setActiveTab] = useState(defaultHRTab);
-//   const [employeeTab, setEmployeeTab] = useState(TABS.EMPLOYEES); // NEW for Employee Sub-Tabs
-
-//   useEffect(() => {
-//     const savedTab = localStorage.getItem(localStorageKeyHR);
-//     if (savedTab) {
-//       setActiveTab(savedTab);
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     localStorage.setItem(localStorageKeyHR, activeTab);
-//   }, [activeTab]);
-
-//   return (
-//     <div className="p-6 space-y-6">
-//       {/* Header Tabs */}
-//       <div className="flex gap-4 border-b">
-//         {activeTabHR.map((tab) => (
-//           <button
-//             key={tab.value}
-//             onClick={() => setActiveTab(tab.value)}
-//             className={`px-4 py-2 font-medium border-b-2 ${
-//               activeTab === tab.value
-//                 ? "text-indigo-700 border-indigo-700"
-//                 : "text-gray-500 border-transparent hover:text-indigo-600"
-//             }`}
-//           >
-//             {tab.label}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Content Area */}
-//       <div>
-//         {activeTab === "employees" && (
-//           <div className="space-y-4">
-//             {employeeTab === TABS.EMPLOYEES && (
-//               <Employees setEmployeeTab={setEmployeeTab} />
-//             )}
-//             {employeeTab === TABS.ADD_EMPLOYEE && (
-//               <EmployeeForm setEmployeeTab={setEmployeeTab} />
-//             )}
-//           </div>
-//         )}
-
-//         {activeTab === "attendances" && (
-//           <div className="space-y-4">
-//             <h2 className="text-xl font-semibold text-indigo-700">
-//               Attendances
-//             </h2>
-//             <Attendances />
-//           </div>
-//         )}
-
-//         {activeTab === "leaves" && (
-//           <div className="space-y-4">
-//             <h2 className="text-xl font-semibold text-indigo-700">Leaves</h2>
-//             <Leaves />
-//           </div>
-//         )}
-
-//         {activeTab === "payrolls" && (
-//           <div className="space-y-4">
-//             <h2 className="text-xl font-semibold text-indigo-700">Payrolls</h2>
-//             <Payrolls />
-//           </div>
-//         )}
-
-//         {activeTab === "interviews" && (
-//           <div className="space-y-4">
-//             <h2 className="text-xl font-semibold text-indigo-700">
-//               Interviews
-//             </h2>
-//             <Interviews />
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
 export const HR = () => {
   const [activeTab, setActiveTab] = useState(defaultHRTab);
-  const [employeeTab, setEmployeeTab] = useState(TABS.EMPLOYEES);
+  const [employeeTab, setEmployeeTab] = useState(TABS.EMPLOYEES); // NEW for Employee Sub-Tabs
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   useEffect(() => {
@@ -135,6 +52,7 @@ export const HR = () => {
 
       {/* Content Area */}
       <div>
+        {/* Employees */}
         {activeTab === "employees" && (
           <div className="space-y-4">
             {employeeTab === TABS.EMPLOYEES && !selectedEmployee && (
@@ -155,6 +73,42 @@ export const HR = () => {
                 }}
               />
             )}
+          </div>
+        )}
+
+        {/* Attendances */}
+        {activeTab === "attendances" && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-indigo-700">
+              Attendances
+            </h2>
+            <Attendances />
+          </div>
+        )}
+
+        {/* Leaves */}
+        {activeTab === "leaves" && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-indigo-700">Leaves</h2>
+            <Leaves />
+          </div>
+        )}
+
+        {/* Payrolls */}
+        {activeTab === "payrolls" && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-indigo-700">Payrolls</h2>
+            <Payrolls />
+          </div>
+        )}
+
+        {/* Interviews */}
+        {activeTab === "interviews" && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-indigo-700">
+              Interviews
+            </h2>
+            <Interviews />
           </div>
         )}
       </div>
