@@ -24,6 +24,23 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
     fetchEmployee();
   }, [fetchEmployee]);
 
+  const handleRemoveTag = async (type, value) => {
+    if (!employee || !Array.isArray(employee[type])) return;
+
+    const updated = employee[type].filter((item) => item !== value);
+    const updatedEmployee = { ...employee, [type]: updated };
+
+    try {
+      await axios.put(`http://localhost:5000/api/employee/${employeeId}`, {
+        [type]: updated,
+      });
+      setEmployee(updatedEmployee);
+      setEditingEmployee(updatedEmployee);
+    } catch (err) {
+      console.error(`Failed to remove ${type}:`, err);
+    }
+  };
+
   // Fix for goBack function
   const handleGoBack = (e) => {
     e.preventDefault();
@@ -55,12 +72,34 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             className="w-24 h-24 rounded-full object-cover"
           />
           <div>
-            <h2 className="font-bold text-xl capitalize">
+            <h2 className="font-bold text-xl capitalize mb-2">
               {employee.firstName} {employee.lastName}
             </h2>
-            <p className=" w-max text-gray-600 bg-indigo-50 rounded-lg px-4 py-1.5 font-semibold first-letter:capitalize">
-              {employee.designation || "No designation provided."}
-            </p>
+            {/* Designations */}
+            {/* <div className="bg-white rounded-xl shadow p-4"> */}
+            {/* <h3 className="text-lg font-semibold mb-3">Designations</h3> */}
+            {Array.isArray(employee.designation) &&
+            employee.designation.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {employee.designation.map((desig, index) => (
+                  <span
+                    key={index}
+                    className="flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-medium"
+                  >
+                    {desig}
+                    <button
+                      onClick={() => handleRemoveTag("designation", desig)}
+                      className="ml-2 text-indigo-500 hover:text-red-500"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No designations assigned yet.</p>
+            )}
+            {/* </div> */}
           </div>
         </div>
 
@@ -117,15 +156,27 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
         </p>
       </div>
 
-      {/* Departments - Similar to Assigned Employees in ProjectDetails */}
+      {/* Departments */}
       <div className="bg-white rounded-xl shadow p-4">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-lg font-semibold">Department</h3>
-        </div>
-        {employee.departments?.length > 0 ? (
-          <p className="w-max text-gray-600 bg-indigo-50 rounded-lg px-4 py-1.5 font-semibold first-letter:capitalize">
-            {employee.designation || "No designation provided."}
-          </p>
+        <h3 className="text-lg font-semibold mb-3">Departments</h3>
+        {Array.isArray(employee.department) &&
+        employee.department.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {employee.department.map((dept, index) => (
+              <span
+                key={index}
+                className="flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium"
+              >
+                {dept}
+                <button
+                  onClick={() => handleRemoveTag("department", dept)}
+                  className="ml-2 text-indigo-500 hover:text-red-500"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
         ) : (
           <p className="text-gray-500">No departments assigned yet.</p>
         )}

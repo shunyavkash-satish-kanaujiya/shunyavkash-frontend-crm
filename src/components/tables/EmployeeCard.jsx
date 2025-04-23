@@ -104,25 +104,13 @@ export const EmployeeCard = ({
             {employee.firstName} {employee.lastName}
           </h3>
           <p className="text-sm text-gray-500 break-words capitalize">
-            {employee.designation || "—"}
+            {employee.department || "—"}
           </p>
         </div>
       </div>
 
-      {/* Departments */}
-      <div className="flex flex-wrap gap-2">
-        {employee.departments?.map((dept, idx) => (
-          <span
-            key={idx}
-            className="bg-indigo-100 text-indigo-600 text-xs font-medium px-2 py-1 rounded-full break-words"
-          >
-            {dept}
-          </span>
-        ))}
-      </div>
-
       {/* Status */}
-      <div className="text-sm text-gray-700">
+      <div className="text-sm text-gray-700 mt-3">
         <span
           className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${
             getStatusColor(employee.status).bg
