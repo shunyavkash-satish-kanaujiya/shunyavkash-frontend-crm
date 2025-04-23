@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useProjectForm } from "../../hooks/project/projectForm/useProjectForm";
+import { formatDate } from "../../utils/formatDate";
 
 export const ProjectForm = ({
   editingProject,
@@ -24,6 +25,8 @@ export const ProjectForm = ({
         priority: editingProject.priority?.toLowerCase() || "normal",
         status: editingProject.status?.toLowerCase() || "pending",
         client: editingProject.client?._id || editingProject.client || "",
+        startDate: formatDate(editingProject.startDate, "yyyy-MM-dd"),
+        endDate: formatDate(editingProject.endDate, "yyyy-MM-dd"),
       });
     }
   }, [editingProject, setFormData]);
@@ -104,8 +107,8 @@ export const ProjectForm = ({
             className="block w-full pt-5 pb-2.5 px-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           >
             {priorityOptions.map((level) => (
-              <option key={level.value} value={level.value}>
-                {level.label}
+              <option key={level} value={level}>
+                {level}
               </option>
             ))}
           </select>
@@ -128,8 +131,8 @@ export const ProjectForm = ({
             className="block w-full pt-5 pb-2.5 px-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
           >
             {statusOptions.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
+              <option key={opt} value={opt}>
+                {opt}
               </option>
             ))}
           </select>
