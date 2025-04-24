@@ -144,33 +144,6 @@ export const useProjectStore = create((set) => ({
   },
 
   // Assign Employees
-  // assignEmployees: async (projectId, employeesWithRoles) => {
-  //   try {
-  //     console.log("Employees with roles to assign:", employeesWithRoles);
-
-  //     // Send request to backend to assign employees to project
-  //     const res = await axios.put(
-  //       `http://localhost:5000/api/project/${projectId}/assign`,
-  //       { employees: employeesWithRoles } // Send employees with roles
-  //     );
-
-  //     console.log("Assigned employees response:", res.data);
-
-  //     // Update the project data in the store with updated project info
-  //     set((state) => ({
-  //       projects: state.projects.map(
-  //         (p) => (p._id === projectId ? res.data : p) // Update the specific project
-  //       ),
-  //     }));
-  //   } catch (error) {
-  //     console.error(
-  //       "Failed to assign employees:",
-  //       error.response ? error.response.data : error
-  //     );
-  //     throw error; // Rethrow error to let the calling function handle it
-  //   }
-  // },
-  // Assign Employees
   assignEmployees: async (projectId, employeesWithRoles) => {
     try {
       console.log("Employees with roles to assign:", employeesWithRoles);

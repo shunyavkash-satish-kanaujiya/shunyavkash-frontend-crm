@@ -11,4 +11,7 @@ export const TABS = {
   HR: "HR",
   EMPLOYEES: "Employees",
   ADD_EMPLOYEE: "Add Employee",
+
+  TIMESHEET: "Timesheet",
+  ADD_TIMESHEET: "Add Timesheet",
 };

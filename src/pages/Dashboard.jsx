@@ -4,6 +4,7 @@ import { Clients } from "./Client.jsx";
 import { ClientForm } from "../components/forms/ClientForm.jsx";
 import { Project } from "../pages/Project.jsx";
 import { ProjectForm } from "../components/forms/ProjectForm.jsx";
+import { Timesheet } from "../pages/Timesheet.jsx";
 import {
   HomeIcon,
   UsersIcon,
@@ -26,6 +27,7 @@ import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
 import { UserDropdown } from "../components/dashboard/UserDropdown.jsx";
+import { TimesheetForm } from "../components/forms/TimesheetForm.jsx";
 
 // Sidebar Tabs
 const navigation = [
@@ -56,6 +58,7 @@ export const Dashboard = () => {
   const [editingClient, setEditingClient] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [editingTimesheet, setEditingTimesheet] = useState(null);
 
   if (isAuthLoading) {
     return (
@@ -178,6 +181,27 @@ export const Dashboard = () => {
           setActiveTab={setActiveTab}
           editingEmployee={editingEmployee}
           setEditingEmployee={setEditingEmployee}
+        />
+      );
+    }
+
+    // Timesheet
+    if (activeTab === TABS.TIMESHEET) {
+      return (
+        <Timesheet
+          setActiveTab={setActiveTab}
+          editingTimesheet={editingTimesheet}
+          setEditingTimesheet={setEditingTimesheet}
+        />
+      );
+    }
+
+    if (activeTab === TABS.ADD_TIMESHEET) {
+      return (
+        <TimesheetForm
+          setActiveTab={setActiveTab}
+          editingTimesheet={editingTimesheet}
+          setEditingTimesheet={setEditingTimesheet}
         />
       );
     }
