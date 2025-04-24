@@ -88,13 +88,23 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
     alert(editingEmployee ? "Updating employee..." : "Saving employee...");
 
     const submissionData = new FormData();
+
     for (const key in formData) {
       if (key === "documents") {
-        formData.documents.forEach((file) =>
-          submissionData.append("documents", file)
-        );
+        formData.documents.forEach((file) => {
+          submissionData.append("documents", file);
+        });
       } else if (key === "avatar" && formData.avatar instanceof File) {
         submissionData.append("avatar", formData.avatar);
+      } else if (key === "designation" && Array.isArray(formData.designation)) {
+        formData.designation.forEach((d) =>
+          submissionData.append("designation[]", d)
+        );
+      } else if (key === "department" && Array.isArray(formData.department)) {
+        // Replace existing departments
+        formData.department.forEach((d) =>
+          submissionData.append("department[]", d)
+        );
       } else {
         submissionData.append(key, formData[key]);
       }
@@ -113,6 +123,7 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
         alert("Employee added successfully!");
       }
 
+      // reset form
       setFormData({
         firstName: "",
         lastName: "",

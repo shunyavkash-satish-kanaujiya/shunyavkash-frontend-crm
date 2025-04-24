@@ -103,7 +103,7 @@ export const EmployeeCard = ({
           <h3 className="text-lg font-bold text-gray-800 capitalize break-words">
             {employee.firstName} {employee.lastName}
           </h3>
-          <p className="text-sm text-gray-500 break-words capitalize">
+          <p className="w-max flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-xs font-medium">
             {employee.department || "—"}
           </p>
         </div>
