@@ -33,6 +33,8 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
       setFormData((prev) => ({
         ...prev,
         ...editingEmployee,
+        department: editingEmployee.department || [],
+        designation: editingEmployee.designation || [],
         dateOfJoining: editingEmployee.dateOfJoining?.slice(0, 10) || "",
         avatar: editingEmployee.avatar || null,
         documents: [],
@@ -117,7 +119,7 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
         email: "",
         phone: "",
         department: "",
-        designation: "",  
+        designation: "",
         dateOfJoining: "",
         salary: "",
         status: "Active",

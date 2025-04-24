@@ -165,7 +165,7 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             {employee.department.map((dept, index) => (
               <span
                 key={index}
-                className="flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-medium"
+                className="flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-medium"
               >
                 {dept}
                 <button
