@@ -144,6 +144,33 @@ export const useProjectStore = create((set) => ({
   },
 
   // Assign Employees
+  // assignEmployees: async (projectId, employeesWithRoles) => {
+  //   try {
+  //     console.log("Employees with roles to assign:", employeesWithRoles);
+
+  //     // Send request to backend to assign employees to project
+  //     const res = await axios.put(
+  //       `http://localhost:5000/api/project/${projectId}/assign`,
+  //       { employees: employeesWithRoles } // Send employees with roles
+  //     );
+
+  //     console.log("Assigned employees response:", res.data);
+
+  //     // Update the project data in the store with updated project info
+  //     set((state) => ({
+  //       projects: state.projects.map(
+  //         (p) => (p._id === projectId ? res.data : p) // Update the specific project
+  //       ),
+  //     }));
+  //   } catch (error) {
+  //     console.error(
+  //       "Failed to assign employees:",
+  //       error.response ? error.response.data : error
+  //     );
+  //     throw error; // Rethrow error to let the calling function handle it
+  //   }
+  // },
+  // Assign Employees
   assignEmployees: async (projectId, employeesWithRoles) => {
     try {
       console.log("Employees with roles to assign:", employeesWithRoles);
@@ -151,15 +178,27 @@ export const useProjectStore = create((set) => ({
       // Send request to backend to assign employees to project
       const res = await axios.put(
         `http://localhost:5000/api/project/${projectId}/assign`,
-        { employees: employeesWithRoles } // Send employees with roles
+        { employees: employeesWithRoles }
       );
 
       console.log("Assigned employees response:", res.data);
 
+      // Alert if any employees were already assigned (skipped)
+      if (res.data.skippedEmployees && res.data.skippedEmployees.length > 0) {
+        const skippedNames = employeesWithRoles
+          .filter((emp) => res.data.skippedEmployees.includes(emp.employeeId))
+          .map((emp) => emp.name)
+          .join(", ");
+
+        alert(`These employees are already assigned: ${skippedNames}`);
+      } else {
+        alert("Employees assigned successfully!");
+      }
+
       // Update the project data in the store with updated project info
       set((state) => ({
-        projects: state.projects.map(
-          (p) => (p._id === projectId ? res.data : p) // Update the specific project
+        projects: state.projects.map((p) =>
+          p._id === projectId ? res.data : p
         ),
       }));
     } catch (error) {
@@ -167,7 +206,7 @@ export const useProjectStore = create((set) => ({
         "Failed to assign employees:",
         error.response ? error.response.data : error
       );
-      throw error; // Rethrow error to let the calling function handle it
+      throw error;
     }
   },
 }));
