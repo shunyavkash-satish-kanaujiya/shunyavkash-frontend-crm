@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore.js";
+import { Link } from "react-router-dom";
 
 export const Signin = () => {
   const [email, setEmail] = useState("");
@@ -66,6 +67,26 @@ export const Signin = () => {
                 </div>
               </div>
 
+              {/* <div>
+                <label
+                  htmlFor="password"
+                  className="block font-medium text-gray-900 text-sm/6"
+                >
+                  Password
+                </label>
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  />
+                </div>
+                {error && <p className="text-sm text-red-500">{error}</p>}
+              </div> */}
               <div>
                 <label
                   htmlFor="password"
@@ -85,6 +106,16 @@ export const Signin = () => {
                   />
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
+
+                {/* 🔗 Forgot password link */}
+                <div className="text-right mt-1">
+                  <Link
+                    to="/forgot-password"
+                    className="text-sm text-indigo-600 hover:underline"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
 
               <div>

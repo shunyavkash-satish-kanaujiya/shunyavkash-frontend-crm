@@ -61,9 +61,27 @@ export const useEmployeeStore = create((set) => ({
   },
 
   // Delete Employee
+  // deleteEmployee: async (employeeId, avatarPublicId, documents) => {
+  //   try {
+  //     // development only
+  //     console.log("Deleting employee with ID:", employeeId);
+  //     console.log("Avatar Public ID:", avatarPublicId);
+  //     console.log("Documents:", documents);
+
+  //     await axios.delete(`http://localhost:5000/api/employee/${employeeId}`, {
+  //       data: { avatarPublicId, documents },
+  //     });
+
+  //     set((state) => ({
+  //       employees: state.employees.filter((emp) => emp._id !== employeeId),
+  //     }));
+  //   } catch (error) {
+  //     console.error("Error deleting employee:", error);
+  //   }
+  // },
+  // Delete Employee
   deleteEmployee: async (employeeId, avatarPublicId, documents) => {
     try {
-      // development only
       console.log("Deleting employee with ID:", employeeId);
       console.log("Avatar Public ID:", avatarPublicId);
       console.log("Documents:", documents);
@@ -76,6 +94,12 @@ export const useEmployeeStore = create((set) => ({
         employees: state.employees.filter((emp) => emp._id !== employeeId),
       }));
     } catch (error) {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Something went wrong while deleting employee";
+
+      alert(errorMessage);
+
       console.error("Error deleting employee:", error);
     }
   },
