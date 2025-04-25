@@ -9,7 +9,7 @@ export const useProjectStore = create((set) => ({
   loading: false,
   error: null,
 
-  // Fetch Active Projects
+  // Fetch all Active Projects
   fetchProjects: async () => {
     try {
       set({ loading: true, error: null });
