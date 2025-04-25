@@ -182,4 +182,22 @@ export const useProjectStore = create((set) => ({
       throw error;
     }
   },
+
+  // Remove Assigned Employee
+  removeAssignedEmployee: async (projectId, employeeId) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/project/${projectId}/remove-employee`,
+        { employeeId }
+      );
+
+      set((state) => ({
+        projects: state.projects.map((p) =>
+          p._id === projectId ? res.data : p
+        ),
+      }));
+    } catch (error) {
+      console.error("Failed to remove assigned employee:", error);
+    }
+  },
 }));
