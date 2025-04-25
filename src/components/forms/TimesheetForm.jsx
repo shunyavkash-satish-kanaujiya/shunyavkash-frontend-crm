@@ -1,85 +1,253 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTimesheetStore } from "../../store/timesheetStore.js";
 import { useTimesheetForm } from "../../hooks/timesheet/useTimesheetForm.js";
 import { TABS } from "../../constants/activeTab.js";
+import { useProjectStore } from "../../store/projectStore";
+import toast from "react-hot-toast";
 
 export const TimesheetForm = ({ setActiveTab }) => {
   const activeTimesheet = useTimesheetStore((state) => state.activeTimesheet);
-  const { formData, handleChange, resetForm } = useTimesheetForm();
-  const { addTimesheet, updateTimesheet } = useTimesheetStore((state) => state);
+  const addTimesheet = useTimesheetStore((state) => state.addTimesheet);
+  const updateTimesheet = useTimesheetStore((state) => state.updateTimesheet);
+  const fetchTimesheets = useTimesheetStore((state) => state.fetchTimesheets);
+  const projects = useProjectStore((state) => state.projects);
+  const fetchProjects = useProjectStore((state) => state.fetchProjects);
+
+  // Import form state and methods from useTimesheetForm hook
+  const { formData, resetForm, setFormData } = useTimesheetForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Handle form changes safely
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    if (setFormData) {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
 
   useEffect(() => {
     if (activeTimesheet) {
       resetForm(activeTimesheet);
     } else {
-      resetForm(); // Reset to initial empty state if no activeTimesheet
+      resetForm();
     }
   }, [activeTimesheet, resetForm]);
 
-  const handleSubmit = (e) => {
+  // Fetch projects on mount
+  useEffect(() => {
+    console.log("Fetching projects...");
+    fetchProjects();
+  }, [fetchProjects]);
+
+  useEffect(() => {
+    console.log("Projects:", projects);
+  }, [projects]);
+
+  // Fetch timesheets on mount
+  useEffect(() => {
+    const loadTimesheets = async () => {
+      try {
+        await fetchTimesheets();
+      } catch (err) {
+        console.error("Failed to load timesheets:", err);
+        toast.error("Failed to load timesheets");
+      }
+    };
+    loadTimesheets();
+  }, [fetchTimesheets]);
+
+  // Handle form submission
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (isSubmitting) return;
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     const submissionData = {
+  //       project: formData.project,
+  //       hoursWorked: Number(formData.hours), // Match backend field name
+  //       date: new Date(formData.date).toISOString(), // ISO format
+  //       description: formData.description,
+  //     };
+
+  //     console.log("Submitting timesheet data:", submissionData);
+
+  //     if (activeTimesheet && activeTimesheet._id) {
+  //       await updateTimesheet({
+  //         ...submissionData,
+  //         _id: activeTimesheet._id, // Include ID for updates
+  //       });
+  //       toast.success("Timesheet updated!");
+  //     } else {
+  //       await addTimesheet(submissionData);
+  //       toast.success("Timesheet added!");
+  //     }
+
+  //     // Force a refresh of timesheets after adding/updating
+  //     await fetchTimesheets();
+
+  //     setActiveTab(TABS.TIMESHEET);
+  //   } catch (err) {
+  //     console.error("Submission error:", err);
+  //     toast.error(err.response?.data?.message || "Failed to submit timesheet");
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (activeTimesheet) {
-      updateTimesheet(formData);
-    } else {
-      addTimesheet(formData);
-    }
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    setActiveTab(TABS.TIMESHEET);
+    try {
+      const employeeId = localStorage.getItem("employeeId"); // 🔥 critical
+
+      const submissionData = {
+        project: formData.project,
+        hoursWorked: Number(formData.hours),
+        date: new Date(formData.date).toISOString(),
+        description: formData.description,
+        employee: employeeId, // 🔥 critical
+      };
+
+      console.log("Submitting timesheet data:", submissionData);
+
+      if (activeTimesheet && activeTimesheet._id) {
+        await updateTimesheet({
+          ...submissionData,
+          _id: activeTimesheet._id,
+        });
+        toast.success("Timesheet updated!");
+      } else {
+        await addTimesheet(submissionData);
+        toast.success("Timesheet added!");
+      }
+
+      await fetchTimesheets();
+      setActiveTab(TABS.TIMESHEET);
+    } catch (err) {
+      console.error("Submission error:", err);
+      toast.error(err.response?.data?.message || "Failed to submit timesheet");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  const fields = [
+    { label: "Hours", name: "hours", type: "number", required: true },
+    { label: "Date", name: "date", type: "date", required: true },
+  ];
+
   return (
-    <div>
-      <h3>{activeTimesheet ? "Edit Timesheet" : "Add Timesheet"}</h3>
-      <form onSubmit={handleSubmit}>
-        {/* Project field */}
-        <div>
-          <label>Project</label>
-          <input
-            type="text"
+    <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
+      <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
+        {activeTimesheet && activeTimesheet._id
+          ? "Update Timesheet"
+          : "Add New Timesheet"}
+      </h2>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
+        {/* Project Select Box */}
+        <div className="relative z-0 w-full group">
+          <select
             name="project"
-            value={formData?.project || ""} // Ensure it's always defined
-            onChange={handleChange}
+            value={formData?.project || ""}
+            onChange={handleFormChange}
             required
-          />
+            className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+          >
+            <option value="" disabled>
+              Select a project
+            </option>
+            {projects.map((project) => (
+              <option key={project._id} value={project._id}>
+                {project.title}
+              </option>
+            ))}
+          </select>
+          <label
+            htmlFor="project"
+            className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+      peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+      peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+          >
+            Project
+          </label>
         </div>
 
-        {/* Hours field */}
-        <div>
-          <label>Hours</label>
-          <input
-            type="number"
-            name="hours"
-            value={formData?.hours || ""} // Ensure it's always defined
-            onChange={handleChange}
-            required
-          />
-        </div>
+        {fields.map((field) => (
+          <div className="relative z-0 w-full group" key={field.name}>
+            <input
+              type={field.type}
+              name={field.name}
+              value={formData?.[field.name] || ""}
+              onChange={handleFormChange}
+              required={field.required}
+              autoComplete="off"
+              className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+            />
+            <label
+              htmlFor={field.name}
+              className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+              peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+            >
+              {field.label}
+            </label>
+          </div>
+        ))}
 
-        {/* Date field */}
-        <div>
-          <label>Date</label>
-          <input
-            type="date"
-            name="date"
-            value={formData?.date || ""} // Ensure it's always defined
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Description field */}
-        <div>
-          <label>Description</label>
+        {/* Description field - spans 2 columns */}
+        <div className="relative z-0 w-full group md:col-span-2">
           <textarea
             name="description"
-            value={formData?.description || ""} // Ensure it's always defined
-            onChange={handleChange}
+            value={formData?.description || ""}
+            onChange={handleFormChange}
             required
-          />
+            rows="4"
+            className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+          ></textarea>
+          <label
+            htmlFor="description"
+            className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+            peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+          >
+            Description
+          </label>
         </div>
 
-        <button type="submit">{activeTimesheet ? "Update" : "Submit"}</button>
+        <div className="md:col-span-2 flex justify-end space-x-3">
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? "Saving..."
+              : activeTimesheet && activeTimesheet._id
+              ? "Update Timesheet"
+              : "Save Timesheet"}
+          </button>
+          <button
+            type="button"
+            className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-6 rounded-lg"
+            onClick={() => {
+              resetForm();
+              setActiveTab(TABS.TIMESHEET);
+            }}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -1,4 +1,3 @@
-// TimesheetRow.jsx
 import React from "react";
 
 export const TimesheetRow = ({
