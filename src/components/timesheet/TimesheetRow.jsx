@@ -1,21 +1,46 @@
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";
+import toast from "react-hot-toast";
+import { useTimesheetStore } from "../../store/timesheetStore";
+import { TABS } from "../../constants/activeTab";
 
 export const TimesheetRow = ({
   timesheet,
   setActiveTab,
   setEditingTimesheet,
 }) => {
-  const { employee, project, date, hoursWorked, isFinalized, _id } = timesheet;
+  const {
+    employee,
+    project,
+    description,
+    date,
+    hoursWorked,
+    isFinalized,
+    _id,
+  } = timesheet;
+
+  const deleteTimesheet = useTimesheetStore((state) => state.deleteTimesheet);
+  const setActiveTimesheet = useTimesheetStore(
+    (state) => state.setActiveTimesheet
+  );
 
   const handleEdit = () => {
+    // Update both local and global state
     setEditingTimesheet(timesheet);
-    setActiveTab("ADD_TIMESHEET"); // Switch to form view to edit
+    setActiveTimesheet(timesheet);
+    setActiveTab(TABS.ADD_TIMESHEET);
   };
 
-  const handleDelete = () => {
-    // Add the delete functionality as needed
-    alert("Delete functionality is yet to be implemented.");
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this timesheet?")) {
+      try {
+        await deleteTimesheet(_id);
+        toast.success("Timesheet deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete timesheet:", error);
+        toast.error("Failed to delete timesheet.");
+      }
+    }
   };
 
   return (
@@ -35,6 +60,9 @@ export const TimesheetRow = ({
       </td>
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
         {project?.title}
+      </td>
+      <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+        {description}
       </td>
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
         {date ? new Date(date).toLocaleDateString() : "-"}
@@ -64,43 +92,3 @@ export const TimesheetRow = ({
     </tr>
   );
 };
-
-// import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
-// import React from "react";
-
-// export const TimesheetRow = ({
-//   timesheet,
-//   setActiveTab,
-//   setEditingTimesheet,
-// }) => {
-//   const { employee, project, date, hoursWorked, isFinalized, _id } = timesheet;
-//   console.log("TimesheetRow - Response", timesheet);
-
-//   const handleEdit = () => {
-//     setEditingTimesheet(timesheet);
-//     setActiveTab("ADD_TIMESHEET"); // Switch to form view to edit
-//   };
-
-//   return (
-//     <tr>
-//       <td>
-//         {employee?.email
-//           ?.split("@")[0]
-//           .replace(/\./g, " ")
-//           .replace(/\b\w/g, (char) => char.toUpperCase()) || "User"}
-//       </td>
-//       <td>{project?.title}</td>
-//       <td>{new Date(date).toLocaleDateString()}</td>
-//       <td>{hoursWorked}</td>
-//       <td>{isFinalized ? "true" : "false"}</td>
-//       <td>
-//         <button onClick={handleEdit}>
-//           <PencilSquareIcon className="w-5 h-5 inline" />
-//         </button>
-//         <button onClick={handleEdit}>
-//           <XMarkIcon className="w-5 h-5 inline" />
-//         </button>
-//       </td>
-//     </tr>
-//   );
-// };
