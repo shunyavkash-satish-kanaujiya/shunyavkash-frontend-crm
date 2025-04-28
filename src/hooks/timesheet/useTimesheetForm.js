@@ -17,7 +17,7 @@ export const useTimesheetForm = () => {
   const [formData, setFormData] = useState({
     project: "",
     hours: "",
-    date: formatDate(new Date()),
+    date: "",
     description: "",
     employee: "",
   });
@@ -35,9 +35,7 @@ export const useTimesheetForm = () => {
     setFormData({
       project: data.project || "",
       hours: data.hoursWorked || "", // Match backend field name
-      date: data.date
-        ? formatDate(new Date(data.date))
-        : formatDate(new Date()),
+      date: data.date ? formatDate(new Date(data.date)) : "",
       description: data.description || "",
     });
   }, []);
