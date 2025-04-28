@@ -14,24 +14,12 @@ import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
-
-    <Routes>
-      <Route path="/" element={<Signin />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/dashboard/*" element={<Dashboard />}>
-        {/* Internal Routes */}
-        {/* <Route index element={<DashboardHome />} /> */}
-        <Route path="clients" element={<Clients />} />
-        <Route path="projects" element={<Project />} />
-        <Route path="hr" element={<HR />} />
-      </Route>
-    </Routes>
-
     <>
       <Toaster />
       <Routes>
         <Route path="/" element={<Signin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/dashboard/*" element={<Dashboard />}>
           {/* Internal Routes */}
           {/* <Route index element={<DashboardHome />} /> */}
