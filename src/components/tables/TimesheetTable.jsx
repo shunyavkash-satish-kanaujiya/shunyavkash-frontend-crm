@@ -10,6 +10,8 @@ export const TimesheetTable = ({
 }) => {
   const { updateStatus } = useTimesheetStore((state) => state);
 
+  console.log("TIMESHEET: ", timesheets);
+
   if (timesheets.length === 0) {
     return <div>No timesheets available.</div>;
   }
@@ -29,6 +31,7 @@ export const TimesheetTable = ({
             <th>Date</th>
             <th>Hours</th>
             <th>Status</th>
+            <th>Action</th>
             {viewMode === "daily" && <th>Actions</th>}
           </tr>
         </thead>

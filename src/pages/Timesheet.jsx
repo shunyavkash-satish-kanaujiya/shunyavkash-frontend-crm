@@ -30,6 +30,9 @@ export const Timesheet = () => {
     (state) => state.setActiveTimesheet
   );
 
+  console.log("Timesheets", timesheets);
+  console.log("Filtered Timesheet", filteredTimesheets);
+
   const handleTimesheetSelect = (timesheet) => {
     setActiveTimesheet(timesheet);
     setActiveTab(TABS.ADD_TIMESHEET);

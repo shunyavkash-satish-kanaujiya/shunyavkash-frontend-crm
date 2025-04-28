@@ -20,9 +20,11 @@ export const useTimesheetStore = create((set, get) => ({
       // Ensure we have valid data structure
       const processed = data.map((t) => ({
         ...t,
-        employee: t.employee || null,
+        employee: t.user || null,
         project: t.project || null,
       }));
+
+      console.log("Processed timesheets:", processed);
 
       set({ timesheets: processed, loading: false });
     } catch (err) {

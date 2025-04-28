@@ -4,6 +4,7 @@ import { useTimesheetForm } from "../../hooks/timesheet/useTimesheetForm.js";
 import { TABS } from "../../constants/activeTab.js";
 import { useProjectStore } from "../../store/projectStore";
 import toast from "react-hot-toast";
+import { useAuthStore } from "../../store/authStore.js";
 
 export const TimesheetForm = ({ setActiveTab }) => {
   const activeTimesheet = useTimesheetStore((state) => state.activeTimesheet);
@@ -11,15 +12,15 @@ export const TimesheetForm = ({ setActiveTab }) => {
   const updateTimesheet = useTimesheetStore((state) => state.updateTimesheet);
   const fetchTimesheets = useTimesheetStore((state) => state.fetchTimesheets);
   const projects = useProjectStore((state) => state.projects);
+  const fetchUser = useAuthStore((state) => state.user);
   const fetchProjects = useProjectStore((state) => state.fetchProjects);
 
   // Import form state and methods from useTimesheetForm hook
   const { formData, resetForm, setFormData } = useTimesheetForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const employeeId = localStorage.getItem("employeeId");
+  const employeeId = fetchUser._id;
   console.log("Employee ID:", employeeId);
-  console.log("Employee ID:", );
 
   // Handle form changes safely
   const handleFormChange = (e) => {
@@ -63,46 +64,6 @@ export const TimesheetForm = ({ setActiveTab }) => {
     };
     loadTimesheets();
   }, [fetchTimesheets]);
-
-  // Handle form submission
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (isSubmitting) return;
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const submissionData = {
-  //       project: formData.project,
-  //       hoursWorked: Number(formData.hours), // Match backend field name
-  //       date: new Date(formData.date).toISOString(), // ISO format
-  //       description: formData.description,
-  //     };
-
-  //     console.log("Submitting timesheet data:", submissionData);
-
-  //     if (activeTimesheet && activeTimesheet._id) {
-  //       await updateTimesheet({
-  //         ...submissionData,
-  //         _id: activeTimesheet._id, // Include ID for updates
-  //       });
-  //       toast.success("Timesheet updated!");
-  //     } else {
-  //       await addTimesheet(submissionData);
-  //       toast.success("Timesheet added!");
-  //     }
-
-  //     // Force a refresh of timesheets after adding/updating
-  //     await fetchTimesheets();
-
-  //     setActiveTab(TABS.TIMESHEET);
-  //   } catch (err) {
-  //     console.error("Submission error:", err);
-  //     toast.error(err.response?.data?.message || "Failed to submit timesheet");
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
