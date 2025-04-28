@@ -1,4 +1,3 @@
-// TimesheetViewToggle.jsx
 import React from "react";
 
 export const TimesheetViewToggle = ({ currentView, onToggleView }) => {

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useTimesheetStore } from "../../store/timesheetStore";
+import { formatDate } from "../../utils/formatDate";
 
 export const useTimesheetForm = () => {
   const timesheets = useTimesheetStore((state) => state.timesheets);
@@ -8,6 +9,7 @@ export const useTimesheetForm = () => {
   const updateFilters = useTimesheetStore((state) => state.updateFilters);
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredTimesheets, setFilteredTimesheets] = useState([]);
 
@@ -15,67 +17,104 @@ export const useTimesheetForm = () => {
   const [formData, setFormData] = useState({
     project: "",
     hours: "",
-    date: "",
+    date: formatDate(new Date()),
     description: "",
   });
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   // Function to reset form data
-  const resetForm = (data = {}) => {
+  const resetForm = useCallback((data = {}) => {
     setFormData({
       project: data.project || "",
-      hours: data.hours || "",
-      date: data.date || "",
+      hours: data.hoursWorked || "", // Match backend field name
+      date: data.date
+        ? formatDate(new Date(data.date))
+        : formatDate(new Date()),
       description: data.description || "",
     });
-  };
+  }, []);
 
   // Fetch timesheets on component mount
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      await fetchTimesheets();
-      setLoading(false);
+      try {
+        await fetchTimesheets();
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching timesheets:", err);
+        setError(err.message || "Failed to fetch timesheets");
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   }, [fetchTimesheets]);
 
   // Filter timesheets based on search, status, project, view, and date
   useEffect(() => {
-    let filtered = [...timesheets];
-
-    if (searchTerm) {
-      filtered = filtered.filter((ts) =>
-        ts.project?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+    if (!timesheets || timesheets.length === 0) {
+      setFilteredTimesheets([]);
+      return;
     }
 
-    if (filters.status !== "All") {
+    let filtered = [...timesheets];
+
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter((ts) => {
+        const projectMatch = ts.project?.title
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const descMatch = ts.description
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        return projectMatch || descMatch;
+      });
+    }
+
+    // Apply status filter
+    if (filters.status && filters.status !== "All") {
       filtered = filtered.filter((ts) => ts.status === filters.status);
     }
 
+    // Apply project filter
     if (filters.project) {
       filtered = filtered.filter(
-        (ts) => ts.project?._id === filters.project._id
+        (ts) => ts.project && ts.project._id === filters.project._id
       );
     }
 
-    // Filter by day/week (Daily view for now)
-    if (filters.view === "daily") {
-      const selected = new Date(filters.date).toDateString();
-      filtered = filtered.filter(
-        (ts) => new Date(ts.date).toDateString() === selected
-      );
+    // Apply date filter
+    if (filters.date) {
+      const filterDate = new Date(filters.date).toDateString();
+      filtered = filtered.filter((ts) => {
+        if (!ts.date) return false;
+        return new Date(ts.date).toDateString() === filterDate;
+      });
     }
 
-    // Update filtered timesheets
+    // Sort by date (newest first)
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
     setFilteredTimesheets(filtered);
   }, [timesheets, searchTerm, filters]);
 
   return {
     formData,
+    setFormData,
+    handleFormChange,
     resetForm,
     filteredTimesheets,
     loading,
+    error,
     searchTerm,
     setSearchTerm,
     filters,
