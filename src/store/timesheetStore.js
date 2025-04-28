@@ -34,11 +34,6 @@ export const useTimesheetStore = create((set, get) => ({
     }
   },
 
-  // Add this new method to force refresh
-  refreshTimesheets: async () => {
-    await get().fetchTimesheets();
-  },
-
   // Add Timesheet
   addTimesheet: async (formData) => {
     try {
@@ -56,8 +51,11 @@ export const useTimesheetStore = create((set, get) => ({
 
       console.log("Timesheet added:", data);
 
-      // Update local state immediately
-      set((state) => ({ timesheets: [data, ...state.timesheets] }));
+      // Optimistically add new timesheet to top
+      set((state) => ({
+        timesheets: [data, ...state.timesheets],
+      }));
+
       return data;
     } catch (err) {
       console.error("Failed to add timesheet:", err);
@@ -65,7 +63,7 @@ export const useTimesheetStore = create((set, get) => ({
     }
   },
 
-  // Update Timesheet - Add this function
+  // Update Timesheet
   updateTimesheet: async (timesheet) => {
     try {
       const token = localStorage.getItem("token");
@@ -80,17 +78,25 @@ export const useTimesheetStore = create((set, get) => ({
         }
       );
 
-      // Update local state
+      console.log("Timesheet updated:", data);
+
+      // Optimistically update the specific timesheet locally
       set((state) => ({
         timesheets: state.timesheets.map((ts) =>
-          ts._id === timesheet._id ? data : ts
+          ts._id === data._id ? data : ts
         ),
       }));
+
       return data;
     } catch (err) {
       console.error("Failed to update timesheet:", err);
       throw err;
     }
+  },
+
+  // Refresh Timesheets
+  refreshTimesheets: async () => {
+    await get().fetchTimesheets();
   },
 
   // Update Filters
@@ -101,7 +107,7 @@ export const useTimesheetStore = create((set, get) => ({
 
   setActiveTimesheet: (entry) => set({ activeTimesheet: entry }),
 
-  // Optional: approve/reject logic
+  // Optional: Approve/Reject logic
   updateStatus: async (id, status) => {
     try {
       const token = localStorage.getItem("token");
@@ -114,13 +120,15 @@ export const useTimesheetStore = create((set, get) => ({
           },
         }
       );
+
+      // Optimistically update status locally
       set((state) => ({
         timesheets: state.timesheets.map((ts) =>
           ts._id === id ? { ...ts, status } : ts
         ),
       }));
     } catch (err) {
-      console.error(err);
+      console.error("Failed to update status:", err);
     }
   },
 
@@ -137,13 +145,15 @@ export const useTimesheetStore = create((set, get) => ({
           },
         }
       );
+
+      // Optimistically set status to 'Finalized'
       set((state) => ({
         timesheets: state.timesheets.map((ts) =>
           ts._id === id ? { ...ts, status: "Finalized" } : ts
         ),
       }));
     } catch (err) {
-      console.error(err);
+      console.error("Failed to finalize timesheet:", err);
     }
   },
 }));

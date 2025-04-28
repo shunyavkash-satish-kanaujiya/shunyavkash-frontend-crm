@@ -29,8 +29,7 @@ export const TimesheetTable = ({
             <th>Date</th>
             <th>Hours</th>
             <th>Status</th>
-            {viewMode === "daily" && <th>Actions</th>}{" "}
-            {/* Show actions only in daily view */}
+            {viewMode === "daily" && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>

@@ -19,6 +19,7 @@ export const useTimesheetForm = () => {
     hours: "",
     date: formatDate(new Date()),
     description: "",
+    employee: "",
   });
 
   const handleFormChange = (e) => {

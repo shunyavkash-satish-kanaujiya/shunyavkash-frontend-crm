@@ -17,6 +17,10 @@ export const TimesheetForm = ({ setActiveTab }) => {
   const { formData, resetForm, setFormData } = useTimesheetForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const employeeId = localStorage.getItem("employeeId");
+  console.log("Employee ID:", employeeId);
+  console.log("Employee ID:", );
+
   // Handle form changes safely
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -36,15 +40,16 @@ export const TimesheetForm = ({ setActiveTab }) => {
     }
   }, [activeTimesheet, resetForm]);
 
-  // Fetch projects on mount
-  useEffect(() => {
-    console.log("Fetching projects...");
-    fetchProjects();
-  }, [fetchProjects]);
-
   useEffect(() => {
     console.log("Projects:", projects);
   }, [projects]);
+
+  // Fetch projects on mount
+  useEffect(() => {
+    if (!projects.length) {
+      fetchProjects();
+    }
+  }, [projects.length, fetchProjects]);
 
   // Fetch timesheets on mount
   useEffect(() => {
@@ -106,8 +111,6 @@ export const TimesheetForm = ({ setActiveTab }) => {
     setIsSubmitting(true);
 
     try {
-      const employeeId = localStorage.getItem("employeeId"); // 🔥 critical
-
       const submissionData = {
         project: formData.project,
         hoursWorked: Number(formData.hours),
