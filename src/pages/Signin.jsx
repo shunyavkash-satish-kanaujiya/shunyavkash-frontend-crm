@@ -5,7 +5,6 @@ import { useAuthStore } from "../store/authStore.js";
 import { Link } from "react-router-dom";
 
 import toast from "react-hot-toast";
- 
 
 export const Signin = () => {
   const [email, setEmail] = useState("");
@@ -30,11 +29,19 @@ export const Signin = () => {
 
     try {
       await register(email, password);
-      console.log("Registration request sent successfully.");
-      toast.success("Login Successful.");
+
+      const currentError = useAuthStore.getState().error;
+      const currentToken = useAuthStore.getState().token;
+
+      if (currentError) {
+        toast.error(currentError); // show error toast
+      } else if (currentToken) {
+        toast.success("Login successful!");
+        navigate("/dashboard"); // move user to dashboard
+      }
     } catch (err) {
       console.error("Handle Submit Error:", err);
-      toast.error("Login Failed.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
