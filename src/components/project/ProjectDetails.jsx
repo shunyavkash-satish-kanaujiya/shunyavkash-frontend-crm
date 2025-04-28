@@ -3,11 +3,12 @@ import { ArrowLeftIcon, UserPlusIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useProjectStore } from "../../store/projectStore";
 import { AssignEmployeeModel } from "./AssignEmployeeModel.jsx";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export const ProjectDetails = ({ projectId, goBack }) => {
   const [project, setProject] = useState(null);
   const [showAssignModal, setShowAssignModal] = useState(false);
-  const { setEditingProject } = useProjectStore();
+  const { setEditingProject, removeAssignedEmployee } = useProjectStore();
 
   const fetchProject = useCallback(async () => {
     try {
@@ -100,6 +101,25 @@ export const ProjectDetails = ({ projectId, goBack }) => {
           </button>
         </div>
         {project.assignedEmployees?.length > 0 ? (
+          // <ul className="space-y-2">
+          //   {project.assignedEmployees.map((assign, index) => (
+          //     <li
+          //       key={`${assign._id}-${index}`}
+          //       className="border p-3 rounded shadow-sm flex justify-between items-center"
+          //     >
+          //       <div>
+          //         {/* Do not remove this log */}
+          //         {console.log("ASSIGN: ", assign)}
+          //         <p className="font-semibold capitalize">
+          //           {assign.employee?.firstName} {assign.employee?.lastName}
+          //         </p>
+          //         <p className="text-sm text-gray-600 capitalize">
+          //           {assign.role || "No role assigned"}
+          //         </p>
+          //       </div>
+          //     </li>
+          //   ))}
+          // </ul>
           <ul className="space-y-2">
             {project.assignedEmployees.map((assign, index) => (
               <li
@@ -107,8 +127,6 @@ export const ProjectDetails = ({ projectId, goBack }) => {
                 className="border p-3 rounded shadow-sm flex justify-between items-center"
               >
                 <div>
-                  {/* Do not remove this log */}
-                  {console.log("ASSIGN: ", assign)}
                   <p className="font-semibold capitalize">
                     {assign.employee?.firstName} {assign.employee?.lastName}
                   </p>
@@ -116,6 +134,23 @@ export const ProjectDetails = ({ projectId, goBack }) => {
                     {assign.role || "No role assigned"}
                   </p>
                 </div>
+                <button
+                  onClick={async () => {
+                    const confirm = window.confirm(
+                      `Remove ${assign.employee?.firstName} from this project?`
+                    );
+                    if (!confirm) return;
+
+                    await removeAssignedEmployee(
+                      project._id,
+                      assign.employee._id
+                    );
+                    fetchProject(); // Refresh project after removal
+                  }}
+                  className=" text-red-600 px-3 py-1  text-sm"
+                >
+                  <XMarkIcon className="w-6 h-6 inline" />
+                </button>
               </li>
             ))}
           </ul>

@@ -49,6 +49,39 @@ export const useAuthStore = create((set) => ({
       localStorage.removeItem("token");
     }
   },
+  forgotPassword: async (email) => {
+    try {
+      set({ loading: true, error: null });
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/forgot-password",
+        { email }
+      );
+      set({ loading: false, message: res.data.message });
+    } catch (err) {
+      set({
+        loading: false,
+        error: err.response?.data?.error || "Something went wrong",
+      });
+    }
+  },
+
+  resetPassword: async (token, password) => {
+    try {
+      set({ loading: true, error: null });
+      const res = await axios.put(
+        `http://localhost:5000/api/auth/reset-password/${token}`,
+        { password }
+      );
+      set({ loading: false, message: res.data.message });
+    } catch (err) {
+      set({
+        loading: false,
+        error: err.response?.data?.error || "Something went wrong",
+      });
+    }
+  },
+
+  clearMessages: () => set({ message: null, error: null }),
 
   logout: () => {
     localStorage.removeItem("token");
