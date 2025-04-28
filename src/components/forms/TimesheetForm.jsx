@@ -6,8 +6,7 @@ import { useProjectStore } from "../../store/projectStore";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../../store/authStore.js";
 
-export const TimesheetForm = ({ setActiveTab }) => {
-  const activeTimesheet = useTimesheetStore((state) => state.activeTimesheet);
+export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   const addTimesheet = useTimesheetStore((state) => state.addTimesheet);
   const updateTimesheet = useTimesheetStore((state) => state.updateTimesheet);
   const fetchTimesheets = useTimesheetStore((state) => state.fetchTimesheets);
@@ -20,7 +19,6 @@ export const TimesheetForm = ({ setActiveTab }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const employeeId = fetchUser._id;
-  console.log("Employee ID:", employeeId);
 
   // Handle form changes safely
   const handleFormChange = (e) => {
@@ -33,17 +31,23 @@ export const TimesheetForm = ({ setActiveTab }) => {
     }
   };
 
+  // Pre-fill the form if there's an editing timesheet
   useEffect(() => {
-    if (activeTimesheet) {
-      resetForm(activeTimesheet);
-    } else {
-      resetForm();
+    if (editingTimesheet) {
+      setFormData({
+        // Use project ID instead of title for the select field
+        project: editingTimesheet.project?._id || "",
+        // Map hoursWorked to hours (the field name used in the form)
+        hours: editingTimesheet.hoursWorked || "",
+        // Format date for the date input field
+        date: editingTimesheet.date
+          ? new Date(editingTimesheet.date).toISOString().split("T")[0]
+          : "",
+        description: editingTimesheet.description || "",
+        employee: employeeId,
+      });
     }
-  }, [activeTimesheet, resetForm]);
-
-  useEffect(() => {
-    console.log("Projects:", projects);
-  }, [projects]);
+  }, [editingTimesheet, setFormData, employeeId]);
 
   // Fetch projects on mount
   useEffect(() => {
@@ -51,19 +55,6 @@ export const TimesheetForm = ({ setActiveTab }) => {
       fetchProjects();
     }
   }, [projects.length, fetchProjects]);
-
-  // Fetch timesheets on mount
-  useEffect(() => {
-    const loadTimesheets = async () => {
-      try {
-        await fetchTimesheets();
-      } catch (err) {
-        console.error("Failed to load timesheets:", err);
-        toast.error("Failed to load timesheets");
-      }
-    };
-    loadTimesheets();
-  }, [fetchTimesheets]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,15 +68,13 @@ export const TimesheetForm = ({ setActiveTab }) => {
         hoursWorked: Number(formData.hours),
         date: new Date(formData.date).toISOString(),
         description: formData.description,
-        employee: employeeId, // 🔥 critical
+        employee: employeeId, // critical
       };
 
-      console.log("Submitting timesheet data:", submissionData);
-
-      if (activeTimesheet && activeTimesheet._id) {
+      if (editingTimesheet && editingTimesheet._id) {
         await updateTimesheet({
           ...submissionData,
-          _id: activeTimesheet._id,
+          _id: editingTimesheet._id,
         });
         toast.success("Timesheet updated!");
       } else {
@@ -96,7 +85,6 @@ export const TimesheetForm = ({ setActiveTab }) => {
       await fetchTimesheets();
       setActiveTab(TABS.TIMESHEET);
     } catch (err) {
-      console.error("Submission error:", err);
       toast.error(err.response?.data?.message || "Failed to submit timesheet");
     } finally {
       setIsSubmitting(false);
@@ -111,7 +99,7 @@ export const TimesheetForm = ({ setActiveTab }) => {
   return (
     <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
       <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
-        {activeTimesheet && activeTimesheet._id
+        {editingTimesheet && editingTimesheet._id
           ? "Update Timesheet"
           : "Add New Timesheet"}
       </h2>
@@ -140,8 +128,8 @@ export const TimesheetForm = ({ setActiveTab }) => {
           <label
             htmlFor="project"
             className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
-      peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
-      peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+            peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
           >
             Project
           </label>
@@ -197,7 +185,7 @@ export const TimesheetForm = ({ setActiveTab }) => {
           >
             {isSubmitting
               ? "Saving..."
-              : activeTimesheet && activeTimesheet._id
+              : editingTimesheet && editingTimesheet._id
               ? "Update Timesheet"
               : "Save Timesheet"}
           </button>

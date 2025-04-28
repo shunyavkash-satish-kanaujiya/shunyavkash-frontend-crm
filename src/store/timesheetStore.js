@@ -5,7 +5,8 @@ export const useTimesheetStore = create((set, get) => ({
   timesheets: [],
   loading: false,
   error: null,
-  filters: { status: "All", view: "daily", date: new Date(), project: null },
+  // filters: { status: "All", view: "daily", date: new Date(), project: null },
+  filters: { status: "All", project: null },
   activeTimesheet: null,
 
   // Fetch Timesheets
@@ -92,6 +93,24 @@ export const useTimesheetStore = create((set, get) => ({
       return data;
     } catch (err) {
       console.error("Failed to update timesheet:", err);
+      throw err;
+    }
+  },
+
+  // Delete Timesheet
+  deleteTimesheet: async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/timesheet/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Optimistically remove timesheet locally
+      set((state) => ({
+        timesheets: state.timesheets.filter((ts) => ts._id !== id),
+      }));
+    } catch (err) {
+      console.error("Failed to delete timesheet:", err);
       throw err;
     }
   },
