@@ -3,29 +3,28 @@ import React from "react";
 import toast from "react-hot-toast";
 import { useTimesheetStore } from "../../store/timesheetStore";
 import { TABS } from "../../constants/activeTab";
+import {
+  statusStyles,
+  statusOptions,
+} from "../../constants/timesheet/timesheetOptions";
 
 export const TimesheetRow = ({
   timesheet,
   setActiveTab,
   setEditingTimesheet,
 }) => {
-  const {
-    employee,
-    project,
-    description,
-    date,
-    hoursWorked,
-    isFinalized,
-    _id,
-  } = timesheet;
+  const { employee, project, description, date, hoursWorked, _id, status } =
+    timesheet;
+  const updateStatus = useTimesheetStore((state) => state.updateStatus);
 
   const deleteTimesheet = useTimesheetStore((state) => state.deleteTimesheet);
   const setActiveTimesheet = useTimesheetStore(
     (state) => state.setActiveTimesheet
   );
 
+  console.log("EDITING TIMESHEET:", timesheet);
+
   const handleEdit = () => {
-    // Update both local and global state
     setEditingTimesheet(timesheet);
     setActiveTimesheet(timesheet);
     setActiveTab(TABS.ADD_TIMESHEET);
@@ -40,6 +39,17 @@ export const TimesheetRow = ({
         console.error("Failed to delete timesheet:", error);
         toast.error("Failed to delete timesheet.");
       }
+    }
+  };
+
+  const handleStatusChange = async (e) => {
+    const newStatus = e.target.value;
+    try {
+      await updateStatus(_id, newStatus);
+      toast.success("Status updated!");
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      toast.error("Failed to update status.");
     }
   };
 
@@ -70,8 +80,20 @@ export const TimesheetRow = ({
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
         {hoursWorked}
       </td>
-      <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-        {isFinalized ? "Finalized" : "Pending"}
+      <td className="px-6 py-4 whitespace-nowrap">
+        <select
+          value={status}
+          onChange={handleStatusChange}
+          className={`text-xs font-medium capitalize rounded-md px-2 py-2 focus:outline-none ${
+            statusStyles[status?.toLowerCase()] || "bg-gray-100 text-gray-800"
+          }`}
+        >
+          {statusOptions.map((option) => (
+            <option key={option} value={option} className="text-gray-800">
+              {option}
+            </option>
+          ))}
+        </select>
       </td>
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap space-x-2">
         <button

@@ -5,7 +5,6 @@ export const useTimesheetStore = create((set, get) => ({
   timesheets: [],
   loading: false,
   error: null,
-  // filters: { status: "All", view: "daily", date: new Date(), project: null },
   filters: { status: "All", project: null },
   activeTimesheet: null,
 
@@ -18,14 +17,11 @@ export const useTimesheetStore = create((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Ensure we have valid data structure
       const processed = data.map((t) => ({
         ...t,
         employee: t.user || null,
         project: t.project || null,
       }));
-
-      console.log("Processed timesheets:", processed);
 
       set({ timesheets: processed, loading: false });
     } catch (err) {
@@ -52,9 +48,6 @@ export const useTimesheetStore = create((set, get) => ({
         }
       );
 
-      console.log("Timesheet added:", data);
-
-      // Optimistically add new timesheet to top
       set((state) => ({
         timesheets: [data, ...state.timesheets],
       }));
@@ -81,9 +74,6 @@ export const useTimesheetStore = create((set, get) => ({
         }
       );
 
-      console.log("Timesheet updated:", data);
-
-      // Optimistically update the specific timesheet locally
       set((state) => ({
         timesheets: state.timesheets.map((ts) =>
           ts._id === data._id ? data : ts
@@ -105,7 +95,6 @@ export const useTimesheetStore = create((set, get) => ({
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Optimistically remove timesheet locally
       set((state) => ({
         timesheets: state.timesheets.filter((ts) => ts._id !== id),
       }));
@@ -126,55 +115,29 @@ export const useTimesheetStore = create((set, get) => ({
       filters: { ...state.filters, ...updatedFilters },
     })),
 
+  // Set active
   setActiveTimesheet: (entry) => set({ activeTimesheet: entry }),
 
-  // Optional: Approve/Reject logic
+  // Update Status
   updateStatus: async (id, status) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(
-        `http://localhost:5000/api/timesheet/${id}/status`,
+      const { data } = await axios.put(
+        `http://localhost:5000/api/timesheet/${id}`,
         { status },
         {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Optimistically update status locally
       set((state) => ({
-        timesheets: state.timesheets.map((ts) =>
-          ts._id === id ? { ...ts, status } : ts
-        ),
+        timesheets: state.timesheets.map((ts) => (ts._id === id ? data : ts)),
       }));
     } catch (err) {
       console.error("Failed to update status:", err);
-    }
-  },
-
-  // Finalize Timesheet
-  finalizeTimesheet: async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.patch(
-        `http://localhost:5000/api/timesheet/${id}/finalize`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Optimistically set status to 'Finalized'
-      set((state) => ({
-        timesheets: state.timesheets.map((ts) =>
-          ts._id === id ? { ...ts, status: "Finalized" } : ts
-        ),
-      }));
-    } catch (err) {
-      console.error("Failed to finalize timesheet:", err);
     }
   },
 }));

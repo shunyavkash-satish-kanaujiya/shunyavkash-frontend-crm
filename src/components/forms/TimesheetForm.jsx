@@ -30,7 +30,8 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   useEffect(() => {
     if (editingTimesheet) {
       setFormData({
-        project: editingTimesheet.project?._id || "",
+        project:
+          editingTimesheet.project?._id || editingTimesheet.project || "",
         status: editingTimesheet.status?.toLowerCase() || "pending",
         hours: editingTimesheet.hoursWorked || "",
         date: editingTimesheet.date
