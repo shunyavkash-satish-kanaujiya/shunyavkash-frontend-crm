@@ -4,6 +4,7 @@ import { useEmployeeForm } from "../../hooks/hr/employee/useEmployeeForm";
 import { AvatarUpload } from "../hr/employee/AvatarUpload";
 import { DocumentsUpload } from "../hr/employee/DocumentsUpload";
 import { FormButtons } from "../hr/employee/FormButtons";
+import { SelectBox } from "../ui/ReusableSelectBox";
 
 export const EmployeeForm = ({ setEmployeeTab }) => {
   const {
@@ -31,22 +32,17 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
         {employeeFields.map((field) => (
           <div className="relative z-0 w-full group" key={field.name}>
             {field.type === "select" ? (
-              <select
+              <SelectBox
+                label={field.label}
                 name={field.name}
-                value={formData[field.name] ?? ""}
+                value={formData[field.name]}
                 onChange={handleChange}
-                required
-                className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-indigo-600"
-              >
-                <option value="" disabled hidden>
-                  Select {field.label}
-                </option>
-                {field.options.map((option, i) => (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                options={field.options.map((option) => ({
+                  value: option,
+                  label: option,
+                }))}
+                required={field.required}
+              />
             ) : (
               <input
                 type={field.type}
