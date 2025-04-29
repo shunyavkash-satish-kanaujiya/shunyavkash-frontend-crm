@@ -168,7 +168,7 @@ export const ProjectTable = ({
                       onChange={async (e) =>
                         await updateProjectPriority(project._id, e.target.value)
                       }
-                      className={`text-xs font-medium rounded px-2 py-1 outline-none ${
+                      className={`text-xs font-medium capitalize rounded-md px-2 py-2 outline-none ${
                         priorityStyles[
                           project.priority?.toLowerCase() || "none"
                         ]
@@ -183,7 +183,7 @@ export const ProjectTable = ({
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      className={`px-3 py-2 capitalize rounded-full text-xs font-medium ${
                         statusStyles[project.status]
                       }`}
                     >
