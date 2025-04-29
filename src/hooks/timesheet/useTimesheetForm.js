@@ -16,13 +16,14 @@ export const useTimesheetForm = () => {
   // Initialize form data state
   const [formData, setFormData] = useState({
     project: "",
-    hours: "",
     date: "",
+    status: "",
+    hours: "",
     description: "",
     employee: "",
   });
 
-  const handleFormChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -34,8 +35,9 @@ export const useTimesheetForm = () => {
   const resetForm = useCallback((data = {}) => {
     setFormData({
       project: data.project || "",
-      hours: data.hoursWorked || "", // Match backend field name
       date: data.date ? formatDate(new Date(data.date)) : "",
+      status: data.status || "",
+      hours: data.hoursWorked || "",
       description: data.description || "",
     });
   }, []);
@@ -92,13 +94,13 @@ export const useTimesheetForm = () => {
     }
 
     // Apply date filter
-    if (filters.date) {
-      const filterDate = new Date(filters.date).toDateString();
-      filtered = filtered.filter((ts) => {
-        if (!ts.date) return false;
-        return new Date(ts.date).toDateString() === filterDate;
-      });
-    }
+    // if (filters.date) {
+    //   const filterDate = new Date(filters.date).toDateString();
+    //   filtered = filtered.filter((ts) => {
+    //     if (!ts.date) return false;
+    //     return new Date(ts.date).toDateString() === filterDate;
+    //   });
+    // }
 
     // Sort by date (newest first)
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -109,7 +111,7 @@ export const useTimesheetForm = () => {
   return {
     formData,
     setFormData,
-    handleFormChange,
+    handleChange,
     resetForm,
     filteredTimesheets,
     loading,

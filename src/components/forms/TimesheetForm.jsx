@@ -5,6 +5,8 @@ import { TABS } from "../../constants/activeTab.js";
 import { useProjectStore } from "../../store/projectStore";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../../store/authStore.js";
+import { SelectBox } from "../ui/ReusableSelectBox.jsx";
+import { timesheetFilters } from "../../constants/timesheet/timesheetFilter.js";
 
 export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   const addTimesheet = useTimesheetStore((state) => state.addTimesheet);
@@ -15,31 +17,22 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   const fetchProjects = useProjectStore((state) => state.fetchProjects);
 
   // Import form state and methods from useTimesheetForm hook
-  const { formData, resetForm, setFormData } = useTimesheetForm();
+  const { formData, resetForm, setFormData, handleChange } = useTimesheetForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const employeeId = fetchUser._id;
+  const statusFilter = timesheetFilters.find(
+    (filter) => filter.key === "status"
+  );
 
-  // Handle form changes safely
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    if (setFormData) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
+  const employeeId = fetchUser._id;
 
   // Pre-fill the form if there's an editing timesheet
   useEffect(() => {
     if (editingTimesheet) {
       setFormData({
-        // Use project ID instead of title for the select field
         project: editingTimesheet.project?._id || "",
-        // Map hoursWorked to hours (the field name used in the form)
+        status: editingTimesheet.status?.toLowerCase() || "pending",
         hours: editingTimesheet.hoursWorked || "",
-        // Format date for the date input field
         date: editingTimesheet.date
           ? new Date(editingTimesheet.date).toISOString().split("T")[0]
           : "",
@@ -65,8 +58,9 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
     try {
       const submissionData = {
         project: formData.project,
-        hoursWorked: Number(formData.hours),
         date: new Date(formData.date).toISOString(),
+        status: formData.status,
+        hoursWorked: Number(formData.hours),
         description: formData.description,
         employee: employeeId, // critical
       };
@@ -92,8 +86,8 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   };
 
   const fields = [
-    { label: "Hours", name: "hours", type: "number", required: true },
     { label: "Date", name: "date", type: "date", required: true },
+    { label: "Hours", name: "hours", type: "number", required: true },
   ];
 
   return (
@@ -108,32 +102,14 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
         {/* Project Select Box */}
-        <div className="relative z-0 w-full group">
-          <select
-            name="project"
-            value={formData?.project || ""}
-            onChange={handleFormChange}
-            required
-            className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
-          >
-            <option value="" disabled>
-              Select a project
-            </option>
-            {projects.map((project) => (
-              <option key={project._id} value={project._id}>
-                {project.title}
-              </option>
-            ))}
-          </select>
-          <label
-            htmlFor="project"
-            className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
-            peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
-            peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
-          >
-            Project
-          </label>
-        </div>
+        <SelectBox
+          label="Project"
+          name="project"
+          value={formData.project}
+          onChange={handleChange}
+          options={projects.map((p) => ({ value: p._id, label: p.title }))}
+          required
+        />
 
         {fields.map((field) => (
           <div className="relative z-0 w-full group" key={field.name}>
@@ -141,7 +117,7 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
               type={field.type}
               name={field.name}
               value={formData?.[field.name] || ""}
-              onChange={handleFormChange}
+              onChange={handleChange}
               required={field.required}
               autoComplete="off"
               className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
@@ -157,12 +133,27 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
           </div>
         ))}
 
+        {/* Status Select Box */}
+        {statusFilter && (
+          <SelectBox
+            label={statusFilter.label.replace("Filter by ", "")}
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
+            options={statusFilter.options.map((status) => ({
+              value: status,
+              label: status,
+            }))}
+            required
+          />
+        )}
+
         {/* Description field - spans 2 columns */}
         <div className="relative z-0 w-full group md:col-span-2">
           <textarea
             name="description"
             value={formData?.description || ""}
-            onChange={handleFormChange}
+            onChange={handleChange}
             required
             rows="4"
             className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
