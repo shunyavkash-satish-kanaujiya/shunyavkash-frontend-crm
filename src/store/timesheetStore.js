@@ -151,4 +151,37 @@ export const useTimesheetStore = create((set, get) => ({
       throw err;
     }
   },
+  // Finalize Timesheet
+  finalizeTimesheet: async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const { data } = await axios.put(
+        `http://localhost:5000/api/timesheet/${id}`,
+        { isFinalized: true },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      set((state) => ({
+        timesheets: state.timesheets.map((ts) =>
+          ts._id === id
+            ? {
+                ...data,
+                employee: data.user || null,
+                project: data.project || null,
+              }
+            : ts
+        ),
+      }));
+
+      return data;
+    } catch (err) {
+      console.error("Failed to finalize timesheet:", err);
+      throw err;
+    }
+  },
 }));
