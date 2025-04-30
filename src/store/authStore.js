@@ -43,6 +43,7 @@ export const useAuthStore = create((set) => ({
 
       const user = res.data;
       set({ user });
+      console.log("USER:", user);
     } catch (err) {
       console.error("Fetch user failed:", err.message);
       set({ error: "Failed to fetch user", user: null, token: null });
