@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { TimesheetRow } from "../timesheet/TimesheetRow";
 import { useTimesheetStore } from "../../store/timesheetStore";
+import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
 
 export const TimesheetTable = ({
   timesheets,
@@ -8,6 +9,8 @@ export const TimesheetTable = ({
   setEditingTimesheet,
   viewMode,
 }) => {
+  const [openTimesheetId, setOpenTimesheetId] = useState(null);
+
   if (timesheets.length === 0) {
     return (
       <div className="text-center py-4 text-gray-500">
@@ -23,6 +26,9 @@ export const TimesheetTable = ({
       <table className="min-w-full divide-y divide-gray-200 text-sm overflow-hidden rounded-lg">
         <thead className="bg-indigo-50">
           <tr>
+            <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+              <BarsArrowDownIcon className="w-6 h-6 inline" />
+            </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
               Employee
             </th>
@@ -49,7 +55,6 @@ export const TimesheetTable = ({
                 Actions
               </th>
             )}
-            {/* Finalized Column */}
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Finalized
             </th>
@@ -63,6 +68,8 @@ export const TimesheetTable = ({
               setActiveTab={setActiveTab}
               setEditingTimesheet={setEditingTimesheet}
               finalizeTimesheet={FinalizeTimesheet}
+              openTimesheetId={openTimesheetId}
+              setOpenTimesheetId={setOpenTimesheetId}
             />
           ))}
         </tbody>

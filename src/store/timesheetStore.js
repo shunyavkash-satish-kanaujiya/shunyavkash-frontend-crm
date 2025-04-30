@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export const useTimesheetStore = create((set, get) => ({
   timesheets: [],
@@ -182,6 +183,44 @@ export const useTimesheetStore = create((set, get) => ({
     } catch (err) {
       console.error("Failed to finalize timesheet:", err);
       throw err;
+    }
+  },
+
+  // other states and actions
+  updateDescription: async (id, description) => {
+    try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
+
+      // Check if the token exists
+      if (!token) {
+        throw new Error("Authorization token is missing");
+      }
+
+      // Send the PUT request with Authorization header
+      const response = await axios.put(
+        `http://localhost:5000/api/timesheet/${id}`,
+        { description },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Update the timesheet state with the new description
+      set((state) => ({
+        timesheets: state.timesheets.map((timesheet) =>
+          timesheet._id === id ? { ...timesheet, description } : timesheet
+        ),
+      }));
+
+      return response.data;
+    } catch (error) {
+      console.error("Failed to update description:", error.message);
+      toast.error("Failed to update description.");
+      throw error;
     }
   },
 }));

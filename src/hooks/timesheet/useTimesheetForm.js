@@ -90,15 +90,6 @@ export const useTimesheetForm = () => {
       );
     }
 
-    // Apply date filter
-    // if (filters.date) {
-    //   const filterDate = new Date(filters.date).toDateString();
-    //   filtered = filtered.filter((ts) => {
-    //     if (!ts.date) return false;
-    //     return new Date(ts.date).toDateString() === filterDate;
-    //   });
-    // }
-
     // Sort by date (newest first)
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
 
