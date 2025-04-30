@@ -1,4 +1,3 @@
-// Clients.jsx
 import { useEffect, useState } from "react";
 import { ClientTable } from "../components/tables/ClientTable.jsx";
 import { useClientStore } from "../store/clientStore.js";
