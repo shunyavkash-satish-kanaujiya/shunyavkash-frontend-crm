@@ -28,10 +28,6 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
     console.log("editingTimesheet:", editingTimesheet);
 
     if (editingTimesheet) {
-      console.log("Description data:", editingTimesheet.description);
-      console.log("Description type:", typeof editingTimesheet.description);
-      console.log("Is array?", Array.isArray(editingTimesheet.description));
-
       let existingTags = [];
 
       if (Array.isArray(editingTimesheet.description)) {
@@ -188,6 +184,9 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
 
         {/* Tag-style Description input */}
         <TagInput tags={descriptionTags} setTags={setDescriptionTags} />
+        <span className="ml-1 text-xs text-gray-500 font-medium  -mt-4">
+          Tap "enter" to save changes.
+        </span>
 
         <div className="md:col-span-2 flex justify-end space-x-3">
           <button
