@@ -22,24 +22,16 @@ export const Sidebar = ({
       className={`transition-all duration-300 ease-in-out bg-surface border-r border-border p-4 flex flex-col`}
       style={{ minWidth: sidebarOpen ? "240px" : "70px" }}
     >
-      <div className="flex items-center justify-between mb-4">
-        {sidebarOpen && (
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img
-              alt="Shaunyavkash"
-              src="/images/shunyavkash-logo.svg"
-              className="w-auto h-10 mx-auto"
-            />
-          </div>
-        )}
+      <div className="flex items-center justify-between mb-6">
+        {sidebarOpen && <h2 className="text-xl font-bold">CRM Admin</h2>}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="text-emerald-500 focus:outline-none ml-2"
+          className="text-gray-500 focus:outline-none"
         >
           {sidebarOpen ? (
-            <ChevronLeftIcon className="h-6 w-6 stroke-2" />
+            <ChevronLeftIcon className="h-6 w-6" />
           ) : (
-            <ChevronRightIcon className="h-6 w-6 ms-2 stroke-2" />
+            <ChevronRightIcon className="h-6 w-6 ms-2" />
           )}
         </button>
       </div>

@@ -24,13 +24,13 @@ export const TagInput = ({ tags, setTags }) => {
         {tags.map((tag, index) => (
           <span
             key={index}
-            className="flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md text-sm"
+            className="flex items-center bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm"
           >
             {tag}
             <button
               type="button"
               onClick={() => removeTag(index)}
-              className="ml-2 text-indigo-500 hover:text-red-700 transition"
+              className="ml-2 text-indigo-500 hover:text-indigo-700"
             >
               &times;
             </button>

@@ -195,7 +195,7 @@ export const TimesheetRow = ({
             <XMarkIcon className="w-5 h-5 inline" />
           </button>
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-center ml-0 my-auto">
+        <td className="px-6 py-4 whitespace-nowrap text-center ml-0 flex justify-start">
           <input
             type="checkbox"
             checked={isFinalized}
@@ -204,7 +204,7 @@ export const TimesheetRow = ({
               e.stopPropagation();
               handleFinalize();
             }}
-            className={`h-5 w-5 rounded flex justify-center align-middle border-gray-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600 ${
+            className={`h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600 ${
               status !== "approved"
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
@@ -213,10 +213,9 @@ export const TimesheetRow = ({
         </td>
       </tr>
 
-      {/* Toggled Description Box */}
       {openTimesheetId === _id && !isFinalized && (
-        <tr className="w-full">
-          <td colSpan="12" className="p-4 bg-indigo-50">
+        <tr>
+          <td colSpan="8" className="p-4 bg-indigo-50">
             <div className="w-full mx-auto">
               <TagInput
                 tags={localTags}
