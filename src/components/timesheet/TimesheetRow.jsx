@@ -71,11 +71,9 @@ export const TimesheetRow = ({
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
         {project?.title}
       </td>
-      <div className=" md:col-span-1">
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis max-w-3xs">
-          {description?.join(", ")}
-        </td>
-      </div>
+      <td className="px-6 py-4 text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis max-w-3xs">
+        {description?.join(", ")}
+      </td>
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
         {date ? new Date(date).toLocaleDateString() : "-"}
       </td>
