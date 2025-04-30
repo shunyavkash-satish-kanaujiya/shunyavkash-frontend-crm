@@ -26,7 +26,7 @@ export const useInvoiceStore = create((set) => ({
     try {
       set({ loading: true, error: null });
       const res = await axios.get(
-        `http://localhost:5000/api/invoices/${invoiceId}`
+        `http://localhost:5000/api/invoice/${invoiceId}`
       );
       set({ editingInvoice: res.data, loading: false });
     } catch (err) {
@@ -36,11 +36,11 @@ export const useInvoiceStore = create((set) => ({
   },
 
   // Create New Invoice
-  addInvoice: async (invoiceData) => {
+  createInvoice: async (invoiceData) => {
     try {
       set({ loading: true, error: null });
       const res = await axios.post(
-        "http://localhost:5000/api/invoices",
+        "http://localhost:5000/api/invoice",
         invoiceData
       );
       set((state) => ({
@@ -57,7 +57,7 @@ export const useInvoiceStore = create((set) => ({
   deleteInvoice: async (invoiceId) => {
     try {
       set({ loading: true, error: null });
-      await axios.delete(`http://localhost:5000/api/invoices/${invoiceId}`);
+      await axios.delete(`http://localhost:5000/api/invoice/${invoiceId}`);
       set((state) => ({
         invoices: state.invoices.filter((inv) => inv._id !== invoiceId),
         loading: false,
@@ -71,12 +71,9 @@ export const useInvoiceStore = create((set) => ({
   // Update Invoice Status (e.g., from Unpaid → Paid)
   updateInvoiceStatus: async (invoiceId, newStatus) => {
     try {
-      await axios.put(
-        `http://localhost:5000/api/invoices/${invoiceId}/status`,
-        {
-          status: newStatus,
-        }
-      );
+      await axios.put(`http://localhost:5000/api/invoice/${invoiceId}/status`, {
+        status: newStatus,
+      });
       set((state) => ({
         invoices: state.invoices.map((inv) =>
           inv._id === invoiceId ? { ...inv, status: newStatus } : inv
@@ -91,7 +88,7 @@ export const useInvoiceStore = create((set) => ({
   regenerateInvoicePDF: async (invoiceId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/invoices/${invoiceId}/regenerate`
+        `http://localhost:5000/api/invoice/${invoiceId}/regenerate`
       );
       set((state) => ({
         invoices: state.invoices.map((inv) =>
