@@ -124,7 +124,7 @@ export const useTimesheetStore = create((set, get) => ({
       const token = localStorage.getItem("token");
       const { data } = await axios.put(
         `http://localhost:5000/api/timesheet/${id}`,
-        { status },
+        { status }, // Only send status
         {
           headers: {
             "Content-Type": "application/json",
@@ -134,10 +134,21 @@ export const useTimesheetStore = create((set, get) => ({
       );
 
       set((state) => ({
-        timesheets: state.timesheets.map((ts) => (ts._id === id ? data : ts)),
+        timesheets: state.timesheets.map((ts) =>
+          ts._id === id
+            ? {
+                ...data,
+                employee: data.user || null,
+                project: data.project || null,
+              }
+            : ts
+        ),
       }));
+
+      return data;
     } catch (err) {
       console.error("Failed to update status:", err);
+      throw err;
     }
   },
 }));
