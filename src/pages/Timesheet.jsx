@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { TimesheetTable } from "../components/tables/TimesheetTable";
 import { ReusableContainer } from "../components/ui/ReusableContainer";
 import { TABS } from "../constants/activeTab";
@@ -8,6 +9,8 @@ import { timesheetFilters } from "../constants/timesheet/timesheetFilter.js";
 export const Timesheet = ({ setActiveTab, setEditingTimesheet }) => {
   const { filteredTimesheets, loading, searchTerm, setSearchTerm, error } =
     useTimesheetForm();
+
+  const [filters, setFilters] = useState({ status: "" });
 
   // Get setActiveTimesheet from the store
   const setActiveTimesheet = useTimesheetStore(
@@ -21,6 +24,13 @@ export const Timesheet = ({ setActiveTab, setEditingTimesheet }) => {
     setActiveTab(TABS.ADD_TIMESHEET);
   };
 
+  const finalFilteredTimesheets = filteredTimesheets.filter((timesheet) => {
+    const matchesStatus = filters.status
+      ? timesheet.status === filters.status
+      : true;
+    return matchesStatus;
+  });
+
   return (
     <>
       <ReusableContainer
@@ -28,6 +38,7 @@ export const Timesheet = ({ setActiveTab, setEditingTimesheet }) => {
         onSearchChange={setSearchTerm}
         searchValue={searchTerm}
         filters={timesheetFilters}
+        onFilterChange={setFilters}
         onAddClick={() => {
           setEditingTimesheet(null);
           setActiveTimesheet(null);
@@ -45,7 +56,8 @@ export const Timesheet = ({ setActiveTab, setEditingTimesheet }) => {
           </div>
         ) : (
           <TimesheetTable
-            timesheets={filteredTimesheets}
+            // timesheets={filteredTimesheets}
+            timesheets={finalFilteredTimesheets}
             setActiveTab={setActiveTab}
             setEditingTimesheet={handleTimesheetSelect}
           />

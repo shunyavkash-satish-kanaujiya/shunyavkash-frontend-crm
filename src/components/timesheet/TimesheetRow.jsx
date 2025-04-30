@@ -1,5 +1,5 @@
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import React from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useTimesheetStore } from "../../store/timesheetStore";
 import { TABS } from "../../constants/activeTab";
@@ -12,17 +12,36 @@ export const TimesheetRow = ({
   timesheet,
   setActiveTab,
   setEditingTimesheet,
+  finalizeTimesheet,
 }) => {
-  const { employee, project, description, date, hoursWorked, _id, status } =
-    timesheet;
+  const {
+    employee,
+    project,
+    description,
+    date,
+    hoursWorked,
+    _id,
+    status,
+    isFinalized,
+  } = timesheet;
   const updateStatus = useTimesheetStore((state) => state.updateStatus);
-
   const deleteTimesheet = useTimesheetStore((state) => state.deleteTimesheet);
   const setActiveTimesheet = useTimesheetStore(
     (state) => state.setActiveTimesheet
   );
 
-  console.log("EDITING TIMESHEET:", timesheet);
+  const [loading, setLoading] = useState(false);
+
+  const handleFinalize = async () => {
+    try {
+      setLoading(true);
+      await finalizeTimesheet(timesheet._id);
+    } catch (error) {
+      console.error("Error finalizing timesheet", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEdit = () => {
     setEditingTimesheet(timesheet);
@@ -84,8 +103,11 @@ export const TimesheetRow = ({
         <select
           value={status}
           onChange={handleStatusChange}
+          disabled={isFinalized} // ✅ Disable when finalized
           className={`text-xs font-medium capitalize rounded-md px-2 py-2 focus:outline-none ${
             statusStyles[status?.toLowerCase()] || "bg-gray-100 text-gray-800"
+          } ${
+            isFinalized ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""
           }`}
         >
           {statusOptions.map((option) => (
@@ -98,7 +120,12 @@ export const TimesheetRow = ({
       <td className="px-6 py-4 text-gray-800 whitespace-nowrap space-x-2">
         <button
           onClick={handleEdit}
-          className="text-indigo-600 hover:text-indigo-800"
+          disabled={isFinalized} // ✅ Disable Edit when finalized
+          className={`${
+            isFinalized
+              ? "text-gray-400 cursor-not-allowed" // ✅ Gray and disabled style
+              : "text-indigo-600 hover:text-indigo-800"
+          }`}
           title="Edit"
         >
           <PencilSquareIcon className="w-5 h-5 inline" />
@@ -110,6 +137,19 @@ export const TimesheetRow = ({
         >
           <XMarkIcon className="w-5 h-5 inline" />
         </button>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <input
+          type="checkbox"
+          checked={isFinalized}
+          disabled={status !== "approved" || loading}
+          onChange={handleFinalize}
+          className={`h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 ${
+            status !== "approved"
+              ? "opacity-50 cursor-not-allowed"
+              : "cursor-pointer"
+          }`}
+        />
       </td>
     </tr>
   );

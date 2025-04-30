@@ -1,5 +1,6 @@
 import React from "react";
 import { TimesheetRow } from "../timesheet/TimesheetRow";
+import { useTimesheetStore } from "../../store/timesheetStore";
 
 export const TimesheetTable = ({
   timesheets,
@@ -14,6 +15,8 @@ export const TimesheetTable = ({
       </div>
     );
   }
+
+  const FinalizeTimesheet = useTimesheetStore.getState().finalizeTimesheet;
 
   return (
     <div className="overflow-x-auto space-y-4 shadow-md rounded-md p-2">
@@ -46,6 +49,10 @@ export const TimesheetTable = ({
                 Actions
               </th>
             )}
+            {/* Finalized Column */}
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Finalized
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
@@ -55,6 +62,7 @@ export const TimesheetTable = ({
               timesheet={timesheet}
               setActiveTab={setActiveTab}
               setEditingTimesheet={setEditingTimesheet}
+              finalizeTimesheet={FinalizeTimesheet}
             />
           ))}
         </tbody>
