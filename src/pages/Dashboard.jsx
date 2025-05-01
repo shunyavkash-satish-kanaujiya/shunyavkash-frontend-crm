@@ -56,12 +56,8 @@ export const Dashboard = () => {
   const navigate = useNavigate();
   const { user, token, isAuthLoading } = useAuth();
   const { activeTab, setActiveTab } = useTab();
-  const {
-    sidebarOpen,
-    setSidebarOpen,
-    openSubmenu,
-    setOpenSubmenu,
-  } = useSidebar();
+  const { sidebarOpen, setSidebarOpen, openSubmenu, setOpenSubmenu } =
+    useSidebar();
 
   const [editingClient, setEditingClient] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
@@ -324,8 +320,8 @@ export const Dashboard = () => {
       {/* Main Area */}
       <div className="flex flex-col flex-1 h-full">
         {/* Header - Fixed */}
-        <header className="flex items-center justify-between p-4 bg-white border-b border-border shadow-sm gap-3">
-          <h1 className="text-2xl font-bold">{activeTab}</h1>
+        <header className="flex items-center justify-between p-4 bg-white border-b border-border border-gray-300 shadow-sm gap-3">
+          <h1 className="text-lg font-bold">{activeTab}</h1>
           <UserDropdown />
         </header>
 

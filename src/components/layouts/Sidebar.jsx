@@ -19,8 +19,11 @@ export const Sidebar = ({
 }) => {
   return (
     <aside
-      className={`transition-all duration-300 ease-in-out bg-surface border-r border-border p-4 flex flex-col`}
-      style={{ minWidth: sidebarOpen ? "240px" : "70px" }}
+      className={`transition-all duration-300 ease-in-out bg-surface border-r border-border border-gray-300 shadow-2xl p-4 flex flex-col`}
+      style={{
+        width: sidebarOpen ? "240px" : "75px",
+        minWidth: sidebarOpen ? "240px" : "75px",
+      }}
     >
       <div className="flex items-center justify-between mb-4">
         {sidebarOpen && (
@@ -28,7 +31,7 @@ export const Sidebar = ({
             <img
               alt="Shaunyavkash"
               src="/images/shunyavkash-logo.svg"
-              className="w-auto h-10 mx-auto"
+              className="w-auto h-8 mx-auto"
             />
           </div>
         )}
@@ -37,14 +40,14 @@ export const Sidebar = ({
           className="text-emerald-500 focus:outline-none ml-2"
         >
           {sidebarOpen ? (
-            <ChevronLeftIcon className="h-6 w-6 stroke-2" />
+            <ChevronLeftIcon className="h-6 w-6 stroke-3" />
           ) : (
-            <ChevronRightIcon className="h-6 w-6 ms-2 stroke-2" />
+            <ChevronRightIcon className="h-6 w-6 ms-1 stroke-3" />
           )}
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto">
+      <nav className="flex-1 overflow-y-auto mt-1">
         <ul className="space-y-1">
           {navigation.map((item) => {
             const isSubmenuActive =
@@ -80,9 +83,9 @@ export const Sidebar = ({
                         <div className="flex flex-1 justify-between items-center">
                           <span className="truncate">{item.name}</span>
                           {openSubmenu === item.name ? (
-                            <ChevronDownIcon className="h-4 w-4 text-gray-500 ms-2" />
+                            <ChevronDownIcon className="h-4 w-4 text-gray-500 ms-2 stroke-2" />
                           ) : (
-                            <SubChevronRightIcon className="h-4 w-4 text-gray-500 ms-2" />
+                            <SubChevronRightIcon className="h-4 w-4 text-gray-500 ms-2 stroke-2" />
                           )}
                         </div>
                       )}
