@@ -20,5 +20,6 @@ export const useAuth = () => {
     }
   }, [navigate, user, token, fetchUser]);
 
+  // return { user, accessToken: token, isAuthLoading };
   return { user, token, isAuthLoading };
 };

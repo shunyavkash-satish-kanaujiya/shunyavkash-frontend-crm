@@ -10,7 +10,7 @@ export const useClientStore = create((set) => ({
   fetchClients: async () => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.get("http://localhost:5000/api/client/");
+      const res = await axios.get("http://localhost:5000/api/client");
       console.log("Clients: ", res.data);
 
       set({ clients: res.data, loading: false });
@@ -25,7 +25,7 @@ export const useClientStore = create((set) => ({
     try {
       set({ loading: true, error: null });
       const res = await axios.post(
-        "http://localhost:5000/api/client/",
+        "http://localhost:5000/api/client",
         clientData
       );
       set((state) => ({
