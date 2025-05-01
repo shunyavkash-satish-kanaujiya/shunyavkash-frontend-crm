@@ -69,34 +69,82 @@ export const useInvoiceStore = create((set) => ({
   },
 
   // Update Invoice Status (e.g., from Unpaid → Paid)
+  // updateInvoiceStatus: async (invoiceId, newStatus) => {
+  //   try {
+  //     await axios.put(`http://localhost:5000/api/invoice/${invoiceId}/status`, {
+  //       status: newStatus,
+  //     });
+  //     set((state) => ({
+  //       invoices: state.invoices.map((inv) =>
+  //         inv._id === invoiceId ? { ...inv, status: newStatus } : inv
+  //       ),
+  //     }));
+  //   } catch (error) {
+  //     console.error("Failed to update invoice status:", error);
+  //   }
+  // },
   updateInvoiceStatus: async (invoiceId, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/invoice/${invoiceId}/status`, {
-        status: newStatus,
-      });
+      set({ loading: true, error: null });
+
+      // Make sure newStatus is being passed correctly
+      if (!newStatus) {
+        throw new Error("New status is required");
+      }
+
+      const response = await axios.put(
+        `http://localhost:5000/api/invoice/${invoiceId}/status`,
+        {
+          status: newStatus,
+        }
+      );
+
       set((state) => ({
         invoices: state.invoices.map((inv) =>
           inv._id === invoiceId ? { ...inv, status: newStatus } : inv
         ),
+        loading: false,
       }));
+
+      return response.data;
     } catch (error) {
+      set({
+        error: error.message || "Failed to update invoice status",
+        loading: false,
+      });
       console.error("Failed to update invoice status:", error);
+      throw error; // Re-throw to allow component to handle the error
     }
   },
-
-  // Regenerate Invoice PDF
-  regenerateInvoicePDF: async (invoiceId) => {
+  regeneratePdf: async (invoiceId) => {
+    set({ loading: true, error: null });
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `http://localhost:5000/api/invoice/${invoiceId}/regenerate`
       );
+
+      // Update the specific invoice in the state
       set((state) => ({
-        invoices: state.invoices.map((inv) =>
-          inv._id === invoiceId ? res.data : inv
+        invoices: state.invoices.map((invoice) =>
+          invoice._id === invoiceId
+            ? {
+                ...invoice,
+                pdfUrl: response.data.invoice.pdfUrl,
+                cloudinaryPublicId: response.data.invoice.cloudinaryPublicId,
+                pdfExists: response.data.invoice.pdfExists,
+              }
+            : invoice
         ),
+        loading: false,
       }));
+
+      return response.data.invoice;
     } catch (error) {
-      console.error("Failed to regenerate PDF:", error);
+      set({
+        error: error.response?.data?.message || "Failed to regenerate PDF",
+        loading: false,
+      });
+      throw error; // Re-throw to allow component to handle the error
     }
   },
 }));
