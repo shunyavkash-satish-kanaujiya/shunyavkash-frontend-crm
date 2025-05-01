@@ -28,11 +28,20 @@ export const Sidebar = ({
       <div className="flex items-center justify-between mb-4">
         {sidebarOpen && (
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img
-              alt="Shaunyavkash"
-              src="/images/shunyavkash-logo.svg"
-              className="w-auto h-8 mx-auto"
-            />
+            <a
+              href="javascript:void(0);"
+              onClick={() => {
+                setActiveTab(TABS.DASHBOARD);
+                setOpenSubmenu(null);
+              }}
+              className="sm:mx-auto sm:w-full sm:max-w-sm block"
+            >
+              <img
+                alt="Shaunyavkash"
+                src="/images/shunyavkash-logo.svg"
+                className="w-auto h-8 mx-auto"
+              />
+            </a>
           </div>
         )}
         <button
@@ -96,7 +105,7 @@ export const Sidebar = ({
                         {item.submenu.map((sub) => (
                           <li key={sub.name}>
                             <a
-                              href="#"
+                              href="javascript:void(0);"
                               onClick={() => {
                                 setActiveTab(sub.name);
                                 setOpenSubmenu(item.name);
@@ -120,7 +129,7 @@ export const Sidebar = ({
                   </div>
                 ) : (
                   <a
-                    href="#"
+                    href="javascript:void(0);"
                     onClick={() => {
                       setActiveTab(item.name);
                       setOpenSubmenu(null);

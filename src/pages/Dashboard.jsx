@@ -15,8 +15,9 @@ import {
   CogIcon,
   UserGroupIcon,
   ReceiptPercentIcon,
+  QueueListIcon,
+  ListBulletIcon,
 } from "@heroicons/react/24/outline";
-import { LogsIcon } from "lucide-react";
 
 import { TABS } from "../constants/activeTab";
 import { HR } from "./HR.jsx";
@@ -42,7 +43,7 @@ const navigation = [
     icon: FolderIcon,
     submenu: [{ name: "Archived Projects" }],
   },
-  { name: "Timesheet", icon: LogsIcon },
+  { name: "Timesheet", icon: ListBulletIcon },
   { name: "Invoice", icon: ReceiptPercentIcon },
   { name: "Reports", icon: ChartBarIcon },
   {

@@ -15,7 +15,7 @@ export const useEmployeeStore = create((set) => ({
       const response = await axios.get("http://localhost:5000/api/employee");
 
       set({ employees: response.data, loading: false });
-      console.log("Fetched employees:", response.data); // all employees
+      console.log("Employees:", response.data); // all employees
     } catch (error) {
       set({ loading: false, error: error.message });
       console.error("Failed to fetch employees:", error);

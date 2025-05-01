@@ -15,7 +15,7 @@ export const useProjectStore = create((set) => ({
       set({ loading: true, error: null });
       const res = await axios.get("http://localhost:5000/api/project");
       set({ projects: res.data, loading: false });
-      console.log("Fetched projects:", res.data);
+      console.log("Projects:", res.data);
     } catch (err) {
       set({ error: err.message, loading: false });
       console.error("Failed to fetch projects:", err);
@@ -96,6 +96,8 @@ export const useProjectStore = create((set) => ({
     try {
       set({ loading: true, error: null });
       const res = await axios.get("http://localhost:5000/api/project/archived");
+      console.log("Archived Projects:", res.data);
+      "Archived Projects:", res.data;
       set({ archivedProjects: res.data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
