@@ -32,6 +32,7 @@ import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
 import { UserDropdown } from "../components/dashboard/UserDropdown.jsx";
 import { TimesheetForm } from "../components/forms/TimesheetForm.jsx";
+import PageNotFound from "./PageNotFound.jsx";
 
 // Sidebar Tabs
 const navigation = [
@@ -285,6 +286,8 @@ export const Dashboard = () => {
         />
       );
     }
+
+    // Invoices
     if (activeTab === TABS.INVOICES) {
       return (
         <Invoice
@@ -294,6 +297,11 @@ export const Dashboard = () => {
           updateInvoiceStatus={updateInvoiceStatus}
         />
       );
+    }
+
+    // PageNotFound
+    if (activeTab === TABS.PAGENOTFOUND) {
+      return <PageNotFound setActiveTab={setActiveTab} />;
     }
 
     return (
