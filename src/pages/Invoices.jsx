@@ -9,7 +9,7 @@ export const Invoice = () => {
   const updateStatus = useInvoiceStore((s) => s.updateInvoiceStatus);
 
   // Simple download by opening URL in new tab
-  const handleDownloadPDF = (invoiceId, pdfUrl) => {
+  const handleDownloadPDF = (pdfUrl) => {
     window.open(pdfUrl, "_blank");
   };
 
