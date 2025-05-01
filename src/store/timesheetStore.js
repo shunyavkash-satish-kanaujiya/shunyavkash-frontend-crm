@@ -11,32 +11,6 @@ export const useTimesheetStore = create((set, get) => ({
   activeTimesheet: null,
 
   // Fetch Timesheets
-  // Working Correctly
-  // fetchTimesheets: async () => {
-  //   set({ loading: true, error: null });
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const { data } = await axios.get("http://localhost:5000/api/timesheet", {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-
-  //     const processed = data.map((t) => ({
-  //       ...t,
-  //       employee: t.user || null,
-  //       project: t.project || null,
-  //     }));
-
-  //     set({ timesheets: processed, loading: false });
-  //   } catch (err) {
-  //     set({
-  //       error: err.response?.data?.message || "Failed to fetch timesheets",
-  //       loading: false,
-  //     });
-  //     throw err;
-  //   }
-  // },
-
-  // Testing
   fetchTimesheets: async () => {
     set({ loading: true, error: null });
     try {
@@ -67,6 +41,7 @@ export const useTimesheetStore = create((set, get) => ({
           }));
       }
 
+      console.log("Timesheets:", data);
       set({ timesheets: processed, loading: false });
     } catch (err) {
       set({

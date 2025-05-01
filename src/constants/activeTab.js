@@ -17,4 +17,6 @@ export const TABS = {
 
   INVOICES: "Invoice",
   ADD_INVOICE: "Add Invoice",
+
+  PAGENOTFOUND: "Page Not Found",
 };

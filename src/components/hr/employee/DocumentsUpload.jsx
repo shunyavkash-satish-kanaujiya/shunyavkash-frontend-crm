@@ -1,3 +1,4 @@
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
 export const DocumentsUpload = ({
@@ -51,7 +52,7 @@ export const DocumentsUpload = ({
                 onClick={() => handleRemoveExistingDoc(index)}
                 className="text-red-500 text-sm ml-4"
               >
-                ❌
+                <XMarkIcon className="w-5 h-5 inline stroke-3" />
               </button>
             </div>
           ))}
@@ -74,7 +75,7 @@ export const DocumentsUpload = ({
                 onClick={() => handleRemoveNewDoc(index)}
                 className="text-red-500 text-sm ml-4"
               >
-                ❌
+                <XMarkIcon className="w-5 h-5 inline stroke-3" />
               </button>
             </div>
           ))}

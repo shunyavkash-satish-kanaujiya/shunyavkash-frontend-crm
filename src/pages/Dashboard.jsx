@@ -15,8 +15,9 @@ import {
   CogIcon,
   UserGroupIcon,
   ReceiptPercentIcon,
+  QueueListIcon,
+  ListBulletIcon,
 } from "@heroicons/react/24/outline";
-import { LogsIcon } from "lucide-react";
 
 import { TABS } from "../constants/activeTab";
 import { HR } from "./HR.jsx";
@@ -31,6 +32,7 @@ import { useSidebar } from "../hooks/dashboard/useSidebar";
 import { useState } from "react";
 import { UserDropdown } from "../components/dashboard/UserDropdown.jsx";
 import { TimesheetForm } from "../components/forms/TimesheetForm.jsx";
+import PageNotFound from "./PageNotFound.jsx";
 
 // Sidebar Tabs
 const navigation = [
@@ -42,7 +44,7 @@ const navigation = [
     icon: FolderIcon,
     submenu: [{ name: "Archived Projects" }],
   },
-  { name: "Timesheet", icon: LogsIcon },
+  { name: "Timesheet", icon: ListBulletIcon },
   { name: "Invoice", icon: ReceiptPercentIcon },
   { name: "Reports", icon: ChartBarIcon },
   {
@@ -56,12 +58,8 @@ export const Dashboard = () => {
   const navigate = useNavigate();
   const { user, token, isAuthLoading } = useAuth();
   const { activeTab, setActiveTab } = useTab();
-  const {
-    sidebarOpen,
-    setSidebarOpen,
-    openSubmenu,
-    setOpenSubmenu,
-  } = useSidebar();
+  const { sidebarOpen, setSidebarOpen, openSubmenu, setOpenSubmenu } =
+    useSidebar();
 
   const [editingClient, setEditingClient] = useState(null);
   const [editingProject, setEditingProject] = useState(null);
@@ -288,6 +286,8 @@ export const Dashboard = () => {
         />
       );
     }
+
+    // Invoices
     if (activeTab === TABS.INVOICES) {
       return (
         <Invoice
@@ -297,6 +297,11 @@ export const Dashboard = () => {
           updateInvoiceStatus={updateInvoiceStatus}
         />
       );
+    }
+
+    // PageNotFound
+    if (activeTab === TABS.PAGENOTFOUND) {
+      return <PageNotFound setActiveTab={setActiveTab} />;
     }
 
     return (
@@ -324,8 +329,8 @@ export const Dashboard = () => {
       {/* Main Area */}
       <div className="flex flex-col flex-1 h-full">
         {/* Header - Fixed */}
-        <header className="flex items-center justify-between p-4 bg-white border-b border-border shadow-sm gap-3">
-          <h1 className="text-2xl font-bold">{activeTab}</h1>
+        <header className="flex items-center justify-between p-4 bg-white border-b border-border border-gray-300 shadow-sm gap-3">
+          <h1 className="text-lg font-bold">{activeTab}</h1>
           <UserDropdown />
         </header>
 

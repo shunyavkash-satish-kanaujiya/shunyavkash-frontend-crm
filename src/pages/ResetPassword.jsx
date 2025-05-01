@@ -11,13 +11,8 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
-  const {
-    resetPassword,
-    loading,
-    error,
-    message,
-    clearMessages,
-  } = useAuthStore();
+  const { resetPassword, loading, error, message, clearMessages } =
+    useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,7 +113,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="cursor-pointer transition flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="cursor-pointer transition flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   {loading ? "Resetting..." : "Reset Password"}
                 </button>
