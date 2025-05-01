@@ -1,200 +1,9 @@
-// import { useEffect, useState } from "react";
-// import { useClientStore } from "../../store/clientStore";
-// import { useTimesheetStore } from "../../store/timesheetStore";
-// import { useInvoiceStore } from "../../store/invoiceStore";
-
-// export const CreateInvoice = ({ setActiveTab }) => {
-//   const { clients, fetchClients } = useClientStore();
-//   const { timesheets, fetchTimesheets } = useTimesheetStore();
-//   const { createInvoice, loading } = useInvoiceStore();
-
-//   const [formData, setFormData] = useState({
-//     client: "",
-//     timesheetIds: [],
-//     ratePerHour: "",
-//     issuedDate: "",
-//     dueDate: "",
-//   });
-
-//   const [formErrors, setFormErrors] = useState({});
-
-//   useEffect(() => {
-//     fetchClients();
-//     fetchTimesheets();
-//   }, [fetchClients, fetchTimesheets]);
-
-//   useEffect(() => {
-//     console.log("Fetched Clients: ", clients);
-//     console.log("Fetched Timesheets: ", timesheets);
-//   }, [clients, timesheets]);
-
-//   const selectedTimesheets = timesheets.filter((ts) =>
-//     formData.timesheetIds.includes(ts._id)
-//   );
-
-//   const totalHours = selectedTimesheets.reduce(
-//     (sum, ts) => sum + (ts.hours || 0),
-//     0
-//   );
-
-//   const totalAmount = totalHours * parseFloat(formData.ratePerHour || 0);
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({ ...prev, [name]: value }));
-//   };
-
-//   const handleTimesheetToggle = (id) => {
-//     setFormData((prev) => ({
-//       ...prev,
-//       timesheetIds: prev.timesheetIds.includes(id)
-//         ? prev.timesheetIds.filter((tid) => tid !== id)
-//         : [...prev.timesheetIds, id],
-//     }));
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-
-//     const errors = {};
-//     if (!formData.client) errors.client = "Client is required.";
-//     if (!formData.timesheetIds.length)
-//       errors.timesheetIds = "Select at least one timesheet.";
-//     if (!formData.ratePerHour)
-//       errors.ratePerHour = "Rate per hour is required.";
-//     if (!formData.issuedDate) errors.issuedDate = "Issued date is required.";
-//     if (!formData.dueDate) errors.dueDate = "Due date is required.";
-
-//     if (Object.keys(errors).length) return setFormErrors(errors);
-
-//     await createInvoice({
-//       ...formData,
-//       totalHours,
-//       totalAmount,
-//     });
-
-//     setActiveTab("Invoice");
-//   };
-
-//   return (
-//     <div className="bg-white rounded-lg p-6 shadow-md max-w-3xl mx-auto">
-//       <h2 className="text-xl font-semibold mb-4">Create Invoice</h2>
-//       <form onSubmit={handleSubmit} className="space-y-4">
-//         {/* Select Client */}
-//         <div>
-//           <label className="block text-sm font-medium">Client</label>
-//           <select
-//             name="client"
-//             value={formData.client}
-//             onChange={handleChange}
-//             className="mt-1 block w-full border rounded px-3 py-2"
-//           >
-//             <option value="">-- Select Client --</option>
-//             {clients.map((client) => (
-//               <option key={client._id} value={client._id}>
-//                 {client.name}
-//               </option>
-//             ))}
-//           </select>
-//           {formErrors.client && (
-//             <p className="text-red-500 text-sm">{formErrors.client}</p>
-//           )}
-//         </div>
-
-//         {/* Select Timesheets */}
-//         <div>
-//           <label className="block text-sm font-medium">Timesheets</label>
-//           <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded p-2">
-//             {timesheets.map((ts) => (
-//               <label key={ts._id} className="flex items-center space-x-2">
-//                 {console.log("ts", ts.project.title)}
-//                 <input
-//                   type="checkbox"
-//                   checked={formData.timesheetIds.includes(ts._id)}
-//                   onChange={() => handleTimesheetToggle(ts._id)}
-//                 />
-//                 <span>
-//                   {ts.taskTitle} — {ts.hours} hrs
-//                 </span>
-//               </label>
-//             ))}
-//           </div>
-//           {formErrors.timesheetIds && (
-//             <p className="text-red-500 text-sm">{formErrors.timesheetIds}</p>
-//           )}
-//         </div>
-
-//         {/* Rate per Hour */}
-//         <div>
-//           <label className="block text-sm font-medium">Rate per Hour (₹)</label>
-//           <input
-//             type="number"
-//             name="ratePerHour"
-//             value={formData.ratePerHour}
-//             onChange={handleChange}
-//             className="mt-1 block w-full border rounded px-3 py-2"
-//           />
-//           {formErrors.ratePerHour && (
-//             <p className="text-red-500 text-sm">{formErrors.ratePerHour}</p>
-//           )}
-//         </div>
-
-//         {/* Issued Date */}
-//         <div>
-//           <label className="block text-sm font-medium">Issued Date</label>
-//           <input
-//             type="date"
-//             name="issuedDate"
-//             value={formData.issuedDate}
-//             onChange={handleChange}
-//             className="mt-1 block w-full border rounded px-3 py-2"
-//           />
-//           {formErrors.issuedDate && (
-//             <p className="text-red-500 text-sm">{formErrors.issuedDate}</p>
-//           )}
-//         </div>
-
-//         {/* Due Date */}
-//         <div>
-//           <label className="block text-sm font-medium">Due Date</label>
-//           <input
-//             type="date"
-//             name="dueDate"
-//             value={formData.dueDate}
-//             onChange={handleChange}
-//             className="mt-1 block w-full border rounded px-3 py-2"
-//           />
-//           {formErrors.dueDate && (
-//             <p className="text-red-500 text-sm">{formErrors.dueDate}</p>
-//           )}
-//         </div>
-
-//         {/* Summary */}
-//         <div className="bg-gray-100 p-3 rounded">
-//           <p>
-//             Total Hours: <strong>{totalHours}</strong>
-//           </p>
-//           <p>
-//             Total Amount: <strong>₹{totalAmount.toFixed(2)}</strong>
-//           </p>
-//         </div>
-
-//         <button
-//           type="submit"
-//           className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500"
-//           disabled={loading}
-//         >
-//           {loading ? "Creating..." : "Create Invoice"}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-// ====================================================================================================================
 import { useEffect, useState } from "react";
 import { useClientStore } from "../../store/clientStore";
 import { useTimesheetStore } from "../../store/timesheetStore";
 import { useInvoiceStore } from "../../store/invoiceStore";
+import toast from "react-hot-toast";
+import { SelectBox } from "../ui/ReusableSelectBox.jsx";
 
 export const CreateInvoice = ({ setActiveTab }) => {
   const { clients, fetchClients } = useClientStore();
@@ -211,6 +20,7 @@ export const CreateInvoice = ({ setActiveTab }) => {
 
   const [formErrors, setFormErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchClients();
@@ -226,7 +36,6 @@ export const CreateInvoice = ({ setActiveTab }) => {
     return ts.isFinalized && projectClientId === formData.client;
   });
 
-  console.log("filteredTimesheets", filteredTimesheets);
   const selectedTimesheets = filteredTimesheets.filter((ts) =>
     formData.timesheetIds.includes(ts._id)
   );
@@ -256,10 +65,25 @@ export const CreateInvoice = ({ setActiveTab }) => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const resetForm = () => {
+    setFormData({
+      client: "",
+      timesheetIds: [],
+      ratePerHour: "",
+      issuedDate: "",
+      dueDate: "",
+    });
     setFormErrors({});
     setSubmitError("");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    setFormErrors({});
+    setSubmitError("");
+    setIsSubmitting(true);
 
     const errors = {};
     if (!formData.client) errors.client = "Client is required.";
@@ -270,67 +94,82 @@ export const CreateInvoice = ({ setActiveTab }) => {
     if (!formData.issuedDate) errors.issuedDate = "Issued date is required.";
     if (!formData.dueDate) errors.dueDate = "Due date is required.";
 
-    if (Object.keys(errors).length) return setFormErrors(errors);
+    if (Object.keys(errors).length) {
+      setFormErrors(errors);
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       await createInvoice({
-        clientId: formData.client, // ✅ Fixed: backend expects 'clientId'
+        clientId: formData.client,
         timesheetIds: formData.timesheetIds,
         ratePerHour: formData.ratePerHour,
         dueDate: formData.dueDate,
       });
-      setActiveTab("Invoice");
 
-      // Optional: reset form
-      setFormData({
-        client: "",
-        timesheetIds: [],
-        ratePerHour: "",
-        issuedDate: "",
-        dueDate: "",
-      });
+      toast.success("Invoice created successfully!");
+      setActiveTab("Invoice");
+      resetForm();
     } catch (err) {
       setSubmitError(
         err.response?.data?.message || "Failed to create invoice."
       );
+      toast.error(err.response?.data?.message || "Failed to create invoice");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  const fields = [
+    { label: "Issued Date", name: "issuedDate", type: "date", required: true },
+    { label: "Due Date", name: "dueDate", type: "date", required: true },
+    {
+      label: "Rate per Hour (₹)",
+      name: "ratePerHour",
+      type: "number",
+      required: true,
+    },
+  ];
+
   return (
-    <div className="bg-white rounded-lg p-6 shadow-md max-w-3xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Create Invoice</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
+      <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
+        Create Invoice
+      </h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Select Client */}
-        <div>
-          <label className="block text-sm font-medium">Client</label>
-          <select
-            name="client"
-            value={formData.client}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          >
-            <option value="">-- Select Client --</option>
-            {clients.map((client) => (
-              <option key={client._id} value={client._id}>
-                {client.name}
-              </option>
-            ))}
-          </select>
-          {formErrors.client && (
-            <p className="text-red-500 text-sm">{formErrors.client}</p>
-          )}
-        </div>
+        <SelectBox
+          label="Client"
+          name="client"
+          value={formData.client}
+          onChange={handleChange}
+          options={clients.map((client) => ({
+            value: client._id,
+            label: client.name,
+          }))}
+          required
+        />
+        {formErrors.client && (
+          <p className="text-red-500 text-sm -mt-5">{formErrors.client}</p>
+        )}
 
         {/* Select Timesheets */}
         {formData.client && (
-          <div>
-            <label className="block text-sm font-medium">Timesheets</label>
-            <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded p-2">
+          <div className="relative z-0 w-full group">
+            <label className="text-md text-gray-500 bg-white px-1">
+              Timesheets
+            </label>
+            <div className="mt-2 grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3">
               {filteredTimesheets.length > 0 ? (
                 filteredTimesheets.map((ts) => (
-                  <label key={ts._id} className="flex items-center space-x-2">
+                  <label
+                    key={ts._id}
+                    className="flex items-center space-x-2 cursor-pointer p-1 hover:bg-gray-50 rounded"
+                  >
                     <input
                       type="checkbox"
+                      className="text-indigo-600 rounded focus:ring-indigo-500"
                       checked={formData.timesheetIds.includes(ts._id)}
                       onChange={() => handleTimesheetToggle(ts._id)}
                     />
@@ -347,77 +186,85 @@ export const CreateInvoice = ({ setActiveTab }) => {
               )}
             </div>
             {formErrors.timesheetIds && (
-              <p className="text-red-500 text-sm">{formErrors.timesheetIds}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {formErrors.timesheetIds}
+              </p>
             )}
           </div>
         )}
 
-        {/* Rate per Hour */}
-        <div>
-          <label className="block text-sm font-medium">Rate per Hour (₹)</label>
-          <input
-            type="number"
-            name="ratePerHour"
-            value={formData.ratePerHour}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
-          {formErrors.ratePerHour && (
-            <p className="text-red-500 text-sm">{formErrors.ratePerHour}</p>
-          )}
-        </div>
-
-        {/* Issued Date */}
-        <div>
-          <label className="block text-sm font-medium">Issued Date</label>
-          <input
-            type="date"
-            name="issuedDate"
-            value={formData.issuedDate}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
-          {formErrors.issuedDate && (
-            <p className="text-red-500 text-sm">{formErrors.issuedDate}</p>
-          )}
-        </div>
-
-        {/* Due Date */}
-        <div>
-          <label className="block text-sm font-medium">Due Date</label>
-          <input
-            type="date"
-            name="dueDate"
-            value={formData.dueDate}
-            onChange={handleChange}
-            className="mt-1 block w-full border rounded px-3 py-2"
-          />
-          {formErrors.dueDate && (
-            <p className="text-red-500 text-sm">{formErrors.dueDate}</p>
-          )}
-        </div>
+        {/* Form Fields */}
+        {fields.map((field) => (
+          <div className="relative z-0 w-full group" key={field.name}>
+            <input
+              type={field.type}
+              name={field.name}
+              value={formData?.[field.name] || ""}
+              onChange={handleChange}
+              required={field.required}
+              autoComplete="off"
+              className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+            />
+            <label
+              htmlFor={field.name}
+              className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+              peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+            >
+              {field.label}
+            </label>
+            {formErrors[field.name] && (
+              <p className="text-red-500 text-sm mt-1">
+                {formErrors[field.name]}
+              </p>
+            )}
+          </div>
+        ))}
 
         {/* Summary */}
-        <div className="bg-gray-100 p-3 rounded">
-          <p>
-            Total Hours: <strong>{totalHours}</strong>
-          </p>
-          <p>
-            Total Amount: <strong>₹{totalAmount.toFixed(2)}</strong>
-          </p>
+        <div className="mt-6 bg-indigo-50 rounded-lg p-4 border border-indigo-100">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-medium text-indigo-700">Invoice Summary</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-gray-500 text-sm">Total Hours</p>
+              <p className="text-xl font-semibold text-gray-800">
+                {totalHours.toFixed(2)}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm">Total Amount</p>
+              <p className="text-xl font-semibold text-indigo-700">
+                ₹{totalAmount.toFixed(2)}
+              </p>
+            </div>
+          </div>
         </div>
 
         {submitError && (
           <p className="text-red-600 text-sm font-medium">{submitError}</p>
         )}
 
-        <button
-          type="submit"
-          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-500"
-          disabled={loading}
-        >
-          {loading ? "Creating..." : "Create Invoice"}
-        </button>
+        <div className="flex justify-end space-x-3 mt-4">
+          <button
+            type="button"
+            className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-6 rounded-lg"
+            onClick={() => {
+              resetForm();
+              setActiveTab("Invoice");
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-6 rounded-lg"
+            disabled={loading}
+          >
+            {loading ? "Creating..." : "Create Invoice"}
+          </button>
+        </div>
       </form>
     </div>
   );
