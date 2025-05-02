@@ -44,6 +44,8 @@ export const TimesheetRow = ({
   const [loading, setLoading] = useState(false);
   const [localTags, setLocalTags] = useState(description || []);
 
+  console.log("EMPLOYEE: ", employee.role);
+
   const handleFinalize = async () => {
     try {
       setLoading(true);
@@ -150,6 +152,7 @@ export const TimesheetRow = ({
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
           {hoursWorked}
         </td>
+        {/* Status */}
         <td className="px-6 py-4 whitespace-nowrap">
           <select
             value={status}
@@ -161,11 +164,19 @@ export const TimesheetRow = ({
               isFinalized ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""
             }`}
           >
-            {statusOptions.map((option) => (
-              <option key={option} value={option} className="text-gray-800">
-                {option}
-              </option>
-            ))}
+            {statusOptions
+              .filter((option) => {
+                if (employee.role === "Admin") {
+                  return true; // Admin
+                } else {
+                  return option === "pending"; // Others
+                }
+              })
+              .map((option) => (
+                <option key={option} value={option} className="text-gray-800">
+                  {option}
+                </option>
+              ))}
           </select>
         </td>
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap space-x-2">

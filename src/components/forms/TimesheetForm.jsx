@@ -134,6 +134,8 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
     { label: "Hours", name: "hours", type: "number", required: true },
   ];
 
+  console.log("STATUS: ", formData.status);
+
   return (
     <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
       <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
@@ -171,13 +173,22 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
           </div>
         ))}
 
+        {/* Status */}
         {statusFilter && (
           <SelectBox
             label={statusFilter.label.replace("Filter by ", "")}
             name="status"
             value={formData.status}
             onChange={handleChange}
-            options={statusFilter.options.map((s) => ({ value: s, label: s }))}
+            options={statusFilter.options
+              .filter((s) => {
+                if (fetchUser.role === "Admin") {
+                  return true; // Admin
+                } else {
+                  return s === "pending"; // Employees
+                }
+              })
+              .map((s) => ({ value: s, label: s }))}
             required
           />
         )}
