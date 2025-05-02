@@ -1,6 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeftIcon, UserPlusIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
 import { useProjectStore } from "../../store/projectStore";
 import { AssignEmployeeModel } from "./AssignEmployeeModel.jsx";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -8,25 +7,22 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 export const ProjectDetails = ({ projectId, goBack }) => {
   const [project, setProject] = useState(null);
   const [showAssignModal, setShowAssignModal] = useState(false);
-  const { setEditingProject, removeAssignedEmployee } = useProjectStore();
-
-  const fetchProject = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/project/${projectId}`
-      );
-      setProject(res.data);
-      setEditingProject(res.data);
-    } catch (err) {
-      console.error("Failed to fetch project details:", err);
-    }
-  }, [projectId, setEditingProject]);
+  const { fetchProjectById, removeAssignedEmployee, projectLoading } =
+    useProjectStore();
 
   useEffect(() => {
-    fetchProject();
-  }, [fetchProject]);
+    const loadProject = async () => {
+      const projectData = await fetchProjectById(projectId);
+      if (projectData) {
+        setProject(projectData);
+      }
+    };
 
-  if (!project) return <div className="p-4">Loading...</div>;
+    loadProject();
+  }, [projectId, fetchProjectById]);
+
+  if (projectLoading || !project)
+    return <div className="p-4">Loading project details...</div>;
 
   return (
     <div className="p-6 space-y-6">
@@ -101,25 +97,6 @@ export const ProjectDetails = ({ projectId, goBack }) => {
           </button>
         </div>
         {project.assignedEmployees?.length > 0 ? (
-          // <ul className="space-y-2">
-          //   {project.assignedEmployees.map((assign, index) => (
-          //     <li
-          //       key={`${assign._id}-${index}`}
-          //       className="border p-3 rounded shadow-sm flex justify-between items-center"
-          //     >
-          //       <div>
-          //         {/* Do not remove this log */}
-          //         {console.log("ASSIGN: ", assign)}
-          //         <p className="font-semibold capitalize">
-          //           {assign.employee?.firstName} {assign.employee?.lastName}
-          //         </p>
-          //         <p className="text-sm text-gray-600 capitalize">
-          //           {assign.role || "No role assigned"}
-          //         </p>
-          //       </div>
-          //     </li>
-          //   ))}
-          // </ul>
           <ul className="space-y-2">
             {project.assignedEmployees.map((assign, index) => (
               <li
@@ -141,13 +118,20 @@ export const ProjectDetails = ({ projectId, goBack }) => {
                     );
                     if (!confirm) return;
 
-                    await removeAssignedEmployee(
+                    const success = await removeAssignedEmployee(
                       project._id,
                       assign.employee._id
                     );
-                    fetchProject(); // Refresh project after removal
+
+                    if (success) {
+                      // Refresh project after removal
+                      const updatedProject = await fetchProjectById(projectId);
+                      if (updatedProject) {
+                        setProject(updatedProject);
+                      }
+                    }
                   }}
-                  className=" text-red-600 px-3 py-1  text-sm"
+                  className="text-red-600 px-3 py-1 text-sm"
                 >
                   <XMarkIcon className="w-6 h-6 inline" />
                 </button>
@@ -164,9 +148,14 @@ export const ProjectDetails = ({ projectId, goBack }) => {
         <AssignEmployeeModel
           project={project}
           projectId={projectId}
-          closeModal={() => {
+          closeModal={async () => {
             setShowAssignModal(false);
-            fetchProject();
+
+            // Refresh project data when modal is closed
+            const updatedProject = await fetchProjectById(projectId);
+            if (updatedProject) {
+              setProject(updatedProject);
+            }
           }}
         />
       )}

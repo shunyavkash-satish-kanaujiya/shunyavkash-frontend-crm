@@ -7,7 +7,24 @@ export const useProjectStore = create((set) => ({
   editingProject: null,
   setEditingProject: (project) => set({ editingProject: project }),
   loading: false,
+  projectLoading: false, // Loading state for single project
   error: null,
+
+  // Fetch a single project by ID
+  fetchProjectById: async (projectId) => {
+    try {
+      set({ projectLoading: true, error: null });
+      const res = await axios.get(
+        `http://localhost:5000/api/project/${projectId}`
+      );
+      set({ editingProject: res.data, projectLoading: false });
+      return res.data;
+    } catch (err) {
+      set({ error: err.message, projectLoading: false });
+      console.error("Failed to fetch project details:", err);
+      return null;
+    }
+  },
 
   // Fetch all Active Projects
   fetchProjects: async () => {
@@ -198,8 +215,11 @@ export const useProjectStore = create((set) => ({
           p._id === projectId ? res.data : p
         ),
       }));
+
+      return true;
     } catch (error) {
       console.error("Failed to remove assigned employee:", error);
+      return false;
     }
   },
 }));
