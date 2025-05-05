@@ -288,7 +288,7 @@ export const Dashboard = () => {
     }
 
     // Invoices
-    if (activeTab === TABS.INVOICES) {
+    if (activeTab === TABS.INVOICE) {
       return (
         <Invoice
           setActiveTab={setActiveTab}
@@ -297,6 +297,10 @@ export const Dashboard = () => {
           updateInvoiceStatus={updateInvoiceStatus}
         />
       );
+    }
+
+    if (activeTab === TABS.ADD_INVOICE) {
+      return <CreateInvoice setActiveTab={setActiveTab} />;
     }
 
     // PageNotFound

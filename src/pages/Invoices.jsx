@@ -1,14 +1,24 @@
-import { useState } from "react";
-import InvoiceListPage from "../components/tables/InvoiceTable";
+import { useState, useEffect } from "react";
+import { InvoiceListPage } from "../components/tables/InvoiceTable";
 import { CreateInvoice } from "../components/forms/InvoiceForm";
 import { useInvoiceStore } from "../store/invoiceStore";
+import { ReusableContainer } from "../components/ui/ReusableContainer";
+import { invoiceFilters } from "../constants/invoice/invoiceFilter";
+import { TABS } from "../constants/activeTab";
 
 export const Invoice = () => {
-  const [activeTab, setActiveTab] = useState("Invoice");
+  const [activeTab, setActiveTab] = useState(TABS.INVOICE);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({ status: "" });
+
   const regeneratePdf = useInvoiceStore((s) => s.regeneratePdf);
   const updateStatus = useInvoiceStore((s) => s.updateInvoiceStatus);
+  const { fetchInvoices } = useInvoiceStore();
 
-  // Simple download by opening URL in new tab
+  useEffect(() => {
+    fetchInvoices();
+  }, [fetchInvoices]);
+
   const handleDownloadPDF = (pdfUrl) => {
     window.open(pdfUrl, "_blank");
   };
@@ -22,35 +32,28 @@ export const Invoice = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">
-          {activeTab === "Invoice" ? "Invoice List" : "Create Invoice"}
-        </h1>
-        {activeTab === "Invoice" ? (
-          <button
-            onClick={() => setActiveTab("Create")}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
-          >
-            + Create Invoice
-          </button>
-        ) : (
-          <button
-            onClick={() => setActiveTab("Invoice")}
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-500"
-          >
-            ← Back to List
-          </button>
-        )}
-      </div>
+    <div>
+      {activeTab === TABS.INVOICE && (
+        <ReusableContainer
+          searchPlaceholder="Search by client name"
+          onSearchChange={setSearchTerm}
+          searchValue={searchTerm}
+          filters={invoiceFilters}
+          onFilterChange={setFilters}
+          onAddClick={() => setActiveTab(TABS.ADD_INVOICE)}
+          addButtonLabel="Create Invoice"
+        >
+          <InvoiceListPage
+            searchTerm={searchTerm}
+            filters={filters}
+            handleDownloadPDF={handleDownloadPDF}
+            handleRegeneratePDF={handleRegeneratePDF}
+            updateInvoiceStatus={handleUpdateStatus}
+          />
+        </ReusableContainer>
+      )}
 
-      {activeTab === "Invoice" ? (
-        <InvoiceListPage
-          handleDownloadPDF={handleDownloadPDF}
-          handleRegeneratePDF={handleRegeneratePDF}
-          updateInvoiceStatus={handleUpdateStatus}
-        />
-      ) : (
+      {activeTab === TABS.ADD_INVOICE && (
         <CreateInvoice setActiveTab={setActiveTab} />
       )}
     </div>
