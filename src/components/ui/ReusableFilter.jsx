@@ -23,7 +23,7 @@ export const ReusableFilter = ({ filters = [], onFilterChange }) => {
           onChange={(e) => handleFilterChange(key, e.target.value)}
         >
           <option value="">{label}</option>
-          {options.map((opt) => (
+          {(options || []).map((opt) => (
             <option key={opt} value={opt}>
               {opt}
             </option>

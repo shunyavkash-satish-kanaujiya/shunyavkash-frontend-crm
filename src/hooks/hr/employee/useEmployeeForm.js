@@ -143,7 +143,20 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
       setEmployeeTab(TABS.EMPLOYEES);
     } catch (err) {
       console.error(err);
-      alert("Failed to save employee.");
+
+      if (err.response) {
+        const { status, data } = err.response;
+
+        if (status === 409 && data.message) {
+          alert("An employee with this email already exists.");
+        } else if (data.message) {
+          alert(data.message);
+        } else {
+          alert("Failed to save employee.");
+        }
+      } else {
+        alert("Failed to save employee.");
+      }
     } finally {
       setLoading(false);
     }
