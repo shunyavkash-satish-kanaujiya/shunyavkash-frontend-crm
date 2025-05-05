@@ -49,26 +49,6 @@ export const Employees = ({ setEmployeeTab, setSelectedEmployee }) => {
       );
     }
 
-    // if (filters.department) {
-    //   updated = updated.filter(
-    //     (emp) =>
-    //       emp.department?.toLowerCase() === filters.department.toLowerCase()
-    //   );
-    // }
-
-    // if (filters.designation) {
-    //   updated = updated.filter(
-    //     (emp) =>
-    //       emp.designation?.toLowerCase() === filters.designation.toLowerCase()
-    //   );
-    // }
-
-    // if (filters.status) {
-    //   updated = updated.filter(
-    //     (emp) => emp.status?.toLowerCase() === filters.status.toLowerCase()
-    //   );
-    // }
-
     setFilteredEmployees(updated);
   }, [searchTerm, filters, employees]);
 
@@ -87,9 +67,9 @@ export const Employees = ({ setEmployeeTab, setSelectedEmployee }) => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 gap-6">
         {filteredEmployees.length > 0 ? (
-          filteredEmployees.map((emp) => (
+          filteredEmployees.map((emp, index) => (
             <EmployeeCard
-              key={emp._id}
+              key={emp._id || index}
               employee={emp}
               setEmployeeTab={setEmployeeTab}
               setSelectedEmployee={setSelectedEmployee}

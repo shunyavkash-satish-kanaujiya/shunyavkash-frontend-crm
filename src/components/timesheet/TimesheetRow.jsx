@@ -116,15 +116,20 @@ export const TimesheetRow = ({
     <>
       <tr
         className="hover:bg-indigo-50 transition cursor-pointer"
-        onClick={handleRowClick}
+        // onClick={handleRowClick}
       >
         {/* Toggle Arrow with smooth rotation */}
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-          <ArrowRightCircleIcon
-            className={`w-5 h-5 inline text-indigo-600 transform transition-transform duration-300 ${
-              openTimesheetId === _id ? "rotate-90" : "rotate-0"
-            }`}
-          />
+          <button
+            onClick={() => handleRowClick(_id)}
+            className="text-indigo-600 hover:text-indigo-900"
+          >
+            <ArrowRightCircleIcon
+              className={`w-5 h-5 inline text-indigo-600 transform transition-transform duration-300 ${
+                openTimesheetId === _id ? "rotate-90" : "rotate-0"
+              }`}
+            />
+          </button>
         </td>
 
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
