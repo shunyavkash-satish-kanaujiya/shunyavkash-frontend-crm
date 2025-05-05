@@ -56,8 +56,13 @@ export const ClientForm = ({
     { label: "Client Name", name: "name", type: "text", required: true },
     { label: "Contact Person", name: "contactPerson", type: "text" },
     { label: "Email", name: "email", type: "email", required: true },
-    { label: "Phone", name: "phone", type: "text" },
-    { label: "Billing Address", name: "billingAddress", type: "text" },
+    { label: "Phone", name: "phone", type: "number" },
+    {
+      label: "Billing Address",
+      name: "billingAddress",
+      type: "email",
+      required: true,
+    },
   ];
 
   return (
