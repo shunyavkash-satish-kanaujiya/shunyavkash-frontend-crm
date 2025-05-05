@@ -45,14 +45,16 @@ export const ProjectTable = ({
 
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.client?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      project.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      project.client?.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase() || "");
 
     const matchesStatus = filters.status
       ? project.status === filters.status
       : true;
     const matchesPriority = filters.priority
-      ? project.priority?.toLowerCase() === filters.priority
+      ? project.priority?.toLowerCase() === filters.priority?.toLowerCase()
       : true;
 
     return matchesSearch && matchesStatus && matchesPriority;
@@ -140,7 +142,7 @@ export const ProjectTable = ({
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{index + 1}</td>
                   <td className="px-6 py-4 whitespace-nowrap capitalize">
-                    {project.title}
+                    {project.title || ""}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap capitalize">
                     {project.client?.name || "N/A"}
@@ -184,10 +186,10 @@ export const ProjectTable = ({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-3 py-2 capitalize rounded-full text-xs font-medium ${
-                        statusStyles[project.status]
+                        statusStyles[project.status] || ""
                       }`}
                     >
-                      {project.status}
+                      {project.status || ""}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap space-x-2">

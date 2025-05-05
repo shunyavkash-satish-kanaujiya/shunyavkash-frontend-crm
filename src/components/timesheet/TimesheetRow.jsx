@@ -44,6 +44,8 @@ export const TimesheetRow = ({
   const [loading, setLoading] = useState(false);
   const [localTags, setLocalTags] = useState(description || []);
 
+  console.log("EMPLOYEE: ", employee.role);
+
   const handleFinalize = async () => {
     try {
       setLoading(true);
@@ -114,15 +116,20 @@ export const TimesheetRow = ({
     <>
       <tr
         className="hover:bg-indigo-50 transition cursor-pointer"
-        onClick={handleRowClick}
+        // onClick={handleRowClick}
       >
         {/* Toggle Arrow with smooth rotation */}
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-          <ArrowRightCircleIcon
-            className={`w-5 h-5 inline text-indigo-600 transform transition-transform duration-300 ${
-              openTimesheetId === _id ? "rotate-90" : "rotate-0"
-            }`}
-          />
+          <button
+            onClick={() => handleRowClick(_id)}
+            className="text-indigo-600 hover:text-indigo-900"
+          >
+            <ArrowRightCircleIcon
+              className={`w-5 h-5 inline text-indigo-600 transform transition-transform duration-300 ${
+                openTimesheetId === _id ? "rotate-90" : "rotate-0"
+              }`}
+            />
+          </button>
         </td>
 
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
@@ -150,6 +157,7 @@ export const TimesheetRow = ({
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
           {hoursWorked}
         </td>
+        {/* Status */}
         <td className="px-6 py-4 whitespace-nowrap">
           <select
             value={status}
@@ -161,11 +169,19 @@ export const TimesheetRow = ({
               isFinalized ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""
             }`}
           >
-            {statusOptions.map((option) => (
-              <option key={option} value={option} className="text-gray-800">
-                {option}
-              </option>
-            ))}
+            {statusOptions
+              .filter((option) => {
+                if (employee.role === "Admin") {
+                  return true; // Admin
+                } else {
+                  return option === "pending"; // Others
+                }
+              })
+              .map((option) => (
+                <option key={option} value={option} className="text-gray-800">
+                  {option}
+                </option>
+              ))}
           </select>
         </td>
         <td className="px-6 py-4 text-gray-800 whitespace-nowrap space-x-2">

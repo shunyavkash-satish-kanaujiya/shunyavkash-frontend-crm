@@ -4,6 +4,7 @@ import { EmployeeCard } from "../tables/EmployeeCard.jsx";
 import { TABS } from "../../constants/activeTab";
 import { ReusableContainer } from "../ui/ReusableContainer.jsx";
 import { employeeTableFilters } from "../../constants/hr/employee/employeeTableFilter.js";
+import { safeLowerCase } from "../../utils/safeLowerCase.js";
 
 export const Employees = ({ setEmployeeTab, setSelectedEmployee }) => {
   const employees = useEmployeeStore((state) => state.employees);
@@ -32,22 +33,19 @@ export const Employees = ({ setEmployeeTab, setSelectedEmployee }) => {
     }
 
     if (filters.department) {
-      updated = updated.filter(
-        (emp) =>
-          emp.department?.toLowerCase() === filters.department.toLowerCase()
-      );
-    }
-
-    if (filters.designation) {
-      updated = updated.filter(
-        (emp) =>
-          emp.designation?.toLowerCase() === filters.designation.toLowerCase()
-      );
+      updated = updated.filter((emp) => {
+        const departments = Array.isArray(emp.department)
+          ? emp.department
+          : [emp.department];
+        return departments.some(
+          (dep) => safeLowerCase(dep) === safeLowerCase(filters.department)
+        );
+      });
     }
 
     if (filters.status) {
       updated = updated.filter(
-        (emp) => emp.status?.toLowerCase() === filters.status.toLowerCase()
+        (emp) => safeLowerCase(emp.status) === safeLowerCase(filters.status)
       );
     }
 
@@ -69,9 +67,9 @@ export const Employees = ({ setEmployeeTab, setSelectedEmployee }) => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 gap-6">
         {filteredEmployees.length > 0 ? (
-          filteredEmployees.map((emp) => (
+          filteredEmployees.map((emp, index) => (
             <EmployeeCard
-              key={emp._id}
+              key={emp._id || index}
               employee={emp}
               setEmployeeTab={setEmployeeTab}
               setSelectedEmployee={setSelectedEmployee}
