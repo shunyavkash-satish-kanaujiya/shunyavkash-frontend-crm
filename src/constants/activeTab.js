@@ -15,7 +15,7 @@ export const TABS = {
   TIMESHEET: "Timesheet",
   ADD_TIMESHEET: "Add Timesheet",
 
-  INVOICES: "Invoice",
+  INVOICE: "Invoice",
   ADD_INVOICE: "Add Invoice",
 
   PAGENOTFOUND: "Page Not Found",
