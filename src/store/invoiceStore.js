@@ -69,34 +69,76 @@ export const useInvoiceStore = create((set) => ({
   },
 
   // Update Invoice Status (e.g., from Unpaid → Paid)
-  // updateInvoiceStatus: async (invoiceId, newStatus) => {
+  // Update Invoice Status (with confirmation and paid invoice protection)
+  // updateInvoiceStatus: async (invoiceId, currentStatus) => {
   //   try {
-  //     await axios.put(`http://localhost:5000/api/invoice/${invoiceId}/status`, {
-  //       status: newStatus,
-  //     });
+  //     set({ loading: true, error: null });
+
+  //     // Prevent changing status if already paid
+  //     if (currentStatus === "Paid") {
+  //       set({ loading: false });
+  //       throw new Error("Cannot change status of a paid invoice");
+  //     }
+
+  //     // Show confirmation dialog for marking as paid
+  //     if (currentStatus === "Unpaid") {
+  //       const confirmChange = window.confirm(
+  //         "Are you sure you want to mark this invoice as paid?"
+  //       );
+  //       if (!confirmChange) {
+  //         set({ loading: false });
+  //         return;
+  //       }
+  //     }
+
+  //     const newStatus = currentStatus === "Unpaid" ? "Paid" : "Unpaid";
+  //     const response = await axios.put(
+  //       `http://localhost:5000/api/invoice/${invoiceId}/status`,
+  //       { status: newStatus }
+  //     );
+
   //     set((state) => ({
   //       invoices: state.invoices.map((inv) =>
   //         inv._id === invoiceId ? { ...inv, status: newStatus } : inv
   //       ),
+  //       loading: false,
   //     }));
+
+  //     return response.data;
   //   } catch (error) {
+  //     set({
+  //       error: error.message || "Failed to update invoice status",
+  //       loading: false,
+  //     });
   //     console.error("Failed to update invoice status:", error);
+  //     throw error;
   //   }
   // },
-  updateInvoiceStatus: async (invoiceId, newStatus) => {
+  updateInvoiceStatus: async (invoiceId, currentStatus) => {
     try {
       set({ loading: true, error: null });
 
-      // Make sure newStatus is being passed correctly
-      if (!newStatus) {
-        throw new Error("New status is required");
+      // Prevent changing status if already paid
+      if (currentStatus === "Paid") {
+        set({ loading: false });
+        return { error: "Cannot change status of a paid invoice" };
       }
 
+      // Show confirmation dialog for marking as paid
+      if (currentStatus === "Unpaid") {
+        const confirmChange = window.confirm(
+          "Are you sure you want to mark this invoice as paid?"
+        );
+        if (!confirmChange) {
+          set({ loading: false });
+          return { cancelled: true };
+        }
+      }
+
+      const newStatus = currentStatus === "Unpaid" ? "Paid" : "Unpaid";
       const response = await axios.put(
         `http://localhost:5000/api/invoice/${invoiceId}/status`,
-        {
-          status: newStatus,
-        }
+        { status: newStatus }
       );
 
       set((state) => ({
@@ -106,14 +148,15 @@ export const useInvoiceStore = create((set) => ({
         loading: false,
       }));
 
-      return response.data;
+      return { data: response.data };
     } catch (error) {
+      const errorMsg = error.message || "Failed to update invoice status";
       set({
-        error: error.message || "Failed to update invoice status",
+        error: errorMsg,
         loading: false,
       });
       console.error("Failed to update invoice status:", error);
-      throw error; // Re-throw to allow component to handle the error
+      return { error: errorMsg };
     }
   },
   regeneratePdf: async (invoiceId) => {
@@ -145,6 +188,23 @@ export const useInvoiceStore = create((set) => ({
         loading: false,
       });
       throw error; // Re-throw to allow component to handle the error
+    }
+  },
+  // Add this to your store methods
+  sendInvoice: async (invoiceId) => {
+    try {
+      set({ loading: true, error: null });
+      const response = await axios.post(
+        `http://localhost:5000/api/invoice/${invoiceId}/send`
+      );
+      set({ loading: false });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || "Failed to send invoice",
+        loading: false,
+      });
+      throw error;
     }
   },
 }));
