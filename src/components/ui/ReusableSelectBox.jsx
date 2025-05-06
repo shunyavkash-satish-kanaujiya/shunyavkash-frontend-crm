@@ -1,4 +1,4 @@
-export const SelectBox = ({
+export const ReusableSelectBox = ({
   label,
   name,
   value,

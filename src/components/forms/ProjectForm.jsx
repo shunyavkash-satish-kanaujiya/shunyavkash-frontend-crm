@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useProjectForm } from "../../hooks/project/projectForm/useProjectForm";
 import { formatDate } from "../../utils/formatDate";
-import { SelectBox } from "../ui/ReusableSelectBox";
+import { ReusableSelectBox } from "../ui/ReusableSelectBox";
 
 export const ProjectForm = ({
   editingProject,
@@ -74,7 +74,7 @@ export const ProjectForm = ({
         ))}
 
         {/* Client Select */}
-        <SelectBox
+        <ReusableSelectBox
           label="Client"
           name="client"
           value={formData.client}
@@ -84,7 +84,7 @@ export const ProjectForm = ({
         />
 
         {/* Priority Select */}
-        <SelectBox
+        <ReusableSelectBox
           label="Priority"
           name="priority"
           value={formData.priority}
@@ -93,7 +93,7 @@ export const ProjectForm = ({
         />
 
         {/* Status Select */}
-        <SelectBox
+        <ReusableSelectBox
           label="Status"
           name="status"
           value={formData.status}

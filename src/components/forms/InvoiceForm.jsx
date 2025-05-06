@@ -3,7 +3,7 @@ import { useClientStore } from "../../store/clientStore";
 import { useTimesheetStore } from "../../store/timesheetStore";
 import { useInvoiceStore } from "../../store/invoiceStore";
 import toast from "react-hot-toast";
-import { SelectBox } from "../ui/ReusableSelectBox.jsx";
+import { ReusableSelectBox } from "../ui/ReusableSelectBox.jsx";
 
 export const CreateInvoice = ({ setActiveTab }) => {
   const { clients, fetchClients } = useClientStore();
@@ -149,7 +149,7 @@ export const CreateInvoice = ({ setActiveTab }) => {
       </h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Select Client */}
-        <SelectBox
+        <ReusableSelectBox
           label="Client"
           name="client"
           value={formData.client}

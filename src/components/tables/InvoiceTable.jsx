@@ -97,6 +97,7 @@ export const InvoiceListPage = ({
         role="alert"
       >
         <strong className="font-bold">Error: </strong>
+        {console.log("ERROR:", error)}
         <span className="block sm:inline">{error}</span>
       </div>
     );

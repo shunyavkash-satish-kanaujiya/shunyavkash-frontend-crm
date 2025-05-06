@@ -25,47 +25,6 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
     setTimeout(() => closeModal(), 100); // transition duration
   };
 
-  // const handleAssign = async () => {
-  //   if (!selectedEmployee || !selectedRole) {
-  //     setError("Both employee and role are required.");
-  //     return;
-  //   }
-
-  //   if (!project?.assignedEmployees) {
-  //     setError("Project data not loaded.");
-  //     return;
-  //   }
-
-  //   const isAlreadyAssigned = project.assignedEmployees.some(
-  //     (e) => e.employeeId === selectedEmployee || e._id === selectedEmployee
-  //   );
-
-  //   if (isAlreadyAssigned) {
-  //     setError("This employee is already assigned to the project.");
-  //     return;
-  //   }
-
-  //   const emp = employees.find((e) => e._id === selectedEmployee);
-  //   if (!emp) {
-  //     setError("Selected employee not found.");
-  //     return;
-  //   }
-
-  //   const employeeToAssign = {
-  //     employeeId: emp._id,
-  //     firstname: emp.firstName,
-  //     lastname: emp.lastName,
-  //     role: selectedRole,
-  //   };
-
-  //   try {
-  //     await assignEmployees(projectId, [employeeToAssign]);
-  //     handleClose(); // Use transition close
-  //   } catch (err) {
-  //     setError("Failed to assign employee.");
-  //     console.error(err);
-  //   }
-  // };
   const handleAssign = async () => {
     if (!selectedEmployee || !selectedRole) {
       setError("Both employee and role are required.");
