@@ -11,7 +11,9 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
     fetchProjects();
   }, [fetchProjects]);
 
-  const activeProjects = projects.filter((project) => !project.isArchived);
+  const activeProjects = Array.isArray(projects)
+    ? projects.filter((project) => !project.isArchived)
+    : [];
 
   // Render different views based on state
   const renderContent = () => {
