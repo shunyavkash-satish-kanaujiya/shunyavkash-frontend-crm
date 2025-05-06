@@ -17,7 +17,6 @@ export const Signin = () => {
   console.log("email:", email);
   console.log("token:", token);
 
-  // Immediately redirect
   useEffect(() => {
     if (token) {
       navigate("/dashboard");
@@ -34,10 +33,10 @@ export const Signin = () => {
       const currentToken = useAuthStore.getState().token;
 
       if (currentError) {
-        toast.error(currentError); // show error toast
+        toast.error(currentError);
       } else if (currentToken) {
         toast.success("Login successful!");
-        navigate("/dashboard"); // move user to dashboard
+        navigate("/dashboard"); 
       }
     } catch (err) {
       console.error("Handle Submit Error:", err);
@@ -101,7 +100,7 @@ export const Signin = () => {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
 
-                {/* 🔗 Forgot password link */}
+                {/* Forgot password link */}
                 <div className="text-right mt-1">
                   <Link
                     to="/forgot-password"

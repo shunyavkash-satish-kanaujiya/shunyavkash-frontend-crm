@@ -120,7 +120,9 @@ export const InvoiceRow = ({
                 )}
               </div>
               <div>
-                <h4 className="text-sm font-medium text-gray-900">Actions</h4>
+                <h4 className="text-sm text-end font-medium text-gray-900">
+                  Actions
+                </h4>
                 <div className="flex space-x-2 mt-2">
                   {/* {invoice.status === "Paid" && ( */}
                   <button

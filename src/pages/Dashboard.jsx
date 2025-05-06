@@ -70,7 +70,7 @@ export const Dashboard = () => {
     return (
       <div className="flex h-screen items-center justify-center bg-background text-textPrimary">
         <div className="text-center">
-          <div className="w-6 h-6 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-6 h-6 border-4 border-indigo-500 border-t-2 border-b-2 rounded-full animate-spin mx-auto mb-4" />
           <p className="text-sm text-gray-600">Checking authorization...</p>
         </div>
       </div>

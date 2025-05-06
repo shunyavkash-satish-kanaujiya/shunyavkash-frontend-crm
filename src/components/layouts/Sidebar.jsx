@@ -110,16 +110,16 @@ export const Sidebar = ({
                                 setActiveTab(sub.name);
                                 setOpenSubmenu(item.name);
                               }}
-                              className={`block px-4 py-2 text-sm rounded ${
+                              className={`block pl-9 py-2 text-sm rounded ${
                                 activeTab === sub.name
                                   ? "bg-indigo-50 text-indigo-700 font-medium"
                                   : "text-gray-600 hover:bg-indigo-100"
                               }`}
                             >
                               {/* Conditional sub-menu icons rendering */}
-                              {sub.name === TABS.ARCHIVED_PROJECTS && (
-                                <ArchiveBoxIcon className="w-5 h-5 inline ml-4 mr-5" />
-                              )}
+                              {/* {sub.name === TABS.ARCHIVED_PROJECTS && (
+                                <ArchiveBoxIcon className="w-5 h-5 inline mr-5" />
+                              )} */}
                               {sub.name}
                             </a>
                           </li>
