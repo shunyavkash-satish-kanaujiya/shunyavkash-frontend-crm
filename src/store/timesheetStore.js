@@ -12,6 +12,43 @@ export const useTimesheetStore = create((set, get) => ({
   activeTimesheet: null,
 
   // Fetch Timesheets
+  // fetchTimesheets: async () => {
+  //   set({ loading: true, error: null });
+  //   try {
+  //     const authState = useAuthStore.getState();
+  //     const role = authState.user?.role;
+  //     const { data } = await instance.get(API_ROUTES.TIMESHEET.BASE);
+
+  //     let processed;
+
+  //     if (role === "Admin") {
+  //       processed = data.map((t) => ({
+  //         ...t,
+  //         employee: t.user || null,
+  //         project: t.project || null,
+  //       }));
+  //     } else {
+  //       const userId = authState.user?._id;
+  //       processed = data
+  //         .filter((t) => t.user?._id === userId)
+  //         .map((t) => ({
+  //           ...t,
+  //           employee: t.user || null,
+  //           project: t.project || null,
+  //         }));
+  //     }
+
+  //     console.log("Timesheets:", data);
+  //     set({ timesheets: processed, loading: false });
+  //   } catch (err) {
+  //     set({
+  //       error: err.response?.data?.message || "Failed to fetch timesheets",
+  //       loading: false,
+  //     });
+  //     throw err;
+  //   }
+  // },
+
   fetchTimesheets: async () => {
     set({ loading: true, error: null });
     try {
@@ -19,17 +56,19 @@ export const useTimesheetStore = create((set, get) => ({
       const role = authState.user?.role;
       const { data } = await instance.get(API_ROUTES.TIMESHEET.BASE);
 
+      const timesheetArray = Array.isArray(data) ? data : data.timesheets || [];
+
       let processed;
 
       if (role === "Admin") {
-        processed = data.map((t) => ({
+        processed = timesheetArray.map((t) => ({
           ...t,
           employee: t.user || null,
           project: t.project || null,
         }));
       } else {
         const userId = authState.user?._id;
-        processed = data
+        processed = timesheetArray
           .filter((t) => t.user?._id === userId)
           .map((t) => ({
             ...t,
@@ -38,7 +77,7 @@ export const useTimesheetStore = create((set, get) => ({
           }));
       }
 
-      console.log("Timesheets:", data);
+      console.log("Timesheets:", timesheetArray);
       set({ timesheets: processed, loading: false });
     } catch (err) {
       set({
