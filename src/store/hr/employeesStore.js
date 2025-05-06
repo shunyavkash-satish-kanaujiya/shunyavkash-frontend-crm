@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
+import { instance } from "../../utils/axiosInstance";
+import { API_ROUTES } from "../../api/apiList";
 
 export const useEmployeeStore = create((set) => ({
   employees: [],
@@ -11,37 +12,82 @@ export const useEmployeeStore = create((set) => ({
   fetchEmployees: async () => {
     try {
       set({ loading: true });
-
-      const response = await axios.get("http://localhost:5000/api/employee");
-
-      set({ employees: response.data, loading: false });
-      console.log("Employees:", response.data); // all employees
+      const res = await instance.get(API_ROUTES.EMPLOYEES.BASE);
+      set({ employees: res.data, loading: false });
+      console.log("Employees:", res.data);
     } catch (error) {
       set({ loading: false, error: error.message });
       console.error("Failed to fetch employees:", error);
     }
   },
 
+  // Fetch Single Employee
+  fetchEmployee: async (employeeId) => {
+    try {
+      set({ loading: true });
+      const res = await instance.get(API_ROUTES.EMPLOYEES.GET_ONE(employeeId));
+      set({ editingEmployee: res.data, loading: false });
+      return res.data;
+    } catch (err) {
+      set({ loading: false, error: err.message });
+      console.error("Failed to fetch employee details:", err);
+      return null;
+    }
+  },
+
+  // Remove tag from employee
+  removeTag: async (employeeId, type, value) => {
+    try {
+      const currentEmployee = await useEmployeeStore
+        .getState()
+        .fetchEmployee(employeeId);
+      if (!currentEmployee || !Array.isArray(currentEmployee[type]))
+        return null;
+
+      const updated = currentEmployee[type].filter((item) => item !== value);
+
+      await instance.put(API_ROUTES.EMPLOYEES.REMOVE_TAG(employeeId), {
+        [type]: updated,
+      });
+
+      const updatedEmployee = { ...currentEmployee, [type]: updated };
+
+      set({ editingEmployee: updatedEmployee });
+
+      set((state) => ({
+        employees: state.employees.map((emp) =>
+          emp._id === employeeId ? updatedEmployee : emp
+        ),
+      }));
+
+      return updatedEmployee;
+    } catch (err) {
+      console.error(`Failed to remove ${type}:`, err);
+      return null;
+    }
+  },
+
   // Add Employee
   addEmployee: async (employeeData) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/employee",
+      const res = await instance.post(
+        API_ROUTES.EMPLOYEES.CREATE,
         employeeData
       );
       set((state) => ({
-        employees: [...state.employees, response.data],
+        employees: [...state.employees, res.data],
       }));
     } catch (error) {
       console.error("Error adding employee:", error);
+      throw error;
     }
   },
 
   // Update Employee
   updateEmployee: async (employeeId, updatedData) => {
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/employee/${employeeId}`,
+      const res = await instance.put(
+        API_ROUTES.EMPLOYEES.UPDATE(employeeId),
         updatedData,
         {
           headers: {
@@ -52,7 +98,7 @@ export const useEmployeeStore = create((set) => ({
 
       set((state) => ({
         employees: state.employees.map((emp) =>
-          emp._id === employeeId ? response.data : emp
+          emp._id === employeeId ? res.data : emp
         ),
       }));
     } catch (error) {
@@ -67,7 +113,7 @@ export const useEmployeeStore = create((set) => ({
       console.log("Avatar Public ID:", avatarPublicId);
       console.log("Documents:", documents);
 
-      await axios.delete(`http://localhost:5000/api/employee/${employeeId}`, {
+      await instance.delete(API_ROUTES.EMPLOYEES.DELETE(employeeId), {
         data: { avatarPublicId, documents },
       });
 
@@ -76,7 +122,7 @@ export const useEmployeeStore = create((set) => ({
       }));
     } catch (error) {
       const errorMessage =
-        error?.response?.data?.message ||
+        error?.res?.data?.message ||
         "Something went wrong while deleting employee";
 
       alert(errorMessage);

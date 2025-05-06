@@ -1,43 +1,26 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import axios from "axios";
 import { useEmployeeStore } from "../../../store/hr/employeesStore.js";
 import { getStatusColor } from "../../../constants/hr/employee/statusColors.js";
 
 export const EmployeeDetails = ({ employeeId, goBack }) => {
   const [employee, setEmployee] = useState(null);
-  const { setEditingEmployee } = useEmployeeStore();
-
-  const fetchEmployee = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/employee/${employeeId}`
-      );
-      setEmployee(res.data);
-      setEditingEmployee(res.data);
-    } catch (err) {
-      console.error("Failed to fetch employee details:", err);
-    }
-  }, [employeeId, setEditingEmployee]);
+  const { fetchEmployee, removeTag } = useEmployeeStore();
 
   useEffect(() => {
-    fetchEmployee();
-  }, [fetchEmployee]);
+    const loadEmployeeData = async () => {
+      const data = await fetchEmployee(employeeId);
+      setEmployee(data);
+    };
 
+    loadEmployeeData();
+  }, [employeeId, fetchEmployee]);
+
+  // Handler for tag removal
   const handleRemoveTag = async (type, value) => {
-    if (!employee || !Array.isArray(employee[type])) return;
-
-    const updated = employee[type].filter((item) => item !== value);
-    const updatedEmployee = { ...employee, [type]: updated };
-
-    try {
-      await axios.put(`http://localhost:5000/api/employee/${employeeId}`, {
-        [type]: updated,
-      });
+    const updatedEmployee = await removeTag(employeeId, type, value);
+    if (updatedEmployee) {
       setEmployee(updatedEmployee);
-      setEditingEmployee(updatedEmployee);
-    } catch (err) {
-      console.error(`Failed to remove ${type}:`, err);
     }
   };
 
@@ -76,8 +59,6 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
               {employee.firstName} {employee.lastName}
             </h2>
             {/* Designations */}
-            {/* <div className="bg-white rounded-xl shadow p-4"> */}
-            {/* <h3 className="text-lg font-semibold mb-3">Designations</h3> */}
             {Array.isArray(employee.designation) &&
             employee.designation.length > 0 ? (
               <div className="flex flex-wrap gap-2">
@@ -115,12 +96,6 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             {"/- "}
             <span className="text-gray-500 font-semibold">per annum</span>
           </p>
-          {/* <p>
-            <strong>Date of Birth:</strong>{" "}
-            {employee.dateOfBirth
-              ? new Date(employee.dateOfBirth).toLocaleDateString()
-              : "—"}
-          </p> */}
           <p>
             <strong>Joining Date:</strong>{" "}
             {employee.dateOfJoining

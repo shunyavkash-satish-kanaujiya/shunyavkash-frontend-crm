@@ -74,6 +74,9 @@ export const useTimesheetForm = () => {
         const projectMatch = ts.project?.title
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase());
+
+        console.log("TS:", ts);
+
         return projectMatch;
       });
     }
