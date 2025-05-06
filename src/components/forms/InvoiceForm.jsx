@@ -27,13 +27,23 @@ export const CreateInvoice = ({ setActiveTab }) => {
     fetchTimesheets();
   }, [fetchClients, fetchTimesheets]);
 
+  // const filteredTimesheets = timesheets.filter((ts) => {
+  //   const projectClientId =
+  //     typeof ts.project?.client === "string"
+  //       ? ts.project.client
+  //       : ts.project?.client?._id;
+
+  //   return ts.isFinalized && projectClientId === formData.client;
+  // });
   const filteredTimesheets = timesheets.filter((ts) => {
     const projectClientId =
       typeof ts.project?.client === "string"
         ? ts.project.client
         : ts.project?.client?._id;
 
-    return ts.isFinalized && projectClientId === formData.client;
+    return (
+      ts.isFinalized && !ts.isInvoiced && projectClientId === formData.client
+    );
   });
 
   const selectedTimesheets = filteredTimesheets.filter((ts) =>
@@ -162,26 +172,43 @@ export const CreateInvoice = ({ setActiveTab }) => {
             </label>
             <div className="mt-2 grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3">
               {filteredTimesheets.length > 0 ? (
-                filteredTimesheets.map((ts) => (
-                  <label
-                    key={ts._id}
-                    className="flex items-center space-x-2 cursor-pointer p-1 hover:bg-gray-50 rounded"
-                  >
-                    <input
-                      type="checkbox"
-                      className="text-indigo-600 rounded focus:ring-indigo-500"
-                      checked={formData.timesheetIds.includes(ts._id)}
-                      onChange={() => handleTimesheetToggle(ts._id)}
-                    />
-                    <span>
-                      {ts.project?.title || "Unnamed Project"} —{" "}
-                      {ts.hoursWorked} hrs
-                    </span>
-                  </label>
-                ))
+                <div className="space-y-3">
+                  {filteredTimesheets.map((ts) => (
+                    <label
+                      key={ts._id}
+                      className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          className="mt-1 text-indigo-600 rounded focus:ring-indigo-500"
+                          checked={formData.timesheetIds.includes(ts._id)}
+                          onChange={() => handleTimesheetToggle(ts._id)}
+                        />
+                        <div className="text-sm leading-5">
+                          <p>
+                            <strong>Project:</strong>{" "}
+                            {ts.project?.title || "Unnamed Project"}
+                          </p>
+                          <p>
+                            <strong>Date:</strong>{" "}
+                            {new Date(ts.date).toLocaleDateString()}
+                          </p>
+                          <p>
+                            <strong>Hours:</strong> {ts.hoursWorked} hrs
+                          </p>
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
               ) : (
+                // <p className="text-gray-500 col-span-2">
+                //   No finalized timesheets available for this client.
+                // </p>
                 <p className="text-gray-500 col-span-2">
-                  No finalized timesheets available for this client.
+                  No eligible timesheets available — only finalized and not yet
+                  invoiced timesheets are shown.
                 </p>
               )}
             </div>
