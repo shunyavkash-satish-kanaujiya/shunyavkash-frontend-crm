@@ -54,7 +54,7 @@ export const ClientForm = ({
 
   const fields = [
     { label: "Client Name", name: "name", type: "text", required: true },
-    { label: "Representative", name: "representative", type: "text" },
+    { label: "Contact Person", name: "contactPerson", type: "text" },
     { label: "Email", name: "email", type: "email", required: true },
     { label: "Phone", name: "phone", type: "number" },
     {
