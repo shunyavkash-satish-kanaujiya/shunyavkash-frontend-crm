@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
+import { instance } from "../utils/axiosInstance";
+import { API_ROUTES } from "../api/apiList";
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -7,15 +8,15 @@ export const useAuthStore = create((set) => ({
   loading: false,
   error: null,
 
+  // Register method
   register: async (email, password) => {
-    try {
-      set({ loading: true, error: null });
+    set({ loading: true, error: null });
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { email, password },
-        { headers: { "Content-Type": "application/json" } }
-      );
+    try {
+      const res = await instance.post(API_ROUTES.AUTH.LOGIN, {
+        email,
+        password,
+      });
 
       const token = res.data.token || null;
       localStorage.setItem("token", token);
@@ -32,31 +33,37 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // Fetch user data
   fetchUser: async () => {
     const token = localStorage.getItem("token");
+
     if (!token) return;
 
+    set({ loading: true });
+
     try {
-      const res = await axios.get("http://localhost:5000/api/auth/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await instance.get(API_ROUTES.AUTH.FETCH_USER);
 
       const user = res.data;
       set({ user });
-      console.log("Uers:", user);
     } catch (err) {
       console.error("Fetch user failed:", err.message);
       set({ error: "Failed to fetch user", user: null, token: null });
       localStorage.removeItem("token");
+    } finally {
+      set({ loading: false });
     }
   },
+
+  // Forgot password
   forgotPassword: async (email) => {
+    set({ loading: true, error: null });
+
     try {
-      set({ loading: true, error: null });
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
-        { email }
-      );
+      const res = await instance.post(API_ROUTES.AUTH.FORGET_PASSWORD, {
+        email,
+      });
+
       set({ loading: false, message: res.data.message });
     } catch (err) {
       set({
@@ -66,13 +73,15 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // Reset password
   resetPassword: async (token, password) => {
+    set({ loading: true, error: null });
+
     try {
-      set({ loading: true, error: null });
-      const res = await axios.put(
-        `http://localhost:5000/api/auth/reset-password/${token}`,
-        { password }
-      );
+      const res = await instance.put(API_ROUTES.AUTH.RESET_PASSWORD(token), {
+        password,
+      });
+
       set({ loading: false, message: res.data.message });
     } catch (err) {
       set({
@@ -82,8 +91,10 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // Clear error and message states
   clearMessages: () => set({ message: null, error: null }),
 
+  // Logout user
   logout: () => {
     localStorage.removeItem("token");
     set({ user: null, token: null });

@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import axios from "axios";
+import { instance } from "../utils/axiosInstance";
+import { API_ROUTES } from "../api/apiList";
 
 export const useProjectStore = create((set) => ({
   projects: [],
@@ -14,9 +15,7 @@ export const useProjectStore = create((set) => ({
   fetchProjectById: async (projectId) => {
     try {
       set({ projectLoading: true, error: null });
-      const res = await axios.get(
-        `http://localhost:5000/api/project/${projectId}`
-      );
+      const res = await instance.get(API_ROUTES.PROJECTS.GET_ONE(projectId));
       set({ editingProject: res.data, projectLoading: false });
       return res.data;
     } catch (err) {
@@ -30,7 +29,7 @@ export const useProjectStore = create((set) => ({
   fetchProjects: async () => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.get("http://localhost:5000/api/project");
+      const res = await instance.get(API_ROUTES.PROJECTS.BASE);
       set({ projects: res.data, loading: false });
       console.log("Projects:", res.data);
     } catch (err) {
@@ -43,10 +42,7 @@ export const useProjectStore = create((set) => ({
   addProject: async (projectData) => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.post(
-        "http://localhost:5000/api/project",
-        projectData
-      );
+      const res = await instance.post(API_ROUTES.PROJECTS.CREATE, projectData);
       set((state) => ({
         projects: [...state.projects, res.data],
         loading: false,
@@ -61,7 +57,7 @@ export const useProjectStore = create((set) => ({
   deleteProject: async (projectId) => {
     try {
       set({ loading: true, error: null });
-      await axios.delete(`http://localhost:5000/api/project/${projectId}`);
+      await instance.delete(API_ROUTES.PROJECTS.DELETE(projectId));
       set((state) => ({
         projects: state.projects.filter((project) => project._id !== projectId),
         loading: false,
@@ -76,8 +72,8 @@ export const useProjectStore = create((set) => ({
   updateProject: async (projectId, updatedData) => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.put(
-        `http://localhost:5000/api/project/${projectId}`,
+      const res = await instance.put(
+        API_ROUTES.PROJECTS.UPDATE(projectId),
         updatedData
       );
       set((state) => ({
@@ -92,12 +88,13 @@ export const useProjectStore = create((set) => ({
     }
   },
 
-  // Update Priority
+  // Update Project Priority
   updateProjectPriority: async (projectId, priority) => {
     try {
-      await axios.put(`http://localhost:5000/api/project/${projectId}`, {
-        priority,
-      });
+      await instance.put(
+        API_ROUTES.PROJECTS.UPDATE_PROJECT_PRIORITY(projectId),
+        { priority }
+      );
       set((state) => ({
         projects: state.projects.map((project) =>
           project._id === projectId ? { ...project, priority } : project
@@ -112,9 +109,10 @@ export const useProjectStore = create((set) => ({
   fetchArchivedProjects: async () => {
     try {
       set({ loading: true, error: null });
-      const res = await axios.get("http://localhost:5000/api/project/archived");
+      const res = await instance.get(
+        API_ROUTES.PROJECTS.FETCH_ARCHIVED_PROJECTS
+      );
       console.log("Archived Projects:", res.data);
-      "Archived Projects:", res.data;
       set({ archivedProjects: res.data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
@@ -125,9 +123,7 @@ export const useProjectStore = create((set) => ({
   // Archive Project
   archiveProject: async (projectId) => {
     try {
-      await axios.patch(
-        `http://localhost:5000/api/project/${projectId}/archive`
-      );
+      await instance.patch(API_ROUTES.PROJECTS.ARCHIVE_PROJECT(projectId));
       set((state) => ({
         projects: state.projects.filter((p) => p._id !== projectId),
       }));
@@ -139,9 +135,11 @@ export const useProjectStore = create((set) => ({
   // Restore Project
   restoreProject: async (projectId) => {
     try {
-      await axios.patch(
-        `http://localhost:5000/api/project/${projectId}/archive`,
-        { isArchived: false }
+      await instance.patch(
+        API_ROUTES.PROJECTS.RESTORE_ARCHIVED_PROJECT(projectId),
+        {
+          isArchived: false,
+        }
       );
       set((state) => {
         const restoredProject = state.archivedProjects.find(
@@ -167,10 +165,11 @@ export const useProjectStore = create((set) => ({
     try {
       console.log("Employees with roles to assign:", employeesWithRoles);
 
-      // Send request to backend to assign employees to project
-      const res = await axios.put(
-        `http://localhost:5000/api/project/${projectId}/assign`,
-        { employees: employeesWithRoles }
+      const res = await instance.put(
+        API_ROUTES.PROJECTS.ASSIGN_EMPLOYEE(projectId),
+        {
+          employees: employeesWithRoles,
+        }
       );
 
       console.log("Assigned employees response:", res.data);
@@ -205,9 +204,11 @@ export const useProjectStore = create((set) => ({
   // Remove Assigned Employee
   removeAssignedEmployee: async (projectId, employeeId) => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/project/${projectId}/remove-employee`,
-        { employeeId }
+      const res = await instance.put(
+        API_ROUTES.PROJECTS.REMOVE_ASSIGNED_EMPLOYEE(projectId),
+        {
+          employeeId,
+        }
       );
 
       set((state) => ({

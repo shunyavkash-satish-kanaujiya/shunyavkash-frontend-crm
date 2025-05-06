@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useAuthStore } from "./authStore";
+import { instance } from "../utils/axiosInstance";
+import { API_ROUTES } from "../api/apiList";
 
 export const useTimesheetStore = create((set, get) => ({
   timesheets: [],
@@ -14,13 +15,9 @@ export const useTimesheetStore = create((set, get) => ({
   fetchTimesheets: async () => {
     set({ loading: true, error: null });
     try {
-      const token = localStorage.getItem("token");
       const authState = useAuthStore.getState();
       const role = authState.user?.role;
-
-      const { data } = await axios.get("http://localhost:5000/api/timesheet", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const { data } = await instance.get(API_ROUTES.TIMESHEET.BASE);
 
       let processed;
 
@@ -55,18 +52,15 @@ export const useTimesheetStore = create((set, get) => ({
   // Add Timesheet
   addTimesheet: async (formData) => {
     try {
-      const token = localStorage.getItem("token");
-      const { data } = await axios.post(
-        "http://localhost:5000/api/timesheet",
+      const { data } = await instance.post(
+        API_ROUTES.TIMESHEET.CREATE,
         formData,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
-
       set((state) => ({
         timesheets: [data, ...state.timesheets],
       }));
@@ -81,18 +75,15 @@ export const useTimesheetStore = create((set, get) => ({
   // Update Timesheet
   updateTimesheet: async (timesheet) => {
     try {
-      const token = localStorage.getItem("token");
-      const { data } = await axios.put(
-        `http://localhost:5000/api/timesheet/${timesheet._id}`,
+      const { data } = await instance.put(
+        API_ROUTES.TIMESHEET.UPDATE(timesheet._id),
         timesheet,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
-
       set((state) => ({
         timesheets: state.timesheets.map((ts) =>
           ts._id === data._id ? data : ts
@@ -109,10 +100,7 @@ export const useTimesheetStore = create((set, get) => ({
   // Delete Timesheet
   deleteTimesheet: async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/timesheet/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await instance.delete(API_ROUTES.TIMESHEET.DELETE(id));
 
       set((state) => ({
         timesheets: state.timesheets.filter((ts) => ts._id !== id),
@@ -140,14 +128,12 @@ export const useTimesheetStore = create((set, get) => ({
   // Update Status
   updateStatus: async (id, status) => {
     try {
-      const token = localStorage.getItem("token");
-      const { data } = await axios.put(
-        `http://localhost:5000/api/timesheet/${id}`,
-        { status }, // Only send status
+      const { data } = await instance.put(
+        API_ROUTES.TIMESHEET.UPDATE_STATUS(id),
+        { status },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -170,17 +156,16 @@ export const useTimesheetStore = create((set, get) => ({
       throw err;
     }
   },
+
   // Finalize Timesheet
   finalizeTimesheet: async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      const { data } = await axios.put(
-        `http://localhost:5000/api/timesheet/${id}`,
+      const { data } = await instance.put(
+        API_ROUTES.TIMESHEET.FINALIZE_TIMESHEET(id),
         { isFinalized: true },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -204,37 +189,26 @@ export const useTimesheetStore = create((set, get) => ({
     }
   },
 
-  // other states and actions
+  // Update Description
   updateDescription: async (id, description) => {
     try {
-      // Retrieve the token from localStorage
-      const token = localStorage.getItem("token");
-
-      // Check if the token exists
-      if (!token) {
-        throw new Error("Authorization token is missing");
-      }
-
-      // Send the PUT request with Authorization header
-      const response = await axios.put(
-        `http://localhost:5000/api/timesheet/${id}`,
+      const { data } = await instance.put(
+        API_ROUTES.TIMESHEET.UPDATE_DESCRIPTION(id),
         { description },
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Update the timesheet state with the new description
       set((state) => ({
         timesheets: state.timesheets.map((timesheet) =>
           timesheet._id === id ? { ...timesheet, description } : timesheet
         ),
       }));
 
-      return response.data;
+      return data;
     } catch (error) {
       console.error("Failed to update description:", error.message);
       toast.error("Failed to update description.");

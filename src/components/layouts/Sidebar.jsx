@@ -118,7 +118,7 @@ export const Sidebar = ({
                             >
                               {/* Conditional sub-menu icons rendering */}
                               {sub.name === TABS.ARCHIVED_PROJECTS && (
-                                <ArchiveBoxIcon className="w-5 h-5 inline mr-6" />
+                                <ArchiveBoxIcon className="w-5 h-5 inline ml-4 mr-5" />
                               )}
                               {sub.name}
                             </a>

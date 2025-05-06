@@ -1,18 +1,18 @@
 import { create } from "zustand";
-import axios from "axios";
+import { instance } from "../utils/axiosInstance";
+import { API_ROUTES } from "../api/apiList";
 
 export const useClientStore = create((set) => ({
   clients: [],
   loading: false,
   error: null,
 
-  //   Get Clients
+  // Fetch clients
   fetchClients: async () => {
-    try {
-      set({ loading: true, error: null });
-      const res = await axios.get("http://localhost:5000/api/client");
-      console.log("Clients: ", res.data);
+    set({ loading: true, error: null });
 
+    try {
+      const res = await instance.get(API_ROUTES.CLIENT.BASE);
       set({ clients: res.data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
@@ -20,14 +20,13 @@ export const useClientStore = create((set) => ({
     }
   },
 
-  //   Create New Client
+  // Create new client
   addClient: async (clientData) => {
+    set({ loading: true, error: null });
+
     try {
-      set({ loading: true, error: null });
-      const res = await axios.post(
-        "http://localhost:5000/api/client",
-        clientData
-      );
+      const res = await instance.post(API_ROUTES.CLIENT.CREATE, clientData);
+
       set((state) => ({
         clients: [...state.clients, res.data],
         loading: false,
@@ -38,12 +37,12 @@ export const useClientStore = create((set) => ({
     }
   },
 
-  // Remove Client
+  // Delete client
   deleteClient: async (clientId) => {
-    try {
-      set({ loading: true, error: null });
+    set({ loading: true, error: null });
 
-      await axios.delete(`http://localhost:5000/api/client/${clientId}`);
+    try {
+      await instance.delete(API_ROUTES.CLIENT.DELETE(clientId));
 
       set((state) => ({
         clients: state.clients.filter((client) => client._id !== clientId),
@@ -62,14 +61,16 @@ export const useClientStore = create((set) => ({
     }
   },
 
-  // Update Client
+  // Update client
   updateClient: async (clientId, updatedData) => {
+    set({ loading: true, error: null });
+
     try {
-      set({ loading: true, error: null });
-      const res = await axios.put(
-        `http://localhost:5000/api/client/${clientId}`,
+      const res = await instance.put(
+        API_ROUTES.CLIENT.UPDATE(clientId),
         updatedData
       );
+
       set((state) => ({
         clients: state.clients.map((client) =>
           client._id === clientId ? res.data : client

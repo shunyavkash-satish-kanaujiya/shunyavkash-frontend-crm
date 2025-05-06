@@ -29,7 +29,7 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
               Name
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
-              Contact Person
+              Representative
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
               Email

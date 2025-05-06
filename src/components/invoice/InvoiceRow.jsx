@@ -21,7 +21,7 @@ export const InvoiceRow = ({
   regeneratingId,
 }) => {
   return (
-    <React.Fragment>
+    <>
       <tr className="hover:bg-gray-50">
         <td className="px-6 py-4">
           <button
@@ -42,7 +42,7 @@ export const InvoiceRow = ({
         </td>
         <td className="px-6 py-4">
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            className={`inline-flex items-center px-3 py-2 rounded-md text-xs font-medium ${
               invoice.status === "Paid"
                 ? "bg-green-100 text-green-800"
                 : invoice.status === "Unpaid"
@@ -77,11 +77,19 @@ export const InvoiceRow = ({
             </button>
           )}
         </td>
+        {/* Actions */}
         <td className="px-6 py-4 text-sm flex space-x-2">
           <button
             onClick={() => handleUpdateStatus(invoice._id, invoice.status)}
-            className="text-indigo-600 hover:text-indigo-900 flex items-center"
-            title={invoice.status === "Paid" ? "Mark Unpaid" : "Mark Paid"}
+            className={`text-indigo-600 hover:text-indigo-900 flex items-center ${
+              invoice.status === "Paid" ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            title={
+              invoice.status === "Paid"
+                ? "Paid invoices cannot be changed"
+                : "Mark Paid/Unpaid"
+            }
+            disabled={invoice.status === "Paid"}
           >
             <BanknotesIcon className="w-5 h-5" />
           </button>
@@ -114,23 +122,23 @@ export const InvoiceRow = ({
               <div>
                 <h4 className="text-sm font-medium text-gray-900">Actions</h4>
                 <div className="flex space-x-2 mt-2">
-                  {invoice.status === "Paid" && (
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        try {
-                          await sendInvoice(invoice._id);
-                          alert("Invoice sent successfully!");
-                        } catch (err) {
-                          alert(err.message || "Failed to send invoice");
-                        }
-                      }}
-                      className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded-md text-sm text-white flex items-center"
-                    >
-                      <PaperAirplaneIcon className="w-4 h-4 mr-1" />
-                      Send to Client
-                    </button>
-                  )}
+                  {/* {invoice.status === "Paid" && ( */}
+                  <button
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      try {
+                        await sendInvoice(invoice._id);
+                        alert("Invoice sent successfully!");
+                      } catch (err) {
+                        alert(err.message || "Failed to send invoice");
+                      }
+                    }}
+                    className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded-md text-sm text-white flex items-center"
+                  >
+                    <PaperAirplaneIcon className="w-4 h-4 mr-1" />
+                    Send to Client
+                  </button>
+                  {/* )} */}
                   {invoice.pdfUrl && invoice.pdfExists ? (
                     <button
                       onClick={() => handleDownloadPDF(invoice.pdfUrl)}
@@ -152,6 +160,6 @@ export const InvoiceRow = ({
           </td>
         </tr>
       )}
-    </React.Fragment>
+    </>
   );
 };

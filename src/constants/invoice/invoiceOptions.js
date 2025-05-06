@@ -1,6 +1,6 @@
 export const invoiceStatusOptions = [
   { value: "paid", label: "Paid" },
-  { value: "Unpaid", label: "Unpaid" },
+  { value: "unpaid", label: "Unpaid" },
 ];
 
 export const statusStyles = {
