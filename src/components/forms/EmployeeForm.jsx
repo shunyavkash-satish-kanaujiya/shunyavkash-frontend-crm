@@ -4,7 +4,7 @@ import { useEmployeeForm } from "../../hooks/hr/employee/useEmployeeForm";
 import { AvatarUpload } from "../hr/employee/AvatarUpload";
 import { DocumentsUpload } from "../hr/employee/DocumentsUpload";
 import { FormButtons } from "../hr/employee/FormButtons";
-import { SelectBox } from "../ui/ReusableSelectBox";
+import { ReusableSelectBox } from "../ui/ReusableSelectBox";
 
 export const EmployeeForm = ({ setEmployeeTab }) => {
   const {
@@ -32,7 +32,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
         {employeeFields.map((field) => (
           <div className="relative z-0 w-full group" key={field.name}>
             {field.type === "select" ? (
-              <SelectBox
+              <ReusableSelectBox
                 label={field.label}
                 name={field.name}
                 value={formData[field.name]}

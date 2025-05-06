@@ -5,7 +5,7 @@ import { TABS } from "../../constants/activeTab.js";
 import { useProjectStore } from "../../store/projectStore";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../../store/authStore.js";
-import { SelectBox } from "../ui/ReusableSelectBox.jsx";
+import { ReusableSelectBox } from "../ui/ReusableSelectBox.jsx";
 import { timesheetFilters } from "../../constants/timesheet/timesheetFilter.js";
 import { TagInput } from "../ui/TagInput.jsx";
 
@@ -142,7 +142,7 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
         {editingTimesheet ? "Update Timesheet" : "Add New Timesheet"}
       </h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <SelectBox
+        <ReusableSelectBox
           label="Project"
           name="project"
           value={formData.project}
@@ -175,7 +175,7 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
 
         {/* Status */}
         {statusFilter && (
-          <SelectBox
+          <ReusableSelectBox
             label={statusFilter.label.replace("Filter by ", "")}
             name="status"
             value={formData.status}
