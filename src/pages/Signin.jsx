@@ -36,11 +36,11 @@ export const Signin = () => {
         toast.error(currentError);
       } else if (currentToken) {
         toast.success("Login successful!");
-        navigate("/dashboard"); 
+        navigate("/dashboard");
       }
-    } catch (err) {
-      console.error("Handle Submit Error:", err);
-      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      console.error("Handle Submit Error:", error);
+      toast.error(error.message);
     }
   };
 

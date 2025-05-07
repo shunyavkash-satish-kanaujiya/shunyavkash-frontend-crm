@@ -30,8 +30,8 @@
 //         employee.avatarPublicId,
 //         employee.documents
 //       );
-//     } catch (err) {
-//       console.error(err);
+//     } catch (error) {
+//       console.error(error);
 //     } finally {
 //       setIsDeleting(false);
 //     }
@@ -165,8 +165,8 @@ export const EmployeeCard = ({
         employee.avatarPublicId,
         employee.documents
       );
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     } finally {
       setIsDeleting(false);
     }

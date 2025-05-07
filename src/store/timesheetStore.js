@@ -11,44 +11,6 @@ export const useTimesheetStore = create((set, get) => ({
   filters: { status: "All", project: null },
   activeTimesheet: null,
 
-  // Fetch Timesheets
-  // fetchTimesheets: async () => {
-  //   set({ loading: true, error: null });
-  //   try {
-  //     const authState = useAuthStore.getState();
-  //     const role = authState.user?.role;
-  //     const { data } = await instance.get(API_ROUTES.TIMESHEET.BASE);
-
-  //     let processed;
-
-  //     if (role === "Admin") {
-  //       processed = data.map((t) => ({
-  //         ...t,
-  //         employee: t.user || null,
-  //         project: t.project || null,
-  //       }));
-  //     } else {
-  //       const userId = authState.user?._id;
-  //       processed = data
-  //         .filter((t) => t.user?._id === userId)
-  //         .map((t) => ({
-  //           ...t,
-  //           employee: t.user || null,
-  //           project: t.project || null,
-  //         }));
-  //     }
-
-  //     console.log("Timesheets:", data);
-  //     set({ timesheets: processed, loading: false });
-  //   } catch (err) {
-  //     set({
-  //       error: err.response?.data?.message || "Failed to fetch timesheets",
-  //       loading: false,
-  //     });
-  //     throw err;
-  //   }
-  // },
-
   fetchTimesheets: async () => {
     set({ loading: true, error: null });
     try {
@@ -79,12 +41,13 @@ export const useTimesheetStore = create((set, get) => ({
 
       console.log("Timesheets:", timesheetArray);
       set({ timesheets: processed, loading: false });
-    } catch (err) {
+    } catch (error) {
       set({
-        error: err.response?.data?.message || "Failed to fetch timesheets",
+        error: error.response?.data?.message || "Failed to fetch timesheets",
         loading: false,
       });
-      throw err;
+      toast.error(error.response?.data?.message);
+      throw error;
     }
   },
 
@@ -104,10 +67,12 @@ export const useTimesheetStore = create((set, get) => ({
         timesheets: [data, ...state.timesheets],
       }));
 
+      toast.success("Timesheet added");
       return data;
-    } catch (err) {
-      console.error("Failed to add timesheet:", err);
-      throw err;
+    } catch (error) {
+      console.error("Failed to add timesheet:", error);
+      toast.error(error.response?.data?.message);
+      throw error;
     }
   },
 
@@ -129,10 +94,12 @@ export const useTimesheetStore = create((set, get) => ({
         ),
       }));
 
+      toast.success("Timesheet updated");
       return data;
-    } catch (err) {
-      console.error("Failed to update timesheet:", err);
-      throw err;
+    } catch (error) {
+      console.error("Failed to update timesheet:", error);
+      toast.error(error.response?.data?.message);
+      throw error;
     }
   },
 
@@ -144,9 +111,11 @@ export const useTimesheetStore = create((set, get) => ({
       set((state) => ({
         timesheets: state.timesheets.filter((ts) => ts._id !== id),
       }));
-    } catch (err) {
-      console.error("Failed to delete timesheet:", err);
-      throw err;
+      toast.success("Timesheet deleted");
+    } catch (error) {
+      console.error("Failed to delete timesheet:", error);
+      toast.error(error.response?.data?.message);
+      throw error;
     }
   },
 
@@ -190,9 +159,9 @@ export const useTimesheetStore = create((set, get) => ({
       }));
 
       return data;
-    } catch (err) {
-      console.error("Failed to update status:", err);
-      throw err;
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      throw error;
     }
   },
 
@@ -221,10 +190,12 @@ export const useTimesheetStore = create((set, get) => ({
         ),
       }));
 
+      toast.success("Timesheet finalized");
       return data;
-    } catch (err) {
-      console.error("Failed to finalize timesheet:", err);
-      throw err;
+    } catch (error) {
+      console.error("Failed to finalize timesheet:", error);
+      toast.error(error.response?.data?.message);
+      throw error;
     }
   },
 
@@ -247,10 +218,11 @@ export const useTimesheetStore = create((set, get) => ({
         ),
       }));
 
+      toast.success("Timesheet description updated");
       return data;
     } catch (error) {
       console.error("Failed to update description:", error.message);
-      toast.error("Failed to update description.");
+      toast.error(error.message);
       throw error;
     }
   },

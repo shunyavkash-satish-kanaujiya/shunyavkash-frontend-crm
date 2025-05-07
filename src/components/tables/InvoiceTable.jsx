@@ -38,8 +38,8 @@ export const InvoiceListPage = ({
       setRegeneratingId(invoiceId);
       await handleRegeneratePDF(invoiceId);
       await fetchInvoices();
-    } catch (err) {
-      console.error("Failed to regenerate PDF:", err);
+    } catch (error) {
+      console.error("Failed to regenerate PDF:", error);
     } finally {
       setRegenerating(false);
       setRegeneratingId(null);
@@ -57,9 +57,9 @@ export const InvoiceListPage = ({
         return;
       }
       await fetchInvoices();
-    } catch (err) {
-      console.error("Failed to update status:", err);
-      if (!err.message.includes("Cannot change status")) {
+    } catch (error) {
+      console.error("Failed to update status:", error);
+      if (!error.message.includes("Cannot change status")) {
         alert("Error updating invoice status. Please try again.");
       }
     }

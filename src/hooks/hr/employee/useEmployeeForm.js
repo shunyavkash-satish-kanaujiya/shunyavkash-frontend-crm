@@ -173,11 +173,11 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
       setExistingDocs([]);
       setDeletedDocIds([]);
       setEmployeeTab(TABS.EMPLOYEES);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
 
-      if (err.response) {
-        const { status, data } = err.response;
+      if (error.response) {
+        const { status, data } = error.response;
 
         if (status === 409 && data.message) {
           alert("An employee with this email already exists.");

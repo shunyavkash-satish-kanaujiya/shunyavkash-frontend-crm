@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { instance } from "../utils/axiosInstance";
 import { API_ROUTES } from "../api/apiList";
+import toast from "react-hot-toast";
 
 export const useProjectStore = create((set) => ({
   projects: [],
@@ -18,9 +19,10 @@ export const useProjectStore = create((set) => ({
       const res = await instance.get(API_ROUTES.PROJECTS.GET_ONE(projectId));
       set({ editingProject: res.data, projectLoading: false });
       return res.data;
-    } catch (err) {
-      set({ error: err.message, projectLoading: false });
-      console.error("Failed to fetch project details:", err);
+    } catch (error) {
+      set({ error: error.message, projectLoading: false });
+      console.error("Failed to fetch project details:", error);
+      toast.error(error.message);
       return null;
     }
   },
@@ -32,9 +34,10 @@ export const useProjectStore = create((set) => ({
       const res = await instance.get(API_ROUTES.PROJECTS.BASE);
       set({ projects: res.data, loading: false });
       console.log("Projects:", res.data);
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to fetch projects:", err);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to fetch projects:", error);
+      toast.error(error.message);
     }
   },
 
@@ -47,9 +50,11 @@ export const useProjectStore = create((set) => ({
         projects: [...state.projects, res.data],
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      throw err;
+      toast.success("Project created");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      toast.error(error.message);
+      throw error;
     }
   },
 
@@ -62,9 +67,11 @@ export const useProjectStore = create((set) => ({
         projects: state.projects.filter((project) => project._id !== projectId),
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to delete project:", err);
+      toast.success("Project deleted");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to delete project:", error);
+      toast.error(error.message);
     }
   },
 
@@ -82,9 +89,11 @@ export const useProjectStore = create((set) => ({
         ),
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      throw err;
+      toast.success("Project updated");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      toast.error(error.message);
+      throw error;
     }
   },
 
@@ -100,8 +109,10 @@ export const useProjectStore = create((set) => ({
           project._id === projectId ? { ...project, priority } : project
         ),
       }));
+      toast.success("Project priority updated");
     } catch (error) {
       console.error("Failed to update project priority", error);
+      toast.error(error.message);
     }
   },
 
@@ -114,9 +125,10 @@ export const useProjectStore = create((set) => ({
       );
       console.log("Archived Projects:", res.data);
       set({ archivedProjects: res.data, loading: false });
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to fetch archived projects:", err);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to fetch archived projects:", error);
+      toast.error(error.message);
     }
   },
 
@@ -127,8 +139,10 @@ export const useProjectStore = create((set) => ({
       set((state) => ({
         projects: state.projects.filter((p) => p._id !== projectId),
       }));
+      toast.success("Project archived");
     } catch (error) {
       console.error("Failed to archive project:", error);
+      toast.error(error.message);
     }
   },
 
@@ -145,6 +159,7 @@ export const useProjectStore = create((set) => ({
         const restoredProject = state.archivedProjects.find(
           (p) => p._id === projectId
         );
+        toast.success("Project restored");
         return {
           archivedProjects: state.archivedProjects.filter(
             (p) => p._id !== projectId
@@ -157,6 +172,7 @@ export const useProjectStore = create((set) => ({
       });
     } catch (error) {
       console.error("Failed to restore project:", error);
+      toast.error(error.message);
     }
   },
 
@@ -192,11 +208,13 @@ export const useProjectStore = create((set) => ({
           p._id === projectId ? res.data : p
         ),
       }));
+      toast.success("Employees assigned.");
     } catch (error) {
       console.error(
         "Failed to assign employees:",
         error.response ? error.response.data : error
       );
+      toast.error(error.message);
       throw error;
     }
   },
@@ -217,9 +235,11 @@ export const useProjectStore = create((set) => ({
         ),
       }));
 
+      toast.success("Employee removed from project");
       return true;
     } catch (error) {
       console.error("Failed to remove assigned employee:", error);
+      toast.error(error.message);
       return false;
     }
   },

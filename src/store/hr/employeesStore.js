@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { instance } from "../../utils/axiosInstance";
 import { API_ROUTES } from "../../api/apiList";
+import toast from "react-hot-toast";
 
 export const useEmployeeStore = create((set) => ({
   employees: [],
@@ -18,6 +19,7 @@ export const useEmployeeStore = create((set) => ({
     } catch (error) {
       set({ loading: false, error: error.message });
       console.error("Failed to fetch employees:", error);
+      toast.error(error.message);
     }
   },
 
@@ -28,9 +30,10 @@ export const useEmployeeStore = create((set) => ({
       const res = await instance.get(API_ROUTES.EMPLOYEES.GET_ONE(employeeId));
       set({ editingEmployee: res.data, loading: false });
       return res.data;
-    } catch (err) {
-      set({ loading: false, error: err.message });
-      console.error("Failed to fetch employee details:", err);
+    } catch (error) {
+      set({ loading: false, error: error.message });
+      console.error("Failed to fetch employee details:", error);
+      toast.error(error.message);
       return null;
     }
   },
@@ -60,9 +63,12 @@ export const useEmployeeStore = create((set) => ({
         ),
       }));
 
+      toast.success("Tag removed");
+
       return updatedEmployee;
-    } catch (err) {
-      console.error(`Failed to remove ${type}:`, err);
+    } catch (error) {
+      console.error(`Failed to remove ${type}:`, error);
+      toast.error(error.message);
       return null;
     }
   },
@@ -77,8 +83,10 @@ export const useEmployeeStore = create((set) => ({
       set((state) => ({
         employees: [...state.employees, res.data],
       }));
+      toast.success("Employee added");
     } catch (error) {
       console.error("Error adding employee:", error);
+      toast.error(error.message);
       throw error;
     }
   },
@@ -101,8 +109,10 @@ export const useEmployeeStore = create((set) => ({
           emp._id === employeeId ? res.data : emp
         ),
       }));
+      toast.success("Employee updated");
     } catch (error) {
       console.error("Error updating employee:", error);
+      toast.error(error.message);
     }
   },
 
@@ -120,14 +130,14 @@ export const useEmployeeStore = create((set) => ({
       set((state) => ({
         employees: state.employees.filter((emp) => emp._id !== employeeId),
       }));
+      toast.success("Employee deleted");
     } catch (error) {
       const errorMessage =
         error?.res?.data?.message ||
         "Something went wrong while deleting employee";
 
-      alert(errorMessage);
-
       console.error("Error deleting employee:", error);
+      toast.error(errorMessage);
     }
   },
 

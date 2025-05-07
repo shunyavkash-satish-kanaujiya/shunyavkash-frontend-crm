@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useClientStore } from "../../store/clientStore";
 import { useTimesheetStore } from "../../store/timesheetStore";
 import { useInvoiceStore } from "../../store/invoiceStore";
-import toast from "react-hot-toast";
 import { ReusableSelectBox } from "../ui/ReusableSelectBox.jsx";
 
 export const CreateInvoice = ({ setActiveTab }) => {
@@ -110,14 +109,12 @@ export const CreateInvoice = ({ setActiveTab }) => {
         dueDate: formData.dueDate,
       });
 
-      toast.success("Invoice created successfully!");
       setActiveTab("Invoice");
       resetForm();
-    } catch (err) {
+    } catch (error) {
       setSubmitError(
-        err.response?.data?.message || "Failed to create invoice."
+        error.response?.data?.message || "Failed to create invoice."
       );
-      toast.error(err.response?.data?.message || "Failed to create invoice");
     } finally {
       setIsSubmitting(false);
     }

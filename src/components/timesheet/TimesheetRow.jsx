@@ -4,7 +4,6 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
 import { useTimesheetStore } from "../../store/timesheetStore";
 import { TABS } from "../../constants/activeTab";
 import {
@@ -67,10 +66,8 @@ export const TimesheetRow = ({
     if (window.confirm("Are you sure you want to delete this timesheet?")) {
       try {
         await deleteTimesheet(_id);
-        toast.success("Timesheet deleted successfully!");
       } catch (error) {
         console.error("Failed to delete timesheet:", error);
-        toast.error("Failed to delete timesheet.");
       }
     }
   };
@@ -79,16 +76,13 @@ export const TimesheetRow = ({
     const newStatus = e.target.value;
     try {
       await updateStatus(_id, newStatus);
-      toast.success("Status updated!");
     } catch (error) {
       console.error("Failed to update status:", error);
-      toast.error("Failed to update status.");
     }
   };
 
   const handleRowClick = () => {
     if (isFinalized) {
-      toast.error("Cannot edit! Timesheet is finalized.");
       return;
     }
     setOpenTimesheetId(openTimesheetId === _id ? null : _id);
@@ -99,10 +93,8 @@ export const TimesheetRow = ({
     try {
       setLocalTags(newTags);
       await updateDescription(_id, newTags);
-      toast.success("Description updated!");
     } catch (error) {
       console.error("Failed to update description:", error);
-      toast.error("Failed to update description.");
     }
   };
 

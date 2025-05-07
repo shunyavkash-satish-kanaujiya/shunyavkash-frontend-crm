@@ -46,8 +46,8 @@ export const ClientForm = ({
         });
       }
       setActiveTab(TABS.CLIENTS);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       alert("Failed to submit client.");
     }
   };
