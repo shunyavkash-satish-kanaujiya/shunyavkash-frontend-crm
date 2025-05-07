@@ -15,7 +15,6 @@ import {
   CogIcon,
   UserGroupIcon,
   ReceiptPercentIcon,
-  QueueListIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline";
 
@@ -214,11 +213,7 @@ export const Dashboard = () => {
 
     // Invoices
     if (activeTab === TABS.INVOICE) {
-      return (
-        <Invoice
-          setActiveTab={setActiveTab}
-        />
-      );
+      return <Invoice setActiveTab={setActiveTab} />;
     }
 
     if (activeTab === TABS.ADD_INVOICE) {

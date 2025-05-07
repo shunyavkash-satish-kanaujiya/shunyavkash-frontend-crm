@@ -14,7 +14,7 @@ export const ReusableSelectBox = ({
         value={value}
         onChange={onChange}
         required={required}
-        className="peer block w-full pt-5 pb-2.5 px-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600"
+        className="peer block w-full pt-5 pb-2.5 px-2.5 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 capitalize"
       >
         <option value="" disabled hidden>
           {placeholder}

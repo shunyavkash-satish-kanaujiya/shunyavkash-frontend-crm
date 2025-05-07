@@ -49,8 +49,13 @@ export const ProjectForm = ({
             type: "text",
             required: true,
           },
-          { label: "Start Date", name: "startDate", type: "date" },
-          { label: "End Date", name: "endDate", type: "date" },
+          {
+            label: "Start Date",
+            name: "startDate",
+            type: "date",
+            required: true,
+          },
+          { label: "End Date", name: "endDate", type: "date", required: true },
         ].map((field) => (
           <div className="relative z-0 w-full group" key={field.name}>
             <input
@@ -60,7 +65,7 @@ export const ProjectForm = ({
               onChange={handleChange}
               required={field.required}
               autoComplete="off"
-              className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+              className="peer block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600"
             />
             <label
               htmlFor={field.name}
@@ -90,6 +95,7 @@ export const ProjectForm = ({
           value={formData.priority}
           onChange={handleChange}
           options={priorityOptions}
+          required
         />
 
         {/* Status Select */}
@@ -99,6 +105,7 @@ export const ProjectForm = ({
           value={formData.status}
           onChange={handleChange}
           options={statusOptions}
+          required
         />
 
         {/* Description */}

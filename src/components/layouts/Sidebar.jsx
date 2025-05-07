@@ -1,11 +1,4 @@
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
-  ChevronRightIcon as SubChevronRightIcon,
-  ArchiveBoxXMarkIcon,
-  ArchiveBoxIcon,
-} from "@heroicons/react/24/outline";
+import { ChevronLeftIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { TABS } from "../../constants/activeTab";
 
 export const Sidebar = ({
@@ -48,11 +41,11 @@ export const Sidebar = ({
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="text-emerald-500 focus:outline-none ml-2"
         >
-          {sidebarOpen ? (
-            <ChevronLeftIcon className="h-6 w-6 stroke-3" />
-          ) : (
-            <ChevronRightIcon className="h-6 w-6 ms-1 stroke-3" />
-          )}
+          <ChevronLeftIcon
+            className={`h-6 w-6 stroke-3 transform transition-transform duration-800 ease-in-out ${
+              sidebarOpen ? "scale-x-100" : "scale-x-[-1]"
+            }`}
+          />
         </button>
       </div>
 
@@ -78,24 +71,30 @@ export const Sidebar = ({
                         );
                         setActiveTab(item.name);
                       }}
-                      className={`w-full flex items-center px-2 py-0 rounded text-sm gap-3 ${itemClasses}`}
+                      className={`w-full flex items-center px-2 py-0 transition-all duration-300 rounded text-sm gap-3 ${itemClasses}`}
                     >
                       <div
                         className={`h-10 w-10 flex items-center justify-center rounded ${
                           sidebarOpen ? "" : "mx-auto"
                         }`}
                       >
-                        <item.icon className="h-5 w-5 text-indigo-600" />
+                        <item.icon
+                          className={`h-5 w-5 text-indigo-600 transition-all duration-200 ${
+                            isSubmenuActive ? "stroke-2" : ""
+                          }`}
+                        />
                       </div>
 
                       {sidebarOpen && (
                         <div className="flex flex-1 justify-between items-center">
                           <span className="truncate">{item.name}</span>
-                          {openSubmenu === item.name ? (
-                            <ChevronDownIcon className="h-4 w-4 text-gray-500 ms-2 stroke-2" />
-                          ) : (
-                            <SubChevronRightIcon className="h-4 w-4 text-gray-500 ms-2 stroke-2" />
-                          )}
+                          <ChevronDownIcon
+                            className={`h-4 w-4 text-gray-500 ms-2 stroke-2 transform transition-transform duration-300 ${
+                              openSubmenu === item.name
+                                ? "rotate-0 stroke-3"
+                                : "-rotate-90"
+                            }`}
+                          />
                         </div>
                       )}
                     </button>
@@ -110,6 +109,7 @@ export const Sidebar = ({
                                 setActiveTab(sub.name);
                                 setOpenSubmenu(item.name);
                               }}
+                              // Add Smooth Transition
                               className={`block pl-9 py-2 text-sm rounded ${
                                 activeTab === sub.name
                                   ? "bg-indigo-50 text-indigo-700 font-medium"
@@ -141,7 +141,11 @@ export const Sidebar = ({
                         sidebarOpen ? "" : "mx-auto"
                       }`}
                     >
-                      <item.icon className="h-5 w-5 text-indigo-600" />
+                      <item.icon
+                        className={`h-5 w-5 text-indigo-600 transition-all duration-200 ${
+                          isSubmenuActive ? "stroke-2" : ""
+                        }`}
+                      />
                     </div>
                     {sidebarOpen && (
                       <span className="truncate">{item.name}</span>
