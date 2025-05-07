@@ -131,8 +131,8 @@ export const InvoiceRow = ({
                       try {
                         await sendInvoice(invoice._id);
                         alert("Invoice sent successfully!");
-                      } catch (err) {
-                        alert(err.message || "Failed to send invoice");
+                      } catch (error) {
+                        alert(error.message || "Failed to send invoice");
                       }
                     }}
                     className="px-3 py-2 bg-green-500 hover:bg-green-600 rounded-md text-sm text-white flex items-center"

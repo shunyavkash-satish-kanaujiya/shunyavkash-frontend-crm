@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { instance } from "../utils/axiosInstance";
 import { API_ROUTES } from "../api/apiList";
+import toast from "react-hot-toast";
 
 export const useClientStore = create((set) => ({
   clients: [],
@@ -14,9 +15,10 @@ export const useClientStore = create((set) => ({
     try {
       const res = await instance.get(API_ROUTES.CLIENT.BASE);
       set({ clients: res.data, loading: false });
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to fetch clients:", err);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to fetch clients:", error);
+      toast.error(error.message);
     }
   },
 
@@ -31,9 +33,11 @@ export const useClientStore = create((set) => ({
         clients: [...state.clients, res.data],
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      throw err;
+      toast.success("Client added");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      toast.error(error.message);
+      throw error;
     }
   },
 
@@ -48,14 +52,16 @@ export const useClientStore = create((set) => ({
         clients: state.clients.filter((client) => client._id !== clientId),
         loading: false,
       }));
+      toast.success("Client deleted");
 
       return { success: true };
-    } catch (err) {
+    } catch (error) {
       const backendError =
-        err.response?.data?.error || err.message || "Something went wrong";
+        error.response?.data?.error || error.message || "Something went wrong";
 
       set({ error: backendError, loading: false });
       console.error("Failed to delete client:", backendError);
+      toast.error(backendError);
 
       return { success: false, error: backendError };
     }
@@ -77,9 +83,11 @@ export const useClientStore = create((set) => ({
         ),
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      throw err;
+      toast.success("Client updated");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      toast.error(error.message);
+      throw error;
     }
   },
 }));

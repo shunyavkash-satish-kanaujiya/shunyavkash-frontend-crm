@@ -63,8 +63,8 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
       await assignEmployees(projectId, [employeeToAssign]);
       setLoading(false); // Stop loader
       handleClose();
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       setError("Failed to assign employee.");
       setLoading(false); // Ensure loader stops on error
     }

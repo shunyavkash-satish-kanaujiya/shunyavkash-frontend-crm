@@ -49,9 +49,9 @@ export const useTimesheetForm = () => {
       try {
         await fetchTimesheets();
         setError(null);
-      } catch (err) {
-        console.error("Error fetching timesheets:", err);
-        setError(err.message || "Failed to fetch timesheets");
+      } catch (error) {
+        console.error("Error fetching timesheets:", error);
+        setError(error.message || "Failed to fetch timesheets");
       } finally {
         setLoading(false);
       }

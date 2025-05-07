@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { instance } from "../utils/axiosInstance";
 import { API_ROUTES } from "../api/apiList";
+import toast from "react-hot-toast";
 
 export const useInvoiceStore = create((set) => ({
   invoices: [],
@@ -16,21 +17,23 @@ export const useInvoiceStore = create((set) => ({
       const res = await instance.get(API_ROUTES.INVOICE.BASE);
       set({ invoices: res.data, loading: false });
       console.log("Fetched invoices:", res.data);
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to fetch invoices:", err);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to fetch invoices:", error);
+      toast.error(error.message);
     }
   },
-  
+
   // Get Invoice By ID (for details page)
   getInvoiceById: async (invoiceId) => {
     try {
       set({ loading: true, error: null });
       const res = await instance.get(API_ROUTES.INVOICE.GET_ONE(invoiceId));
       set({ editingInvoice: res.data, loading: false });
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to fetch invoice:", err);
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to fetch invoice:", error);
+      toast.error(error.message);
     }
   },
 
@@ -43,9 +46,11 @@ export const useInvoiceStore = create((set) => ({
         invoices: [...state.invoices, res.data],
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      throw err;
+      toast.success("Invoice created");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      toast.error(error.message);
+      throw error;
     }
   },
 
@@ -58,9 +63,11 @@ export const useInvoiceStore = create((set) => ({
         invoices: state.invoices.filter((inv) => inv._id !== invoiceId),
         loading: false,
       }));
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      console.error("Failed to delete invoice:", err);
+      toast.success("Invoice deleted");
+    } catch (error) {
+      set({ error: error.message, loading: false });
+      console.error("Failed to delete invoice:", error);
+      toast.error(error.message);
     }
   },
 
@@ -98,6 +105,7 @@ export const useInvoiceStore = create((set) => ({
         loading: false,
       }));
 
+      toast.success(`Invoice status updated to ${newStatus}`);
       return { data: response.data };
     } catch (error) {
       const errorMsg = error.message || "Failed to update invoice status";
@@ -106,6 +114,7 @@ export const useInvoiceStore = create((set) => ({
         loading: false,
       });
       console.error("Failed to update invoice status:", error);
+      toast.error(errorMsg);
       return { error: errorMsg };
     }
   },
@@ -131,6 +140,7 @@ export const useInvoiceStore = create((set) => ({
         ),
         loading: false,
       }));
+      toast.success("Invoice PDF regenerated");
 
       return response.data.invoice;
     } catch (error) {
@@ -138,7 +148,8 @@ export const useInvoiceStore = create((set) => ({
         error: error.response?.data?.message || "Failed to regenerate PDF",
         loading: false,
       });
-      throw error; // Re-throw to allow component to handle the error
+      toast.error(error.response?.data?.message);
+      throw error;
     }
   },
 
@@ -150,12 +161,14 @@ export const useInvoiceStore = create((set) => ({
         API_ROUTES.INVOICE.SEND_INVOICE(invoiceId)
       );
       set({ loading: false });
+      toast.success("Invoice sent");
       return response.data;
     } catch (error) {
       set({
         error: error.response?.data?.message || "Failed to send invoice",
         loading: false,
       });
+      toast.error(error.response?.data?.message);
       throw error;
     }
   },

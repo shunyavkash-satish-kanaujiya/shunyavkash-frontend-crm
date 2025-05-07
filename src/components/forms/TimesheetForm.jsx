@@ -3,7 +3,6 @@ import { useTimesheetStore } from "../../store/timesheetStore.js";
 import { useTimesheetForm } from "../../hooks/timesheet/useTimesheetForm.js";
 import { TABS } from "../../constants/activeTab.js";
 import { useProjectStore } from "../../store/projectStore";
-import toast from "react-hot-toast";
 import { useAuthStore } from "../../store/authStore.js";
 import { ReusableSelectBox } from "../ui/ReusableSelectBox.jsx";
 import { timesheetFilters } from "../../constants/timesheet/timesheetFilter.js";
@@ -113,17 +112,14 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
 
       if (editingTimesheet && editingTimesheet._id) {
         await updateTimesheet({ ...submissionData, _id: editingTimesheet._id });
-        toast.success("Timesheet updated!");
       } else {
         await addTimesheet(submissionData);
-        toast.success("Timesheet added!");
       }
 
       await fetchTimesheets();
       setActiveTab(TABS.TIMESHEET);
-    } catch (err) {
-      console.error("Error submitting timesheet:", err);
-      toast.error(err.response?.data?.message || "Failed to submit timesheet");
+    } catch (error) {
+      console.error("Error submitting timesheet:", error);
     } finally {
       setIsSubmitting(false);
     }

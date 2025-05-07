@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { instance } from "../utils/axiosInstance";
 import { API_ROUTES } from "../api/apiList";
+import toast from "react-hot-toast";
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -24,10 +25,12 @@ export const useAuthStore = create((set) => ({
       set({ token, loading: false });
 
       await useAuthStore.getState().fetchUser();
-    } catch (err) {
+    } catch (error) {
       set({
         error:
-          err.response?.data?.message || err.message || "Registration failed",
+          error.response?.data?.message ||
+          error.message ||
+          "Registration failed",
         loading: false,
       });
     }
@@ -46,8 +49,8 @@ export const useAuthStore = create((set) => ({
 
       const user = res.data;
       set({ user });
-    } catch (err) {
-      console.error("Fetch user failed:", err.message);
+    } catch (error) {
+      console.error("Fetch user failed:", error.message);
       set({ error: "Failed to fetch user", user: null, token: null });
       localStorage.removeItem("token");
     } finally {
@@ -65,10 +68,10 @@ export const useAuthStore = create((set) => ({
       });
 
       set({ loading: false, message: res.data.message });
-    } catch (err) {
+    } catch (error) {
       set({
         loading: false,
-        error: err.response?.data?.error || "Something went wrong",
+        error: error.response?.data?.error || "Something went wrong",
       });
     }
   },
@@ -83,10 +86,10 @@ export const useAuthStore = create((set) => ({
       });
 
       set({ loading: false, message: res.data.message });
-    } catch (err) {
+    } catch (error) {
       set({
         loading: false,
-        error: err.response?.data?.error || "Something went wrong",
+        error: error.response?.data?.error || "Something went wrong",
       });
     }
   },
@@ -97,6 +100,7 @@ export const useAuthStore = create((set) => ({
   // Logout user
   logout: () => {
     localStorage.removeItem("token");
+    toast.success("Logged-out!");
     set({ user: null, token: null });
   },
 }));
