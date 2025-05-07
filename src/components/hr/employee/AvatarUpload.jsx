@@ -9,7 +9,7 @@ export const AvatarUpload = ({
   return (
     <div className="relative">
       <label className="block mb-2 text-sm font-medium text-gray-700">
-        Avatar
+        <span className="text-red-700 text-lg inline">* </span>Avatar
       </label>
       <div className="flex items-center space-x-4">
         <label
@@ -33,11 +33,14 @@ export const AvatarUpload = ({
         accept="image/*"
         onChange={handleChange}
         className="hidden"
+        required={editingEmployee ? false : true}
       />
 
       {(previewAvatar || (editingEmployee && editingEmployee.avatar?.url)) && (
-        <div className="mb-4">
-          <p className="text-sm text-gray-500 mb-1">Avatar Preview:</p>
+        <div>
+          <p className="text-sm font-medium text-gray-500 my-3">
+            Avatar Preview:
+          </p>
           <img
             src={previewAvatar || editingEmployee.avatar.url}
             alt="Avatar Preview"

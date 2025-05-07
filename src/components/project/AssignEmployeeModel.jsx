@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { employeeRoles } from "../../constants/hr/employee/employeeRoles";
 import { useEmployeeStore } from "../../store/hr/employeesStore";
 import { useProjectStore } from "../../store/projectStore";
+import { designationOptions } from "../../constants/hr/employee/positionOptions";
 
 export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
   const [selectedEmployee, setSelectedEmployee] = useState("");
@@ -110,7 +110,7 @@ export const AssignEmployeeModel = ({ project, projectId, closeModal }) => {
             className="w-full border px-3 py-2 rounded"
           >
             <option value="">-- Select Role --</option>
-            {employeeRoles.map((role) => (
+            {designationOptions.map((role) => (
               <option key={role} value={role}>
                 {role}
               </option>

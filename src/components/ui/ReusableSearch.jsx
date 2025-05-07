@@ -11,7 +11,7 @@ export const ReusableSearch = ({
   }, [onSearchChange, searchTerm]);
 
   return (
-    <div className="flex gap-4 items-center p-3 bg-white shadow-md rounded-lg">
+    <div className="flex gap-4 items-center p-2 bg-white shadow-md rounded-lg">
       <input
         type="text"
         placeholder={searchPlaceholder}
