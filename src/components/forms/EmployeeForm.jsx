@@ -21,6 +21,10 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
 
   return (
     <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
+      <p className="text-sm text-gray-500">
+        ● Fields with<span className="text-red-700 text-lg inline"> * </span>
+        must be required.
+      </p>
       <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
         {editingEmployee ? "Update Employee" : "Add New Employee"}
       </h2>
@@ -51,7 +55,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
                 onChange={handleChange}
                 required={field.required}
                 autoComplete="off"
-                className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+                className="peer block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
               />
             )}
             <label

@@ -34,7 +34,7 @@ export const ReusableContainer = ({
         {onAddClick && (
           <button
             onClick={onAddClick}
-            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition cursor-pointer mr-0 ml-auto"
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition cursor-pointer mr-0 ml-auto shadow-md"
           >
             <PlusIcon className="h-5 w-5" />
             {addButtonLabel}

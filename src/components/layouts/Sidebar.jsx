@@ -29,7 +29,7 @@ export const Sidebar = ({
         {sidebarOpen && (
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <a
-              href="javascript:void(0);"
+              // href="javascript:void(0);"
               onClick={() => {
                 setActiveTab(TABS.DASHBOARD);
                 setOpenSubmenu(null);
@@ -105,7 +105,7 @@ export const Sidebar = ({
                         {item.submenu.map((sub) => (
                           <li key={sub.name}>
                             <a
-                              href="javascript:void(0);"
+                              // href="javascript:void(0);"
                               onClick={() => {
                                 setActiveTab(sub.name);
                                 setOpenSubmenu(item.name);
@@ -129,7 +129,7 @@ export const Sidebar = ({
                   </div>
                 ) : (
                   <a
-                    href="javascript:void(0);"
+                    // href="javascript:void(0);"
                     onClick={() => {
                       setActiveTab(item.name);
                       setOpenSubmenu(null);

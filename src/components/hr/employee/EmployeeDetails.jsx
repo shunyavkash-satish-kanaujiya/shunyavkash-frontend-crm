@@ -52,7 +52,7 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             src={employee.avatar || "/default-avatar.png"}
             alt="Avatar"
             onError={(e) => (e.target.src = "/default-avatar.png")}
-            className="w-24 h-24 rounded-full object-cover"
+            className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 shadow-sm"
           />
           <div>
             <h2 className="font-bold text-xl capitalize mb-2">
