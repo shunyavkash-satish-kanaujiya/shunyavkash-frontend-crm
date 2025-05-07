@@ -1,7 +1,24 @@
 import { useEffect, useState } from "react";
 import { useEmployeeStore } from "../../../store/hr/employeesStore";
+import { useAuthStore } from "../../../store/authStore";
 
 export const useEmployeeForm = (setEmployeeTab, TABS) => {
+  const { user } = useAuthStore();
+  const editingEmployee = useEmployeeStore((state) => state.editingEmployee);
+  const addEmployee = useEmployeeStore((state) => state.addEmployee);
+  const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
+  const setEditingEmployee = useEmployeeStore(
+    (state) => state.setEditingEmployee
+  );
+
+  // Then calculate derived values
+  const isAdminOrHR = ["Admin", "HR"].includes(user?.role);
+  const isEditingOwnProfile = user?.email === editingEmployee?.email;
+
+  // Track original values for comparison
+  const [originalValues, setOriginalValues] = useState({});
+
+  // Then declare local state
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -21,15 +38,14 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
   const [existingDocs, setExistingDocs] = useState([]);
   const [deletedDocIds, setDeletedDocIds] = useState([]);
 
-  const addEmployee = useEmployeeStore((state) => state.addEmployee);
-  const updateEmployee = useEmployeeStore((state) => state.updateEmployee);
-  const editingEmployee = useEmployeeStore((state) => state.editingEmployee);
-  const setEditingEmployee = useEmployeeStore(
-    (state) => state.setEditingEmployee
-  );
-
   useEffect(() => {
     if (editingEmployee) {
+      // Store original values of restricted fields for comparison
+      setOriginalValues({
+        salary: editingEmployee.salary || "",
+        dateOfJoining: editingEmployee.dateOfJoining?.slice(0, 10) || "",
+      });
+
       setFormData((prev) => ({
         ...prev,
         ...editingEmployee,
@@ -84,6 +100,21 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Add validation for employees editing their own profile
+    if (editingEmployee && isEditingOwnProfile && !isAdminOrHR) {
+      const restrictedFields = ["salary", "dateOfJoining"];
+      // Compare with original values instead of editingEmployee directly
+      const changedFields = restrictedFields.filter(
+        (field) => formData[field] !== originalValues[field]
+      );
+
+      if (changedFields.length > 0) {
+        alert(`You are not authorized to modify: ${changedFields.join(", ")}`);
+        return;
+      }
+    }
+
     setLoading(true);
     alert(editingEmployee ? "Updating employee..." : "Saving employee...");
 
@@ -138,6 +169,7 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
         avatar: null,
         documents: [],
       });
+      setOriginalValues({});
       setExistingDocs([]);
       setDeletedDocIds([]);
       setEmployeeTab(TABS.EMPLOYEES);
@@ -173,5 +205,7 @@ export const useEmployeeForm = (setEmployeeTab, TABS) => {
     handleRemoveExistingDoc,
     handleRemoveNewDoc,
     handleSubmit,
+    isAdminOrHR,
+    isEditingOwnProfile,
   };
 };

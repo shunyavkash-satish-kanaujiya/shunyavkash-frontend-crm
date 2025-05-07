@@ -17,7 +17,18 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
     handleRemoveExistingDoc,
     handleRemoveNewDoc,
     handleSubmit,
+    isAdminOrHR,
+    isEditingOwnProfile,
   } = useEmployeeForm(setEmployeeTab, TABS);
+
+  // Function to determine if field should be read-only
+  const shouldBeReadOnly = (fieldName) => {
+    // If editing own profile and not admin/HR, restrict certain fields
+    if (isEditingOwnProfile && !isAdminOrHR) {
+      return ["salary", "dateOfJoining"].includes(fieldName);
+    }
+    return false;
+  };
 
   return (
     <div className="max-w-3xl mx-auto mt-8 bg-white rounded-2xl shadow-lg p-8">
@@ -28,6 +39,14 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
       <h2 className="text-2xl font-semibold text-indigo-700 mb-6">
         {editingEmployee ? "Update Employee" : "Add New Employee"}
       </h2>
+      {isEditingOwnProfile && !isAdminOrHR && (
+        <div className="mb-4 p-3 bg-blue-50 text-sm text-blue-800 rounded-md">
+          <p>
+            Note: As an employee, you cannot modify your salary or date of
+            joining.
+          </p>
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -46,6 +65,7 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
                   label: option,
                 }))}
                 required={field.required}
+                isDisabled={shouldBeReadOnly(field.name)}
               />
             ) : (
               <input
@@ -55,16 +75,26 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
                 onChange={handleChange}
                 required={field.required}
                 autoComplete="off"
-                className="peer block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+                readOnly={shouldBeReadOnly(field.name)}
+                className={`peer block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer ${
+                  shouldBeReadOnly(field.name)
+                    ? "bg-gray-100 cursor-not-allowed"
+                    : ""
+                }`}
               />
             )}
             <label
               htmlFor={field.name}
-              className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
-        peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
-        peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+              className={`absolute text-md transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0] 
+                peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+                peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 px-1 bg-white ${
+                  shouldBeReadOnly(field.name)
+                    ? "text-gray-400"
+                    : "text-gray-500 peer-focus:text-indigo-600"
+                }`}
             >
               {field.label}
+              {field.required}
             </label>
           </div>
         ))}
