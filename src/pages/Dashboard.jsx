@@ -334,7 +334,9 @@ export const Dashboard = () => {
       <div className="flex flex-col flex-1 h-full">
         {/* Header - Fixed */}
         <header className="flex items-center justify-between p-4 bg-white border-b border-border border-gray-300 shadow-sm gap-3">
-          <h1 className="text-lg font-bold">{activeTab}</h1>
+          <h1 className="text-lg opacity-90 tracking-wide text-blue-950 font-bold">
+            {activeTab}
+          </h1>
           <UserDropdown />
         </header>
 
