@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { instance } from "../utils/axiosInstance";
 import { API_ROUTES } from "../api/apiList";
-import axios from "axios";
 
 export const useInvoiceStore = create((set) => ({
   invoices: [],
@@ -22,25 +21,7 @@ export const useInvoiceStore = create((set) => ({
       console.error("Failed to fetch invoices:", err);
     }
   },
-
-  fetchAvailableTimesheets: async (projectId) => {
-    try {
-      set({ loading: true, error: null });
-      const res = await axios.get(
-        `http://localhost:8000/api/timesheets/available-timesheets/${projectId}`
-      );
-      set({ availableTimesheets: res.data, loading: false });
-      console.log("Fetched available timesheets:", res.data);
-    } catch (error) {
-      set({
-        error:
-          error.response?.data?.message ||
-          "Failed to fetch available timesheets",
-        loading: false,
-      });
-      console.error("Error fetching available timesheets:", error);
-    }
-  },
+  
   // Get Invoice By ID (for details page)
   getInvoiceById: async (invoiceId) => {
     try {
