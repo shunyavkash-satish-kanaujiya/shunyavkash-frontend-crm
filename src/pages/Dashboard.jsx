@@ -93,81 +93,6 @@ export const Dashboard = () => {
       </div>
     );
   }
-  // Downloads an invoice PDF (from Cloudinary or backend)
-  const handleDownloadPDF = async (invoiceId) => {
-    try {
-      const response = await fetch(`/api/invoices/${invoiceId}/download`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to download PDF");
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `invoice-${invoiceId}.pdf`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Download error:", error.message);
-      alert("Failed to download invoice PDF.");
-    }
-  };
-
-  // Regenerates a deleted invoice PDF
-  const handleRegeneratePDF = async (invoiceId) => {
-    try {
-      const response = await fetch(
-        `/api/invoices/${invoiceId}/regenerate-pdf`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(data.message || "Error regenerating PDF");
-
-      alert("PDF regenerated successfully.");
-    } catch (error) {
-      console.error("Regenerate error:", error.message);
-      alert("Failed to regenerate invoice PDF.");
-    }
-  };
-
-  // Updates invoice status (e.g., from Pending to Paid)
-  const updateInvoiceStatus = async (invoiceId, newStatus) => {
-    try {
-      const response = await fetch(`/api/invoices/${invoiceId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          status: newStatus,
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok)
-        throw new Error(data.message || "Error updating status");
-
-      alert("Invoice status updated.");
-    } catch (error) {
-      console.error("Status update error:", error.message);
-      alert("Failed to update invoice status.");
-    }
-  };
 
   const renderMainContent = () => {
     // Dashboard
@@ -292,9 +217,6 @@ export const Dashboard = () => {
       return (
         <Invoice
           setActiveTab={setActiveTab}
-          handleDownloadPDF={handleDownloadPDF}
-          handleRegeneratePDF={handleRegeneratePDF}
-          updateInvoiceStatus={updateInvoiceStatus}
         />
       );
     }
