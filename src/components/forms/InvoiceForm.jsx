@@ -27,14 +27,6 @@ export const CreateInvoice = ({ setActiveTab }) => {
     fetchTimesheets();
   }, [fetchClients, fetchTimesheets]);
 
-  // const filteredTimesheets = timesheets.filter((ts) => {
-  //   const projectClientId =
-  //     typeof ts.project?.client === "string"
-  //       ? ts.project.client
-  //       : ts.project?.client?._id;
-
-  //   return ts.isFinalized && projectClientId === formData.client;
-  // });
   const filteredTimesheets = timesheets.filter((ts) => {
     const projectClientId =
       typeof ts.project?.client === "string"
@@ -167,16 +159,20 @@ export const CreateInvoice = ({ setActiveTab }) => {
         {/* Select Timesheets */}
         {formData.client && (
           <div className="relative z-0 w-full group">
-            <label className="text-md text-gray-500 bg-white px-1">
+            <label
+              className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-3 left-2.5 origin-[0] 
+              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+              peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+            >
               Timesheets
             </label>
-            <div className="mt-2 grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3">
+            <div className="mt-2 grid gap-2 max-h-40 overflow-y-auto border border-gray-300 rounded-lg p-3">
               {filteredTimesheets.length > 0 ? (
                 <div className="space-y-3">
                   {filteredTimesheets.map((ts) => (
                     <label
                       key={ts._id}
-                      className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+                      className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 p-4 border rounded-lg cursor-pointer hover:bg-indigo-50 transition-all ease-in duration-300"
                     >
                       <div className="flex items-start gap-3">
                         <input

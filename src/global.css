@@ -23,6 +23,7 @@
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
+  cursor: pointer;
   background-color: var(--color-indigo-200);
   border-radius: 3px;
 }
@@ -31,4 +32,8 @@ button,
 a,
 select {
   cursor: pointer;
+}
+
+button {
+  transition: all 0.3s ease-in-out;
 }

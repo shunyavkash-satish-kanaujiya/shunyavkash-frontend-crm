@@ -135,23 +135,23 @@ export const InvoiceRow = ({
                         alert(err.message || "Failed to send invoice");
                       }
                     }}
-                    className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded-md text-sm text-white flex items-center"
+                    className="px-3 py-2 bg-green-500 hover:bg-green-600 rounded-md text-sm text-white flex items-center"
                   >
-                    <PaperAirplaneIcon className="w-4 h-4 mr-1" />
+                    <PaperAirplaneIcon className="w-4 h-4 mr-1 inline stroke-2" />
                     Send to Client
                   </button>
                   {/* )} */}
                   {invoice.pdfUrl && invoice.pdfExists ? (
                     <button
                       onClick={() => handleDownloadPDF(invoice.pdfUrl)}
-                      className="px-3 py-1 bg-blue-500 hover:bg-blue-600 rounded-md text-sm text-white"
+                      className="px-3 py-2 bg-blue-500 hover:bg-blue-600 rounded-md text-sm text-white"
                     >
                       Download PDF
                     </button>
                   ) : (
                     <button
                       onClick={() => handleRegeneratePdf(invoice._id)}
-                      className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 rounded-md text-sm text-white"
+                      className="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-md text-sm text-white"
                     >
                       Generate PDF
                     </button>
