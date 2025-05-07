@@ -12,7 +12,7 @@ export const ArchivedProjectTable = ({ projects }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({ status: "", priority: "" });
 
-  const restoreProject = useProjectStore((state) => state.restoreProject); // <-- Hook into store
+  const restoreProject = useProjectStore((state) => state.restoreProject);
 
   const handleRestore = (projectId) => {
     restoreProject(projectId);
@@ -109,7 +109,7 @@ export const ArchivedProjectTable = ({ projects }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`text-xs font-medium rounded px-2 py-1 ${
+                      className={`text-xs font-medium rounded-md px-4 py-2 ${
                         priorityStyles[
                           project.priority?.toLowerCase() || "none"
                         ]
@@ -120,7 +120,7 @@ export const ArchivedProjectTable = ({ projects }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      className={`px-4 py-2 rounded-full text-xs font-medium ${
                         statusStyles[project.status]
                       }`}
                     >
