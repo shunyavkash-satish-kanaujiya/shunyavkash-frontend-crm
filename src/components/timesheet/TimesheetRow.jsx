@@ -12,6 +12,7 @@ import {
   statusOptions,
 } from "../../constants/timesheet/timesheetOptions";
 import { TagInput } from "../ui/TagInput";
+import { useAuthStore } from "../../store/authStore";
 
 export const TimesheetRow = ({
   timesheet,
@@ -40,16 +41,15 @@ export const TimesheetRow = ({
   const setActiveTimesheet = useTimesheetStore(
     (state) => state.setActiveTimesheet
   );
+  const userRole = useAuthStore((state) => state.user?.role);
 
   const [loading, setLoading] = useState(false);
   const [localTags, setLocalTags] = useState(description || []);
 
-  console.log("EMPLOYEE: ", employee.role);
-
   const handleFinalize = async () => {
     try {
       setLoading(true);
-      await finalizeTimesheet(timesheet._id);
+      await finalizeTimesheet(_id);
     } catch (error) {
       console.error("Error finalizing timesheet", error);
     } finally {
@@ -91,14 +91,8 @@ export const TimesheetRow = ({
       toast.error("Cannot edit! Timesheet is finalized.");
       return;
     }
-
-    // Toggle open state for timesheet
-    if (openTimesheetId === _id) {
-      setOpenTimesheetId(null);
-    } else {
-      setOpenTimesheetId(_id);
-      setLocalTags(description || []);
-    }
+    setOpenTimesheetId(openTimesheetId === _id ? null : _id);
+    setLocalTags(description || []);
   };
 
   const handleTagsChange = async (newTags) => {
@@ -114,56 +108,56 @@ export const TimesheetRow = ({
 
   return (
     <>
-      <tr
-        className="hover:bg-indigo-50 transition cursor-pointer"
-        // onClick={handleRowClick}
-      >
-        {/* Toggle Arrow with smooth rotation */}
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+      <tr className="hover:bg-indigo-50 transition cursor-pointer">
+        {/* Toggle Arrow */}
+        <td className="px-6 py-4">
           <button
             onClick={() => handleRowClick(_id)}
             className="text-indigo-600 hover:text-indigo-900"
           >
             <ArrowRightCircleIcon
-              className={`w-5 h-5 inline text-indigo-600 transform transition-transform duration-300 ${
+              className={`w-5 h-5 transform transition-transform ${
                 openTimesheetId === _id ? "rotate-90" : "rotate-0"
               }`}
             />
           </button>
         </td>
 
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+        {/* Employee Info */}
+        <td className="px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center font-semibold uppercase">
-              {employee?.email?.split("@")[0].charAt(0).toUpperCase()}
+              {employee?.email?.charAt(0).toUpperCase()}
             </div>
             <span className="capitalize">
-              {employee?.email
-                ?.split("@")[0]
-                .replace(/\./g, " ")
-                .replace(/\b\w/g, (char) => char.toUpperCase()) || "User"}
+              {employee?.email?.split("@")[0]?.replace(/\./g, " ") || "User"}
             </span>
           </div>
         </td>
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-          {project?.title}
-        </td>
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap overflow-hidden text-ellipsis max-w-3xs">
+
+        {/* Project Title */}
+        <td className="px-6 py-4">{project?.title || "-"}</td>
+
+        {/* Description */}
+        <td className="px-6 py-4 max-w-3xs overflow-hidden text-ellipsis">
           {description?.join(", ")}
         </td>
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+
+        {/* Date */}
+        <td className="px-6 py-4">
           {date ? new Date(date).toLocaleDateString() : "-"}
         </td>
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-          {hoursWorked}
-        </td>
+
+        {/* Hours Worked */}
+        <td className="px-6 py-4">{hoursWorked}</td>
+
         {/* Status */}
-        <td className="px-6 py-4 whitespace-nowrap">
+        <td className="px-6 py-4">
           <select
             value={status}
             onChange={handleStatusChange}
             disabled={isFinalized}
-            className={`text-xs font-medium capitalize rounded-md px-2 py-2 focus:outline-none ${
+            className={`text-xs font-medium capitalize rounded-md px-2 py-2 ${
               statusStyles[status?.toLowerCase()] || "bg-gray-100 text-gray-800"
             } ${
               isFinalized ? "bg-gray-300 text-gray-500 cursor-not-allowed" : ""
@@ -171,47 +165,49 @@ export const TimesheetRow = ({
           >
             {statusOptions
               .filter((option) => {
-                if (employee.role === "Admin") {
-                  return true; // Admin
-                } else {
-                  return option === "pending"; // Others
-                }
+                if (userRole === "Admin") return true;
+                return option === "pending" || option === status;
               })
               .map((option) => (
-                <option key={option} value={option} className="text-gray-800">
+                <option key={option} value={option}>
                   {option}
                 </option>
               ))}
           </select>
         </td>
-        <td className="px-6 py-4 text-gray-800 whitespace-nowrap space-x-2">
+
+        {/* Action Buttons */}
+        <td className="px-6 py-4 space-x-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleEdit();
             }}
             disabled={isFinalized}
+            title="Edit"
             className={`${
               isFinalized
                 ? "text-gray-400 cursor-not-allowed"
                 : "text-indigo-600 hover:text-indigo-800"
             }`}
-            title="Edit"
           >
-            <PencilSquareIcon className="w-5 h-5 inline" />
+            <PencilSquareIcon className="w-5 h-5" />
           </button>
+
           <button
             onClick={(e) => {
               e.stopPropagation();
               handleDelete();
             }}
-            className="text-red-600 hover:text-red-800"
             title="Delete"
+            className="text-red-600 hover:text-red-800"
           >
-            <XMarkIcon className="w-5 h-5 inline" />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-center ml-0 my-auto">
+
+        {/* Finalize Checkbox */}
+        <td className="px-6 py-4 text-center">
           <input
             type="checkbox"
             checked={isFinalized}
@@ -220,7 +216,7 @@ export const TimesheetRow = ({
               e.stopPropagation();
               handleFinalize();
             }}
-            className={`h-5 w-5 rounded flex justify-center align-middle border-gray-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600 ${
+            className={`h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 ${
               status !== "approved"
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer"
@@ -229,20 +225,20 @@ export const TimesheetRow = ({
         </td>
       </tr>
 
-      {/* Toggled Description Box */}
+      {/* Expanded Row (TagInput) */}
       {openTimesheetId === _id && !isFinalized && (
         <tr className="w-full">
           <td colSpan="12" className="p-4 bg-indigo-50">
-            <div className="w-full mx-auto">
+            <div className="w-full">
               <TagInput
                 tags={localTags}
                 setTags={handleTagsChange}
                 placeholder="Add description tags..."
               />
+              <span className="text-xs text-gray-500 ml-1">
+                Tap "enter" to save changes.
+              </span>
             </div>
-            <span className="ml-1 text-xs text-gray-500 font-medium">
-              Tap "enter" to save changes.
-            </span>
           </td>
         </tr>
       )}
