@@ -248,7 +248,12 @@ export const Dashboard = () => {
       />
 
       {/* Main Area */}
-      <div className="flex flex-col flex-1 h-full">
+      {/* <div className="flex flex-col flex-1 w-full h-full"> */}
+      <div
+        className={`flex flex-col h-full transition-all duration-300 ${
+          sidebarOpen ? "w-[calc(100%-240px)]" : "w-full"
+        }`}
+      >
         {/* Header - Fixed */}
         <header className="flex items-center justify-between p-4 bg-white border-b border-border border-gray-300 shadow-sm gap-3">
           <h1 className="text-lg opacity-90 tracking-wide text-blue-950 font-bold">
@@ -258,7 +263,7 @@ export const Dashboard = () => {
         </header>
 
         {/* Scrollable Main Content */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <main className="flex-1 w-full overflow-y-auto p-6 bg-gray-50">
           {renderMainContent()}
         </main>
       </div>
