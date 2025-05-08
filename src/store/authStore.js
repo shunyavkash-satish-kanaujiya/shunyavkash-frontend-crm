@@ -102,5 +102,6 @@ export const useAuthStore = create((set) => ({
     localStorage.removeItem("token");
     toast.success("Logged-out!");
     set({ user: null, token: null });
+    localStorage.clear();
   },
 }));

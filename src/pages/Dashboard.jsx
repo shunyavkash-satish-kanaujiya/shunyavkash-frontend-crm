@@ -24,7 +24,6 @@ import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
 import { Employees } from "../components/hr/Employees.jsx";
 import { ArchivedProjects } from "../components/project/ArchivedProjects.jsx";
 
-// Custom hooks
 import { useAuth } from "../hooks/dashboard/useAuth";
 import { useTab } from "../hooks/dashboard/useTab";
 import { useSidebar } from "../hooks/dashboard/useSidebar";
@@ -93,12 +92,23 @@ export const Dashboard = () => {
     );
   }
 
+  // Hide Tabs if role is Employee
+  const filteredNavigation = navigation.filter((item) => {
+    if (
+      user?.role === "Employee" &&
+      (item.name === TABS.HR ||
+        item.name === TABS.EMPLOYEES ||
+        item.name === TABS.ADD_EMPLOYEE)
+    ) {
+      return false;
+    }
+    return true;
+  });
+
   const renderMainContent = () => {
-    // Dashboard
     if (activeTab === TABS.DASHBOARD) {
       return (
         <div className="rounded-lg bg-white p-6 shadow-md">
-          {/* Username Capitalize */}
           <h2 className="text-lg font-semibold mb-1">
             Welcome,{" "}
             {user?.email
@@ -114,7 +124,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Clients
     if (activeTab === TABS.CLIENTS) {
       return (
         <Clients
@@ -134,7 +143,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Projects
     if (activeTab === TABS.PROJECTS) {
       return (
         <Project
@@ -163,14 +171,12 @@ export const Dashboard = () => {
       );
     }
 
-    // HR
     if (activeTab === TABS.HR) {
       return (
         <HR setActiveTab={setActiveTab} setEditingProject={setEditingProject} />
       );
     }
 
-    // Employees
     if (activeTab === TABS.EMPLOYEES) {
       return (
         <Employees
@@ -190,7 +196,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Timesheet
     if (activeTab === TABS.TIMESHEET) {
       return (
         <Timesheet
@@ -211,7 +216,6 @@ export const Dashboard = () => {
       );
     }
 
-    // Invoices
     if (activeTab === TABS.INVOICE) {
       return <Invoice setActiveTab={setActiveTab} />;
     }
@@ -220,7 +224,6 @@ export const Dashboard = () => {
       return <CreateInvoice setActiveTab={setActiveTab} />;
     }
 
-    // PageNotFound
     if (activeTab === TABS.PAGENOTFOUND) {
       return <PageNotFound setActiveTab={setActiveTab} />;
     }
@@ -238,7 +241,7 @@ export const Dashboard = () => {
     <div className="h-screen flex overflow-hidden bg-background text-textPrimary">
       {/* Sidebar */}
       <Sidebar
-        navigation={navigation}
+        navigation={filteredNavigation}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         activeTab={activeTab}
@@ -253,7 +256,6 @@ export const Dashboard = () => {
           sidebarOpen ? "w-[calc(100%-240px)]" : "w-full"
         }`}
       >
-        {/* Header - Fixed */}
         <header className="flex items-center justify-between p-4 bg-white border-b border-border border-gray-300 shadow-sm gap-3">
           <h1 className="text-lg opacity-90 tracking-wide text-blue-950 font-bold">
             {activeTab}
@@ -261,7 +263,6 @@ export const Dashboard = () => {
           <UserDropdown />
         </header>
 
-        {/* Scrollable Main Content */}
         <main className="flex-1 w-full overflow-y-auto p-6 bg-gray-50">
           {renderMainContent()}
         </main>
