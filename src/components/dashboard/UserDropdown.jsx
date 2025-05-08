@@ -1,7 +1,7 @@
 import React from "react";
 import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useAuthStore } from "../../store/authStore.js";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/dashboard/useAuth.js";
@@ -12,12 +12,12 @@ export const UserDropdown = () => {
 
   return (
     <Menu as="div" className="relative inline-block text-left">
-      <Menu.Button className="flex items-center gap-2 focus:outline-none">
+      <MenuButton className="flex items-center gap-2 focus:outline-none">
         <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-semibold">
           {user?.email?.charAt(0).toUpperCase() || "U"}
         </div>
         <ChevronDownIcon className="w-4 h-4 text-gray-600" />
-      </Menu.Button>
+      </MenuButton>
 
       <Transition
         as={Fragment}
@@ -28,7 +28,7 @@ export const UserDropdown = () => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute right-0 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+        <MenuItems className="absolute right-0 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
           <div className="px-4 py-3 border-b border-gray-200">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
@@ -48,7 +48,7 @@ export const UserDropdown = () => {
           </div>
 
           <div className="py-1">
-            <Menu.Item>
+            <MenuItem>
               {({ active }) => (
                 <button
                   onClick={() => {
@@ -62,9 +62,9 @@ export const UserDropdown = () => {
                   Logout
                 </button>
               )}
-            </Menu.Item>
+            </MenuItem>
           </div>
-        </Menu.Items>
+        </MenuItems>
       </Transition>
     </Menu>
   );
