@@ -4,8 +4,7 @@ import { useAuthStore } from "../store/authStore.js";
 import { PasswordValidator } from "../components/ui/PasswordValidator.jsx";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; 
-import { isPasswordValid } from "../utils/isPasswordValid.js";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 export const Signin = () => {
   const [email, setEmail] = useState("");
@@ -23,11 +22,6 @@ export const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isPasswordValid(password)) {
-      toast.error("Password does not meet the validation criteria.");
-      return;
-    }
 
     try {
       await register(email, password);
@@ -113,11 +107,6 @@ export const Signin = () => {
                     )}
                   </button>
                 </div>
-
-                {/* Password Validator */}
-                {password.length > 0 && (
-                  <PasswordValidator password={password} />
-                )}
 
                 {error && <p className="text-sm text-red-500">{error}</p>}
 
