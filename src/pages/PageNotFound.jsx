@@ -26,14 +26,14 @@ const PageNotFound = ({ setActiveTab }) => {
   }, []);
 
   const handleReturnToDashboard = () => {
-    console.log("Button clicked"); // Debug log
+    console.log("Button clicked");
     if (setActiveTab) {
       // If rendered within Dashboard, use setActiveTab
-      console.log("Using setActiveTab"); // Debug log
+      console.log("Using setActiveTab");
       setActiveTab(TABS.DASHBOARD);
     } else {
       // If standalone, navigate to dashboard route
-      console.log("Using navigate"); // Debug log
+      console.log("Using navigate"); 
       navigate("/dashboard");
     }
   };

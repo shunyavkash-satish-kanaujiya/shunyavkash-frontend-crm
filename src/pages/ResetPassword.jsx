@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import toast from "react-hot-toast";
-import { PasswordValidator } from "../components/ui/PasswordValidator.jsx"; // Import PasswordValidator
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid"; // Import icons from heroicons
+import { PasswordValidator } from "../components/ui/PasswordValidator.jsx";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid";
 import { isPasswordValid } from "../utils/isPasswordValid.js";
 
 const ResetPassword = () => {

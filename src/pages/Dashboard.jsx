@@ -248,7 +248,6 @@ export const Dashboard = () => {
       />
 
       {/* Main Area */}
-      {/* <div className="flex flex-col flex-1 w-full h-full"> */}
       <div
         className={`flex flex-col h-full transition-all duration-300 ${
           sidebarOpen ? "w-[calc(100%-240px)]" : "w-full"

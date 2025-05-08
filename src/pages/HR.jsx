@@ -17,7 +17,7 @@ import { EmployeeDetails } from "../components/hr/employee/EmployeeDetails";
 
 export const HR = () => {
   const [activeTab, setActiveTab] = useState(defaultHRTab);
-  const [employeeTab, setEmployeeTab] = useState(TABS.EMPLOYEES); // NEW for Employee Sub-Tabs
+  const [employeeTab, setEmployeeTab] = useState(TABS.EMPLOYEES);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   useEffect(() => {

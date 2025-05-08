@@ -82,7 +82,6 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
     }
   }, [editingTimesheet, setFormData, employeeId]);
 
-  // Debug when descriptionTags change
   useEffect(() => {
     console.log("descriptionTags updated:", descriptionTags);
   }, [descriptionTags]);
@@ -104,7 +103,7 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
         date: new Date(formData.date).toISOString(),
         status: formData.status,
         hoursWorked: Number(formData.hours),
-        description: descriptionTags, // Send as array directly to match schema
+        description: descriptionTags, // Send as array directly to matched schema
         employee: employeeId,
       };
 
