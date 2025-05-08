@@ -1,8 +1,9 @@
-// pages/ResetPassword.jsx
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import toast from "react-hot-toast";
+import { PasswordValidator } from "../components/ui/PasswordValidator.jsx"; // Import PasswordValidator
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid"; // Import icons from heroicons
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -10,6 +11,8 @@ const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   const { resetPassword, loading, error, message, clearMessages } =
     useAuthStore();
@@ -62,18 +65,34 @@ const ResetPassword = () => {
                 >
                   New Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={passwordVisible ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                     placeholder="Enter new password"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                    className="absolute right-3 top-2.5 text-gray-500"
+                  >
+                    {passwordVisible ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
+
+                {/* Password Validator */}
+                {password.length > 0 && (
+                  <PasswordValidator password={password} />
+                )}
               </div>
 
               <div>
@@ -83,17 +102,30 @@ const ResetPassword = () => {
                 >
                   Confirm Password
                 </label>
-                <div className="mt-2">
+                <div className="mt-2 relative">
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="text"
+                    type={confirmPasswordVisible ? "text" : "password"}
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6"
                     placeholder="Confirm your new password"
                   />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setConfirmPasswordVisible(!confirmPasswordVisible)
+                    }
+                    className="absolute right-3 top-2.5 text-gray-500"
+                  >
+                    {confirmPasswordVisible ? (
+                      <EyeSlashIcon className="h-5 w-5" />
+                    ) : (
+                      <EyeIcon className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
               </div>
 
@@ -113,7 +145,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="cursor-pointer transition flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="cursor-pointer transition flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
                 >
                   {loading ? "Resetting..." : "Reset Password"}
                 </button>
