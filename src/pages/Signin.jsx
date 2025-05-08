@@ -4,12 +4,13 @@ import { useAuthStore } from "../store/authStore.js";
 import { PasswordValidator } from "../components/ui/PasswordValidator.jsx";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; // For show/hide password
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid"; 
+import { isPasswordValid } from "../utils/isPasswordValid.js";
 
 export const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for show/hide password
+  const [showPassword, setShowPassword] = useState(false);
   const { register, loading, error } = useAuthStore();
   const token = useAuthStore((state) => state.token);
   const navigate = useNavigate();
@@ -22,6 +23,11 @@ export const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isPasswordValid(password)) {
+      toast.error("Password does not meet the validation criteria.");
+      return;
+    }
 
     try {
       await register(email, password);

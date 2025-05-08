@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/authStore";
 import toast from "react-hot-toast";
 import { PasswordValidator } from "../components/ui/PasswordValidator.jsx"; // Import PasswordValidator
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/20/solid"; // Import icons from heroicons
+import { isPasswordValid } from "../utils/isPasswordValid.js";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -19,6 +20,12 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isPasswordValid(password)) {
+      toast.error("Password does not meet the validation criteria.");
+      return;
+    }
+
     clearMessages();
     setLocalError("");
 
