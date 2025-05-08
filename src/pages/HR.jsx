@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Employees } from "../components/hr/Employees";
 import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
-import { Attendances } from "../components/hr/Attendances";
-import { Leaves } from "../components/hr/Leaves";
-import { Payrolls } from "../components/hr/Payrolls";
-import { Interviews } from "../components/hr/Interviews";
+// import { Attendances } from "../components/hr/Attendances";
+// import { Leaves } from "../components/hr/Leaves";
+// import { Payrolls } from "../components/hr/Payrolls";
+// import { Interviews } from "../components/hr/Interviews";
 
 import {
   activeTabHR,
@@ -77,40 +77,40 @@ export const HR = () => {
         )}
 
         {/* Attendances */}
-        {activeTab === "attendances" && (
+        {/* {activeTab === "attendances" && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-indigo-700">
               Attendances
             </h2>
             <Attendances />
           </div>
-        )}
+        )} */}
 
         {/* Leaves */}
-        {activeTab === "leaves" && (
+        {/* {activeTab === "leaves" && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-indigo-700">Leaves</h2>
             <Leaves />
           </div>
-        )}
+        )} */}
 
         {/* Payrolls */}
-        {activeTab === "payrolls" && (
+        {/* {activeTab === "payrolls" && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-indigo-700">Payrolls</h2>
             <Payrolls />
           </div>
-        )}
+        )} */}
 
         {/* Interviews */}
-        {activeTab === "interviews" && (
+        {/* {activeTab === "interviews" && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-indigo-700">
               Interviews
             </h2>
             <Interviews />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
