@@ -196,9 +196,6 @@ export const CreateInvoice = ({ setActiveTab }) => {
                   ))}
                 </div>
               ) : (
-                // <p className="text-gray-500 col-span-2">
-                //   No finalized timesheets available for this client.
-                // </p>
                 <p className="text-gray-500 col-span-2">
                   No eligible timesheets available — only finalized and not yet
                   invoiced timesheets are shown.

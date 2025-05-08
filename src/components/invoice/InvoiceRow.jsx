@@ -124,7 +124,6 @@ export const InvoiceRow = ({
                   Actions
                 </h4>
                 <div className="flex space-x-2 mt-2">
-                  {/* {invoice.status === "Paid" && ( */}
                   <button
                     onClick={async (e) => {
                       e.stopPropagation();
@@ -140,7 +139,7 @@ export const InvoiceRow = ({
                     <PaperAirplaneIcon className="w-4 h-4 mr-1 inline stroke-2" />
                     Send to Client
                   </button>
-                  {/* )} */}
+
                   {invoice.pdfUrl && invoice.pdfExists ? (
                     <button
                       onClick={() => handleDownloadPDF(invoice.pdfUrl)}

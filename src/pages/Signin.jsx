@@ -94,7 +94,7 @@ export const Signin = () => {
                   <input
                     id="password"
                     name="password"
-                    type={showPassword ? "text" : "password"} // Toggle between text and password
+                    type={showPassword ? "text" : "password"} // Toggle: text and password
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

@@ -1,8 +1,9 @@
+// Not Implemented Yet.
 export const clientTableFilters = [
   {
     label: "Filter by Contact Person",
     key: "contactPerson",
-    options: [], // Optional: dynamically populate if needed
+    options: [], 
   },
   {
     label: "Filter by Connect Date",

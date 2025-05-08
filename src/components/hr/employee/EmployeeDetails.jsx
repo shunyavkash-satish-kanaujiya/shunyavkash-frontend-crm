@@ -80,7 +80,6 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
             ) : (
               <p className="text-gray-500">No designations assigned yet.</p>
             )}
-            {/* </div> */}
           </div>
         </div>
 
