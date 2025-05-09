@@ -41,6 +41,15 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
               Billing Address
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+              Address
+            </th>
+            <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+              Currency
+            </th>
+            <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+              Industry
+            </th>
+            <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
               Connect Date
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
@@ -51,7 +60,7 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
         <tbody className="bg-white divide-y divide-gray-100">
           {clients.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center py-4 text-gray-500">
+              <td colSpan="10" className="text-center py-4 text-gray-500">
                 No clients found.
               </td>
             </tr>
@@ -80,6 +89,15 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
                 </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
                   {client.billingAddress}
+                </td>
+                <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+                  {client.address}
+                </td>
+                <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+                  {client.currency}
+                </td>
+                <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
+                  {client.industry}
                 </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
                   {new Date(client.createdAt).toLocaleDateString()}
