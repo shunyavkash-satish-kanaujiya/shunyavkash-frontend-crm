@@ -125,8 +125,8 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   };
 
   const fields = [
-    { label: "Date", name: "date", type: "date", required: true },
-    { label: "Hours", name: "hours", type: "number", required: true },
+    { label: "Date", name: "date", type: "date" },
+    { label: "Hours", name: "hours", type: "number" },
   ];
 
   console.log("STATUS: ", formData.status);

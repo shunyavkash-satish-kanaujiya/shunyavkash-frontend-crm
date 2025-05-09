@@ -22,7 +22,6 @@ import { TABS } from "../constants/activeTab";
 import { HR } from "./HR.jsx";
 import { EmployeeForm } from "../components/forms/EmployeeForm.jsx";
 import { Employees } from "../components/hr/Employees.jsx";
-import { ArchivedProjects } from "../components/project/ArchivedProjects.jsx";
 
 import { useAuth } from "../hooks/dashboard/useAuth";
 import { useTab } from "../hooks/dashboard/useTab";
@@ -40,7 +39,6 @@ const navigation = [
   {
     name: "Projects",
     icon: FolderIcon,
-    submenu: [{ name: "Archived Projects" }],
   },
   { name: "Timesheet", icon: ListBulletIcon },
   { name: "Invoice", icon: ReceiptPercentIcon },
@@ -157,15 +155,6 @@ export const Dashboard = () => {
         <ProjectForm
           setActiveTab={setActiveTab}
           editingProject={editingProject}
-          setEditingProject={setEditingProject}
-        />
-      );
-    }
-
-    if (activeTab === TABS.ARCHIVED_PROJECTS) {
-      return (
-        <ArchivedProjects
-          setActiveTab={setActiveTab}
           setEditingProject={setEditingProject}
         />
       );

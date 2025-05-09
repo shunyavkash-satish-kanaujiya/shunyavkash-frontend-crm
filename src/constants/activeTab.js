@@ -6,7 +6,6 @@ export const TABS = {
 
   PROJECTS: "Projects",
   ADD_PROJECT: "Add Project",
-  ARCHIVED_PROJECTS: "Archived Projects",
 
   HR: "HR",
   EMPLOYEES: "Employees",
