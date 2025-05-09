@@ -104,4 +104,24 @@ export const useAuthStore = create((set) => ({
     set({ user: null, token: null });
     localStorage.clear();
   },
+  // Inside your useAuthStore definition
+
+  verifyPassword: async (password) => {
+    set({ loading: true, error: null });
+
+    try {
+      const res = await instance.post(API_ROUTES.AUTH.VERIFY_PASSWORD, {
+        password,
+      });
+      toast.success(res.data.message);
+      set({ loading: false });
+      return true;
+    } catch (error) {
+      const message =
+        error.response?.data?.message || "Password verification failed";
+      toast.error(message);
+      set({ loading: false, error: message });
+      return false;
+    }
+  },
 }));

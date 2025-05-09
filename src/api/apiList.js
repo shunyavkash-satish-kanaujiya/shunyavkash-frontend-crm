@@ -4,6 +4,7 @@ export const API_ROUTES = {
     // REGISTER: "/auth/register",
     FETCH_USER: "/auth/me",
     FORGET_PASSWORD: "/auth/forgot-password",
+    VERIFY_PASSWORD: "/auth/verify-password",
     RESET_PASSWORD: (token) => `/auth/reset-password/${token}`,
   },
   EMPLOYEES: {
