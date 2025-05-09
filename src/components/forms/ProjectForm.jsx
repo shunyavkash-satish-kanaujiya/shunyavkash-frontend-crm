@@ -53,9 +53,8 @@ export const ProjectForm = ({
             label: "Start Date",
             name: "startDate",
             type: "date",
-            required: true,
           },
-          { label: "End Date", name: "endDate", type: "date", required: true },
+          { label: "End Date", name: "endDate", type: "date" },
         ].map((field) => (
           <div className="relative z-0 w-full group" key={field.name}>
             <input

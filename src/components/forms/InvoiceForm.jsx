@@ -121,13 +121,12 @@ export const CreateInvoice = ({ setActiveTab }) => {
   };
 
   const fields = [
-    { label: "Issued Date", name: "issuedDate", type: "date", required: true },
-    { label: "Due Date", name: "dueDate", type: "date", required: true },
+    { label: "Issued Date", name: "issuedDate", type: "date" },
+    { label: "Due Date", name: "dueDate", type: "date" },
     {
       label: "Rate per Hour (₹)",
       name: "ratePerHour",
       type: "number",
-      required: true,
     },
   ];
 
