@@ -116,7 +116,7 @@ export const TimesheetRow = ({
         </td>
 
         {/* Employee Info */}
-        <td className="px-6 py-4">
+        <td className="px-6 py-4 whitespace-nowrap">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center font-semibold uppercase">
               {employee?.email?.charAt(0).toUpperCase()}
