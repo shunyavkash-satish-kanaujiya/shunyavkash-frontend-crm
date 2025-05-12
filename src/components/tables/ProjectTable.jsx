@@ -127,11 +127,13 @@ export const ProjectTable = ({
   return (
     <>
       {/* Toggle Active/Archived */}
-      <div className="flex justify-end mb-4">
+      <div className="flex mb-4 bg-indigo-50 w-min p-3 rounded-md">
         <label className="inline-flex items-center cursor-pointer">
           <span
-            className={`mr-3 text-sm font-medium ${
-              !showArchived ? "text-indigo-700" : "text-gray-500"
+            className={`mr-3 text-sm transition-all ease-in-out duration-200 ${
+              !showArchived
+                ? "text-indigo-700 font-bold"
+                : "text-gray-500 font-medium tracking-wide"
             }`}
           >
             Active
@@ -147,8 +149,10 @@ export const ProjectTable = ({
             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
           </div>
           <span
-            className={`ml-3 text-sm font-medium ${
-              showArchived ? "text-indigo-700" : "text-gray-500"
+            className={`ml-3 text-sm  transition-all ease-in-out duration-200 ${
+              showArchived
+                ? "text-indigo-700 font-bold"
+                : "text-gray-500 font-medium tracking-wide"
             }`}
           >
             Archived
@@ -244,7 +248,7 @@ export const ProjectTable = ({
                           onClick={() => setViewingProjectId(project._id)}
                           disabled={isToggling}
                         >
-                          <EyeIcon className="w-5 h-5 inline" />
+                          <EyeIcon className="w-5 h-5 inline stroke-2" />
                         </button>
                       </td>
                     )}

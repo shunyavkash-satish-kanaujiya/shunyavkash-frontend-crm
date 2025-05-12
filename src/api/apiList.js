@@ -21,7 +21,7 @@ export const API_ROUTES = {
     CREATE: "/client",
     UPDATE: (id) => `/client/${id}`,
     DELETE: (id) => `/client/${id}`,
-    // GET_ONE: (id) => `/clients/${id}`, // No Detailed Page
+    GET_ONE: (id) => `/client/${id}`, // View client details
   },
   PROJECTS: {
     BASE: "/project",

@@ -22,6 +22,25 @@ export const useClientStore = create((set) => ({
     }
   },
 
+  // Fetch single client
+  fetchSingleClient: async (clientId) => {
+    set({ loading: true, error: null });
+
+    try {
+      const res = await instance.get(API_ROUTES.CLIENT.GET_ONE(clientId));
+      set({ loading: false });
+      return res.data;
+    } catch (error) {
+      const backendError =
+        error.response?.data?.error || error.message || "Something went wrong";
+
+      set({ error: backendError, loading: false });
+      console.error("Failed to fetch single client:", backendError);
+      toast.error(backendError);
+      throw error;
+    }
+  },
+
   // Create new client
   addClient: async (clientData) => {
     set({ loading: true, error: null });
