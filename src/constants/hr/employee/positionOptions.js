@@ -13,3 +13,5 @@ export const designationOptions = [
 ];
 
 export const statusOptions = ["Active", "Inactive", "On Leave", "Terminated"];
+
+export const employeeRoleOptions = ["Admin", "HR", "Employee"];

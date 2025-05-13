@@ -1,8 +1,8 @@
 export const API_ROUTES = {
   AUTH: {
-    LOGIN: "/auth/register",
+    LOGIN: "/auth/login",
     // REGISTER: "/auth/register",
-    FETCH_USER: "/auth/me",
+    FETCH_USER: "/auth/verify-token",
     FORGET_PASSWORD: "/auth/forgot-password",
     VERIFY_PASSWORD: "/auth/verify-password",
     RESET_PASSWORD: (token) => `/auth/reset-password/${token}`,
@@ -38,6 +38,14 @@ export const API_ROUTES = {
 
     ASSIGN_EMPLOYEE: (id) => `/project/${id}/assign`,
     REMOVE_ASSIGNED_EMPLOYEE: (id) => `/project/${id}/remove-employee`,
+  },
+  TASKS: {
+    BASE: "/task",
+    CREATE: "/task",
+    UPDATE: (id) => `/task/${id}`,
+    DELETE: (id) => `/task/${id}`,
+
+    GET_BY_PROJECT: (id) => `/task/project/${id}`,
   },
   TIMESHEET: {
     BASE: "/timesheet",

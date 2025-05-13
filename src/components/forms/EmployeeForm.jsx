@@ -5,6 +5,8 @@ import { AvatarUpload } from "../hr/employee/AvatarUpload";
 import { DocumentsUpload } from "../hr/employee/DocumentsUpload";
 import { FormButtons } from "../hr/employee/FormButtons";
 import { ReusableSelectBox } from "../ui/ReusableSelectBox";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
 
 export const EmployeeForm = ({ setEmployeeTab }) => {
   const {
@@ -20,7 +22,13 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
     isAdminOrHR,
     isEditingOwnProfile,
   } = useEmployeeForm(setEmployeeTab, TABS);
-
+  const [visiblePasswords, setVisiblePasswords] = useState({});
+  const togglePasswordVisibility = (fieldName) => {
+    setVisiblePasswords((prev) => ({
+      ...prev,
+      [fieldName]: !prev[fieldName],
+    }));
+  };
   // Function to determine if field should be read-only
   const shouldBeReadOnly = (fieldName) => {
     // If editing own profile and not admin/HR, restrict certain fields
@@ -69,7 +77,11 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
               />
             ) : (
               <input
-                type={field.type}
+                type={
+                  field.type === "password" && visiblePasswords[field.name]
+                    ? "text"
+                    : field.type
+                }
                 name={field.name}
                 value={formData[field.name] ?? ""}
                 onChange={handleChange}
@@ -82,6 +94,19 @@ export const EmployeeForm = ({ setEmployeeTab }) => {
                     : ""
                 }`}
               />
+            )}
+            {field.type === "password" && (
+              <button
+                type="button"
+                onClick={() => togglePasswordVisibility(field.name)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              >
+                {visiblePasswords[field.name] ? (
+                  <EyeSlashIcon className="w-5 h-5" />
+                ) : (
+                  <EyeIcon className="w-5 h-5" />
+                )}
+              </button>
             )}
             <label
               htmlFor={field.name}

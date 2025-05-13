@@ -1,6 +1,7 @@
 import {
   departmentOptions,
   designationOptions,
+  employeeRoleOptions,
   statusOptions,
 } from "./positionOptions";
 
@@ -8,6 +9,15 @@ export const employeeFields = [
   { label: "First Name", name: "firstName", type: "text", required: true },
   { label: "Last Name", name: "lastName", type: "text", required: true },
   { label: "Email", name: "email", type: "email", required: true },
+
+  { label: "Password", name: "password", type: "password", required: true },
+  {
+    label: "Role",
+    name: "role",
+    type: "select",
+    options: employeeRoleOptions,
+    required: true,
+  },
   {
     label: "Personal Email",
     name: "personalEmail",
@@ -44,4 +54,6 @@ export const employeeFields = [
     required: true,
   },
   { label: "Address", name: "address", type: "text", required: true },
+
+  { label: " ", name: "", type: "hidden" },
 ];

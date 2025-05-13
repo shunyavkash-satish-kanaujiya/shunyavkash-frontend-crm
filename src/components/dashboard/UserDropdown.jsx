@@ -205,7 +205,7 @@ export const UserDropdown = () => {
   // Debug information
   console.log("UserDropdown rendered. Current state:", {
     userRole: user?.role,
-    userEmail: user?.email,
+    userEmail: user?._id,
     employeeId,
     hasFetched,
   });
@@ -213,15 +213,15 @@ export const UserDropdown = () => {
   // Fetch and find matching employee when component mounts
   useEffect(() => {
     const findEmployeeId = async () => {
-      if (user?.email && !hasFetched) {
+      if (user?._id && !hasFetched) {
         try {
           setHasFetched(true);
-          console.log("Fetching employee for email:", user.email);
-
-          const matchingEmployee = await employeeStore.fetchEmployeeByEmail(
-            user.email
+          const matchingEmployee = await employeeStore.fetchEmployee(user?._id);
+          console.log(
+            "API response for employee:",
+            matchingEmployee,
+            matchingEmployee
           );
-          console.log("API response for employee:", matchingEmployee);
 
           if (matchingEmployee && matchingEmployee._id) {
             console.log("Found matching employee:", matchingEmployee._id);
