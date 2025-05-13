@@ -82,6 +82,12 @@ export const useProjectStore = create((set) => ({
   updateProject: async (projectId, updatedData) => {
     try {
       set({ loading: true, error: null });
+      delete updatedData._id;
+      delete updatedData.createdAt;
+      delete updatedData.updatedAt;
+      delete updatedData.__v;
+      delete updatedData.isArchived;
+      delete updatedData.isDeleted;
       const res = await instance.put(
         API_ROUTES.PROJECTS.UPDATE(projectId),
         updatedData
