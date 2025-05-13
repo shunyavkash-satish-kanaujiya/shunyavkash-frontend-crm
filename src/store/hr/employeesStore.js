@@ -28,12 +28,30 @@ export const useEmployeeStore = create((set) => ({
     try {
       set({ loading: true });
       const res = await instance.get(API_ROUTES.EMPLOYEES.GET_ONE(employeeId));
-      set({ editingEmployee: res.data, loading: false });
-      return res.data;
+      set({ editingEmployee: res.data?.data, loading: false });
+      return res.data?.data;
     } catch (error) {
       set({ loading: false, error: error.message });
       console.error("Failed to fetch employee details:", error);
       toast.error(error.message);
+      return null;
+    }
+  },
+
+  fetchEmployeeByEmail: async (email) => {
+    try {
+      set({ loading: true });
+      const res = await instance.get(`/employee/email/${email}`);
+      if (!res.data) {
+        console.log("No employee found with email:", email);
+        set({ loading: false });
+        return null;
+      }
+      set({ editingEmployee: res.data, loading: false });
+      return res.data;
+    } catch (error) {
+      console.error("Failed to fetch employee by email:", error);
+      set({ loading: false, error: error.message });
       return null;
     }
   },

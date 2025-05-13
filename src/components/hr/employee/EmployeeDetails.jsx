@@ -7,6 +7,8 @@ import {
 import { useEmployeeStore } from "../../../store/hr/employeesStore.js";
 import { getStatusColor } from "../../../constants/hr/employee/statusColors.js";
 import { useAuthStore } from "../../../store/authStore.js";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/dashboard/useAuth.js";
 
 export const EmployeeDetails = ({ employeeId, goBack }) => {
   const [employee, setEmployee] = useState(null);
@@ -18,6 +20,8 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
   const [fieldToShow, setFieldToShow] = useState(null); // 'salary' or 'joiningDate'
   const { fetchEmployee, removeTag } = useEmployeeStore();
   const { verifyPassword } = useAuthStore();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const loadEmployeeData = async () => {
@@ -88,6 +92,9 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
     if (typeof goBack === "function") {
       goBack();
     }
+    if (user?.role === "Employee") {
+      navigate(-1);
+    }
   };
 
   if (!employee) return <div className="p-4">Loading...</div>;
@@ -100,7 +107,7 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
         className="flex items-center text-indigo-600 hover:text-indigo-800 hover:underline"
       >
         <ArrowLeftIcon className="w-5 h-5 mr-1" />
-        Back to Employees
+        {user?.role === "Employee" ? "Back" : "Back to Employees"}
       </button>
 
       {/* Employee Info */}
