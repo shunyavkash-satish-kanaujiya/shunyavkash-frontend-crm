@@ -39,6 +39,14 @@ export const API_ROUTES = {
     ASSIGN_EMPLOYEE: (id) => `/project/${id}/assign`,
     REMOVE_ASSIGNED_EMPLOYEE: (id) => `/project/${id}/remove-employee`,
   },
+  TASKS: {
+    BASE: "/task",
+    CREATE: "/task",
+    UPDATE: (id) => `/task/${id}`,
+    DELETE: (id) => `/task/${id}`,
+
+    GET_BY_PROJECT: (id) => `/task/project/${id}`,
+  },
   TIMESHEET: {
     BASE: "/timesheet",
     CREATE: "/timesheet",
