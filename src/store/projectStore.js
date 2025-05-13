@@ -5,11 +5,14 @@ import toast from "react-hot-toast";
 
 export const useProjectStore = create((set) => ({
   projects: [],
-  archivedProjects: [],
+  projectsLoading: false,
   editingProject: null,
   setEditingProject: (project) => set({ editingProject: project }),
+  archivedProjects: [],
+  showArchived: false,
+  archivedProjectsLoading: false,
+  setShowArchived: (show) => set({ showArchived: show }),
   loading: false,
-  projectLoading: false, // Loading state for single project
   error: null,
 
   // Fetch a single project by ID
@@ -30,12 +33,12 @@ export const useProjectStore = create((set) => ({
   // Fetch all Active Projects
   fetchProjects: async () => {
     try {
-      set({ loading: true, error: null });
+      set({ projectsLoading: true, error: null });
       const res = await instance.get(API_ROUTES.PROJECTS.BASE);
-      set({ projects: res.data?.data?.projects, loading: false });
+      set({ projects: res.data?.data?.projects, projectsLoading: false });
       console.log("Projects:", res.data);
     } catch (error) {
-      set({ error: error.message, loading: false });
+      set({ error: error.message, projectsLoading: false });
       console.error("Failed to fetch projects:", error);
       toast.error(error.message);
     }
@@ -119,14 +122,14 @@ export const useProjectStore = create((set) => ({
   // Fetch Archived Projects
   fetchArchivedProjects: async () => {
     try {
-      set({ loading: true, error: null });
+      set({ archivedProjectsLoading: true, error: null });
       const res = await instance.get(
         API_ROUTES.PROJECTS.FETCH_ARCHIVED_PROJECTS
       );
       console.log("Archived Projects:", res.data);
-      set({ archivedProjects: res.data?.data, loading: false });
+      set({ archivedProjects: res.data?.data, archivedProjectsLoading: false });
     } catch (error) {
-      set({ error: error.message, loading: false });
+      set({ error: error.message, archivedProjectsLoading: false });
       console.error("Failed to fetch archived projects:", error);
       toast.error(error.message);
     }

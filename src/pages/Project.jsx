@@ -1,26 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ProjectTable } from "../components/tables/ProjectTable";
 import { ProjectDetails } from "../components/project/ProjectDetails";
 import { useProjectStore } from "../store/projectStore";
 
 export const Project = ({ setActiveTab, setEditingProject }) => {
-  const { projects, fetchProjects, loading } = useProjectStore();
+  const projects = useProjectStore((state) => state.projects);
+  const archivedProjects = useProjectStore((state) => state.archivedProjects);
+  const showArchived = useProjectStore((state) => state.showArchived);
+  const fetchProjects = useProjectStore((state) => state.fetchProjects);
+  const fetchArchivedProjects = useProjectStore(
+    (state) => state.fetchArchivedProjects
+  );
+  const projectsLoading = useProjectStore((state) => state.projectsLoading);
+
   const [viewingProjectId, setViewingProjectId] = useState(null);
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects]);
+    fetchArchivedProjects();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const activeProjects = Array.isArray(projects)
-    ? projects.filter((project) => !project.isArchived)
-    : [];
+  const activeProjects = useMemo(
+    () =>
+      Array.isArray(projects)
+        ? projects.filter((project) => !project.isArchived)
+        : [],
+    [projects]
+  );
 
-  // Render different views based on state
+  const selectedProjects = showArchived ? archivedProjects : activeProjects;
+
   const renderContent = () => {
-    if (loading && !viewingProjectId) {
+    if (projectsLoading && !viewingProjectId) {
       return (
         <div className="text-center py-6 text-indigo-600 font-medium">
-          Loading projects...
+          {showArchived
+            ? "Loading archived projects..."
+            : "Loading projects..."}
         </div>
       );
     }
@@ -36,7 +53,7 @@ export const Project = ({ setActiveTab, setEditingProject }) => {
 
     return (
       <ProjectTable
-        projects={activeProjects}
+        projects={selectedProjects}
         setActiveTab={setActiveTab}
         setEditingProject={setEditingProject}
         setViewingProjectId={setViewingProjectId}

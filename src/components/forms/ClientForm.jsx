@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useClientStore } from "../../store/clientStore.js";
 import { TABS } from "../../constants/activeTab.js";
+import { ReusableSelectBox } from "../ui/ReusableSelectBox.jsx";
 
 export const ClientForm = ({
   setActiveTab,
@@ -13,6 +14,9 @@ export const ClientForm = ({
     email: "",
     phone: "",
     billingAddress: "",
+    address: "",
+    currency: "USD",
+    industry: "",
   });
 
   const addClient = useClientStore((state) => state.addClient);
@@ -43,6 +47,9 @@ export const ClientForm = ({
           email: "",
           phone: "",
           billingAddress: "",
+          address: "",
+          currency: "USD",
+          industry: "",
         });
       }
       setActiveTab(TABS.CLIENTS);
@@ -60,7 +67,7 @@ export const ClientForm = ({
     {
       label: "Billing Address",
       name: "billingAddress",
-      type: "email",
+      type: "text",
       required: true,
     },
   ];
@@ -95,6 +102,52 @@ export const ClientForm = ({
             </label>
           </div>
         ))}
+
+        {/* New fields: address, currency, and industry */}
+        <div className="relative z-0 w-full group">
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            required
+            autoComplete="off"
+            className="block w-full px-2.5 pt-5 pb-2.5 text-sm text-gray-900 bg-transparent border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-0 focus:border-indigo-600 peer"
+          />
+          <label
+            htmlFor="address"
+            className="absolute text-md text-gray-500 bg-white px-1 transition-all duration-250 transform scale-75 -translate-y-4 top-1 left-2.5 origin-[0]
+              peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:top-4 
+              peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 peer-focus:text-indigo-600"
+          >
+            Address
+          </label>
+        </div>
+
+        <ReusableSelectBox
+          label="Currency"
+          name="currency"
+          value={formData.currency}
+          onChange={handleChange}
+          required
+          options={["USD", "EUR", "INR", "GBP", "AUD"]}
+        />
+
+        <ReusableSelectBox
+          label="Industry"
+          name="industry"
+          value={formData.industry}
+          onChange={handleChange}
+          required
+          options={[
+            "IT",
+            "Healthcare",
+            "Education",
+            "Finance",
+            "Retail",
+            "Other",
+          ]}
+        />
 
         <div className="md:col-span-2 flex justify-end space-x-3">
           <button

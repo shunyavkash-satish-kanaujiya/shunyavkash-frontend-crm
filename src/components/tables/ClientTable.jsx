@@ -1,9 +1,19 @@
 import { PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useClientStore } from "../../store/clientStore";
 import { TABS } from "../../constants/activeTab";
+import ClientDetails from "../client/ClientDetails";
+import { EyeIcon } from "@heroicons/react/24/outline";
 
-export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
+export const ClientTable = ({
+  clients,
+  setActiveTab,
+  setEditingClient,
+  setViewingClientId,
+  viewingClientId,
+}) => {
   const deleteClient = useClientStore((state) => state.deleteClient);
+
+  console.log(clients);
 
   const handleDelete = async (id) => {
     if (confirm("Are you sure you want to delete this client?")) {
@@ -19,12 +29,25 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
     setActiveTab(TABS.ADD_CLIENT);
   };
 
+  // View client details
+  if (viewingClientId) {
+    return (
+      <ClientDetails
+        clientId={viewingClientId}
+        goBack={() => setViewingClientId(null)}
+      />
+    );
+  }
+
   return (
     <div className="overflow-x-auto space-y-4 shadow-md rounded-md p-2">
       {/* Table */}
       <table className="min-w-full divide-y divide-gray-200 text-sm overflow-hidden rounded-lg">
         <thead className="bg-indigo-50">
           <tr>
+            <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
+              View
+            </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
               Name
             </th>
@@ -35,10 +58,10 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
               Email
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
-              Contact
+              Currency
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
-              Billing Address
+              Industry
             </th>
             <th className="px-6 py-3 text-left font-medium text-indigo-700 uppercase">
               Connect Date
@@ -51,7 +74,7 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
         <tbody className="bg-white divide-y divide-gray-100">
           {clients.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center py-4 text-gray-500">
+              <td colSpan="10" className="text-center py-4 text-gray-500">
                 No clients found.
               </td>
             </tr>
@@ -61,6 +84,16 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
                 key={client._id}
                 className="hover:bg-indigo-50 transition cursor-pointer"
               >
+                {/* View client details */}
+                <td className="px-5 py-4 whitespace-nowrap space-x-2">
+                  <button
+                    className="text-gray-600 hover:text-blue-800"
+                    title="View"
+                    onClick={() => setViewingClientId(client._id)}
+                  >
+                    <EyeIcon className="w-5 h-5 inline stroke-2" />
+                  </button>
+                </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center font-semibold uppercase">
@@ -76,10 +109,10 @@ export const ClientTable = ({ clients, setActiveTab, setEditingClient }) => {
                   {client.email}
                 </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-                  {client.phone}
+                  {client.currency}
                 </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
-                  {client.billingAddress}
+                  {client.industry}
                 </td>
                 <td className="px-6 py-4 text-gray-800 whitespace-nowrap">
                   {new Date(client.createdAt).toLocaleDateString()}
