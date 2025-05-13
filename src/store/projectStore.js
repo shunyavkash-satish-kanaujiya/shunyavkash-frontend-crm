@@ -21,7 +21,7 @@ export const useProjectStore = create((set) => ({
       set({ projectLoading: true, error: null });
       const res = await instance.get(API_ROUTES.PROJECTS.GET_ONE(projectId));
       set({ editingProject: res.data?.data, projectLoading: false });
-      return res.data;
+      return res.data?.data;
     } catch (error) {
       set({ error: error.message, projectLoading: false });
       console.error("Failed to fetch project details:", error);

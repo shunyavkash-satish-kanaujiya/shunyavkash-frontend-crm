@@ -29,7 +29,7 @@ export const useClientStore = create((set) => ({
     try {
       const res = await instance.get(API_ROUTES.CLIENT.GET_ONE(clientId));
       set({ loading: false });
-      return res.data;
+      return res.data?.data?.client;
     } catch (error) {
       const backendError =
         error.response?.data?.error || error.message || "Something went wrong";
