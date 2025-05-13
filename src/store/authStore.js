@@ -19,7 +19,7 @@ export const useAuthStore = create((set) => ({
         password,
       });
 
-      const token = res.data.token || null;
+      const token = res.data?.data.token || null;
       localStorage.setItem("token", token);
 
       set({ token, loading: false });
@@ -47,7 +47,7 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await instance.get(API_ROUTES.AUTH.FETCH_USER);
 
-      const user = res.data;
+      const user = res.data?.data?._doc;
       set({ user });
     } catch (error) {
       console.error("Fetch user failed:", error.message);

@@ -14,7 +14,7 @@ export const useClientStore = create((set) => ({
 
     try {
       const res = await instance.get(API_ROUTES.CLIENT.BASE);
-      set({ clients: res.data, loading: false });
+      set({ clients: res.data?.data?.clients, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
       console.error("Failed to fetch clients:", error);
@@ -70,7 +70,9 @@ export const useClientStore = create((set) => ({
   // Update client
   updateClient: async (clientId, updatedData) => {
     set({ loading: true, error: null });
-
+    delete updatedData._id;
+    delete updatedData.createdAt;
+    delete updatedData.__v;
     try {
       const res = await instance.put(
         API_ROUTES.CLIENT.UPDATE(clientId),

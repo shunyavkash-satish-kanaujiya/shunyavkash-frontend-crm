@@ -15,7 +15,7 @@ export const useInvoiceStore = create((set) => ({
     try {
       set({ loading: true, error: null });
       const res = await instance.get(API_ROUTES.INVOICE.BASE);
-      set({ invoices: res.data, loading: false });
+      set({ invoices: res.data?.data?.invoices, loading: false });
       console.log("Fetched invoices:", res.data);
     } catch (error) {
       set({ error: error.message, loading: false });

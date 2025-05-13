@@ -17,7 +17,7 @@ export const useProjectStore = create((set) => ({
     try {
       set({ projectLoading: true, error: null });
       const res = await instance.get(API_ROUTES.PROJECTS.GET_ONE(projectId));
-      set({ editingProject: res.data, projectLoading: false });
+      set({ editingProject: res.data?.data, projectLoading: false });
       return res.data;
     } catch (error) {
       set({ error: error.message, projectLoading: false });
@@ -32,7 +32,7 @@ export const useProjectStore = create((set) => ({
     try {
       set({ loading: true, error: null });
       const res = await instance.get(API_ROUTES.PROJECTS.BASE);
-      set({ projects: res.data, loading: false });
+      set({ projects: res.data?.data?.projects, loading: false });
       console.log("Projects:", res.data);
     } catch (error) {
       set({ error: error.message, loading: false });
@@ -124,7 +124,7 @@ export const useProjectStore = create((set) => ({
         API_ROUTES.PROJECTS.FETCH_ARCHIVED_PROJECTS
       );
       console.log("Archived Projects:", res.data);
-      set({ archivedProjects: res.data, loading: false });
+      set({ archivedProjects: res.data?.data, loading: false });
     } catch (error) {
       set({ error: error.message, loading: false });
       console.error("Failed to fetch archived projects:", error);
