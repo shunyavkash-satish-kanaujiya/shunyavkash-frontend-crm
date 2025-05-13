@@ -63,7 +63,7 @@ const ClientDetails = ({ clientId, goBack }) => {
         {/* Header */}
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 bg-indigo-500 text-white rounded-full flex items-center justify-center font-bold text-3xl uppercase">
-            {client.name.charAt(0)}
+            {client?.name?.charAt(0)}
           </div>
           <div>
             <h2 className="text-2xl font-semibold text-gray-800 capitalize">
