@@ -8,6 +8,12 @@ export const employeeFields = [
   { label: "First Name", name: "firstName", type: "text", required: true },
   { label: "Last Name", name: "lastName", type: "text", required: true },
   { label: "Email", name: "email", type: "email", required: true },
+  {
+    label: "Personal Email",
+    name: "personalEmail",
+    type: "email",
+    required: true,
+  },
   { label: "Phone", name: "phone", type: "number", required: true },
   {
     label: "Department",

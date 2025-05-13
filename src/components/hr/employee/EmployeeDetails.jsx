@@ -147,6 +147,10 @@ export const EmployeeDetails = ({ employeeId, goBack }) => {
               {employee.email || "—"}
             </p>
             <p className="text-gray-700">
+              <span className="font-semibold">Personal Email:</span>{" "}
+              {employee.personalEmail || "—"}
+            </p>
+            <p className="text-gray-700">
               <span className="font-semibold">Phone:</span>{" "}
               {employee.phone || "—"}
             </p>
