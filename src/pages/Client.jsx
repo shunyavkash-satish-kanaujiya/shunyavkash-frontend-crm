@@ -20,7 +20,7 @@ export const Clients = ({ setActiveTab, setEditingClient }) => {
 
   useEffect(() => {
     const filtered = clients.filter((client) =>
-      client.name.toLowerCase().includes(searchTerm.toLowerCase())
+      client.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredClients(filtered);
   }, [clients, searchTerm]);

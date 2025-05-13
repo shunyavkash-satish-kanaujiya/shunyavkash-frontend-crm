@@ -14,7 +14,7 @@ export const useEmployeeStore = create((set) => ({
     try {
       set({ loading: true });
       const res = await instance.get(API_ROUTES.EMPLOYEES.BASE);
-      set({ employees: res.data, loading: false });
+      set({ employees: res.data?.data?.employee, loading: false });
       console.log("Employees:", res.data);
     } catch (error) {
       set({ loading: false, error: error.message });

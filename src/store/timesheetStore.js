@@ -18,7 +18,9 @@ export const useTimesheetStore = create((set, get) => ({
       const role = authState.user?.role;
       const { data } = await instance.get(API_ROUTES.TIMESHEET.BASE);
 
-      const timesheetArray = Array.isArray(data) ? data : data.timesheets || [];
+      const timesheetArray = Array.isArray(data?.data?.timesheets)
+        ? data?.data?.timesheets
+        : data?.data?.timesheets || [];
 
       let processed;
 
@@ -54,6 +56,8 @@ export const useTimesheetStore = create((set, get) => ({
   // Add Timesheet
   addTimesheet: async (formData) => {
     try {
+      console.log("data", formData);
+
       const { data } = await instance.post(
         API_ROUTES.TIMESHEET.CREATE,
         formData,
@@ -79,9 +83,17 @@ export const useTimesheetStore = create((set, get) => ({
   // Update Timesheet
   updateTimesheet: async (timesheet) => {
     try {
+      let payload = {
+        date: timesheet?.date,
+        description: timesheet?.description,
+        employee: timesheet?.employee,
+        hoursWorked: timesheet?.hoursWorked,
+        project: timesheet?.project,
+        status: timesheet?.status,
+      };
       const { data } = await instance.put(
         API_ROUTES.TIMESHEET.UPDATE(timesheet._id),
-        timesheet,
+        payload,
         {
           headers: {
             "Content-Type": "application/json",

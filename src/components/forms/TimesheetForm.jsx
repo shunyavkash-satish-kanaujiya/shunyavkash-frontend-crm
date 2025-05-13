@@ -24,8 +24,6 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
   const employeeId = fetchUser._id;
 
   useEffect(() => {
-    console.log("editingTimesheet:", editingTimesheet);
-
     if (editingTimesheet) {
       let existingTags = [];
 
@@ -142,7 +140,7 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
           name="project"
           value={formData.project}
           onChange={handleChange}
-          options={projects.map((p) => ({ value: p._id, label: p.title }))}
+          options={projects?.map((p) => ({ value: p._id, label: p.title }))}
           required
         />
 
@@ -203,8 +201,8 @@ export const TimesheetForm = ({ editingTimesheet, setActiveTab }) => {
             {isSubmitting
               ? "Saving..."
               : editingTimesheet
-              ? "Update Timesheet"
-              : "Save Timesheet"}
+                ? "Update Timesheet"
+                : "Save Timesheet"}
           </button>
           <button
             type="button"
