@@ -15,7 +15,6 @@ import PageNotFound from "./pages/PageNotFound.jsx";
 import { DashboardIndex } from "./components/dashboard/DashboardIndex.jsx";
 
 function App() {
-  console.log(import.meta.env.VITE_BACKEND_URL);
   return (
     <>
       <Toaster />
