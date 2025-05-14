@@ -10,6 +10,7 @@
     "staging:build": "infisical run --env=staging -- vite build",
     "production": "infisical run --env=production -- vite",
     "production:build": "infisical run --env=production -- vite build",
+    "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint ."
