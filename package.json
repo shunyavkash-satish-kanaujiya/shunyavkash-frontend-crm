@@ -4,10 +4,15 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "infisical run --env=dev -- vite",
+    "dev:build": "infisical run --env=dev -- vite build",
+    "staging": "infisical run --env=staging -- vite",
+    "staging:build": "infisical run --env=staging -- vite build",
+    "production": "infisical run --env=production -- vite",
+    "production:build": "infisical run --env=production -- vite build",
     "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@headlessui/react": "^2.2.2",
